@@ -1,0 +1,25 @@
+{% extends "mote/element/index.html" %}
+{% load mote_tags %}
+
+{% block codeblock %}
+<div class="sg-code-block">
+    <h4 class="title">
+        Code Example Ipsum
+    </h4>
+    <div class="description">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsam itaque quasi ullam expedita tempora voluptatibus!
+    </div>
+    <div class="code-example">
+        <pre>
+            <code class="language-markup">
+                <xmp>
+{% render_element element.aspect.atoms.test_atom %}
+                </xmp>
+            </code>
+        </pre>
+    </div>
+    <!-- code-example -->
+</div>
+
+<!-- sg-code-block -->
+{% endblock %}

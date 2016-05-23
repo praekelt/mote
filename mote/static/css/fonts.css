@@ -1,0 +1,20 @@
+@font-face {
+  font-family: "Lato Light";
+  font-style: normal;
+  font-weight: normal;
+  src: url("../fonts/Lato/lato-light.eot?#iefix") format("embedded-opentype"), url("../fonts/Lato/lato-light.woff2") format("woff2"), url("../fonts/Lato/lato-light.woff") format("woff"), url("../fonts/Lato/lato-light.ttf") format("truetype"), url("../fonts/Lato/lato-light.svg#Lato Light") format("svg"); }
+@font-face {
+  font-family: "Novecento Regular";
+  font-style: normal;
+  font-weight: normal;
+  src: url("../fonts/Novecento/Novecentosanswide-Normal.eot?#iefix") format("embedded-opentype"), url("../fonts/Novecento/Novecentosanswide-Normal.woff2") format("woff2"), url("../fonts/Novecento/Novecentosanswide-Normal.woff") format("woff"), url("../fonts/Novecento/Novecentosanswide-Normal.ttf") format("truetype"), url("../fonts/Novecento/Novecentosanswide-Normal.svg#Novecento Regular") format("svg"); }
+@font-face {
+  font-family: "Lato Thin";
+  font-style: normal;
+  font-weight: normal;
+  src: url("../fonts/Lato/lato-hairline-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/Lato/lato-hairline-webfont.woff2") format("woff2"), url("../fonts/Lato/lato-hairline-webfont.woff") format("woff"), url("../fonts/Lato/lato-hairline-webfont.ttf") format("truetype"), url("../fonts/Lato/lato-hairline-webfont.svg#Lato Thin") format("svg"); }
+@font-face {
+  font-family: "Lato Bold";
+  font-style: normal;
+  font-weight: normal;
+  src: url("../fonts/Lato/lato-bold-webfont.eot?#iefix") format("embedded-opentype"), url("../fonts/Lato/lato-bold-webfont.woff2") format("woff2"), url("../fonts/Lato/lato-bold-webfont.woff") format("woff"), url("../fonts/Lato/lato-bold-webfont.ttf") format("truetype"), url("../fonts/Lato/lato-bold-webfont.svg#Lato Bold") format("svg"); }

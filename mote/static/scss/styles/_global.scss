@@ -1,0 +1,11 @@
+@include global-box-sizing(border-box);
+
+.wrapper {
+    display: block;
+    margin-left: $site-gutter;
+    margin-right: $site-gutter;
+}
+
+body {
+    background-color: $color-grey-lightest;
+}

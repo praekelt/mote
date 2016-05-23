@@ -1,0 +1,5 @@
+{% load staticfiles %}
+
+<a class="link-out" href="{% url 'mote:iframe' "view_"|add:name %}?version=production" target="_blank">
+    <img src="{% static "img/rocket.png" %}"/>
+</a>

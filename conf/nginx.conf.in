@@ -1,0 +1,50 @@
+server {
+    listen 80;
+    server_name {{ web_server_name }};
+    client_max_body_size 100m;
+    gzip_types application/x-javascript text/css;
+
+    # static resources
+    location ^~ /media/ {
+        alias   {{ deploy_root }}/{{ app_name }}-media/;
+        expires 31d;
+    }
+
+    location ^~ /static/ {
+        alias   {{ deploy_root }}/{{ app_name }}-static/;
+        expires 31d;
+    }
+
+    location ^~ /media/downloads/(.*) {
+	    internal;
+        alias {{ deploy_root }}/{{ app_name }}-media/downloads/$1;
+    }
+
+    location / {
+        proxy_pass_header Server;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Scheme $scheme;
+        proxy_set_header X-Site-Type web;
+        proxy_connect_timeout 10;
+        proxy_read_timeout 10;
+        proxy_pass http://127.0.0.1:9011;
+        proxy_intercept_errors on;
+        keepalive_timeout  0;
+    }
+
+    error_page 502 503 504 /50x.html;
+    location = /50x.html {
+        root /usr/share/nginx/www;
+    }
+    location = /50x.png {
+        root /usr/share/nginx/www;
+    }
+
+    # logging
+    access_log  {{ deploy_root }}/log/{{ app_name }}-web.log;
+    error_log   {{ deploy_root }}/log/{{ app_name }}-web-error.log;
+
+}

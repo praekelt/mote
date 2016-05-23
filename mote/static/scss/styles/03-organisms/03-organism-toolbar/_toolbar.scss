@@ -1,0 +1,99 @@
+$toolbar-height: rem(35);
+$toolbar-padding: ($vertical-rhythm-unit * 0.75);
+
+.toolbar {
+    @include container;
+    padding: $toolbar-padding $site-gutter;
+    background-color: $color-grey;
+    border-top: 1px solid $color-grey-light;
+    z-index: 20;
+
+    .toolbar-version-picker {
+        @include span(2);
+    }
+
+    .toolbar-breakpoint-picker {
+        @include span(10);
+        @include last;
+        line-height: $toolbar-height;
+    }
+
+    select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance:none;
+        border:0;
+        border-bottom:1px solid $color-grey-light;
+        border-left:1px solid $color-grey-light;
+        background: url(../img/dropdown.svg) no-repeat right $color-grey-dark;
+        background-position: 90% 50%;
+        background-size: rem(10) auto;
+        padding-right: rem(15);
+        padding-left: rem(5);
+        margin-right: rem(30);
+        color:$color-grey-lightest;
+        height: $toolbar-height;
+        border-radius: 0px;
+    }
+
+    input {
+        border:0;
+        margin-left: rem(30);
+        background-color: $color-grey-dark;
+        border-left:1px solid $color-grey-light;
+        border-bottom:1px solid $color-grey-light;
+        padding-left: rem(5);
+        color:$color-grey-lightest;
+        width: 4rem;
+        height: $toolbar-height;
+    }
+
+    button {
+
+        background-color: $color-primary-1;
+        border:0;
+        color:$color-white;
+        font-size: rem(12);
+        padding:rem(0) rem(10);
+        height: $toolbar-height;
+        transition: all 0.2s ease-in-out;
+
+        &.disabled {
+            pointer-events: none;
+            background-color: $color-grey-lighter;
+        }
+
+        &:hover {
+            background-color: $color-grey-lighter;
+        }
+    }
+
+    .button-set {
+        float:right;
+    }
+}
+
+.sidebar-search {
+    margin-bottom: $site-gutter;
+
+    [type="search"] {
+        height: 1.5rem;
+        width: 100%;
+        padding: rem(5);
+    }
+
+    .search-results {
+        margin-top: $vertical-rhythm-unit;
+        border-bottom:1px solid $color-grey-lighter;
+
+        padding:20px;
+        width:100%;
+    }
+
+    .selected {
+        a {
+            color: $color-primary-1;
+
+        }
+    }
+}

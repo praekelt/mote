@@ -1,0 +1,50 @@
+$bp-alpha: map-get($breakpoints, alpha);
+$bp-beta: map-get($breakpoints, beta);
+$bp-gamma: map-get($breakpoints, gamma);
+$bp-delta: map-get($breakpoints, delta);
+$bp-iota: map-get($breakpoints, iota);
+$bp-zeta: map-get($breakpoints, zeta);
+$bp-eta: map-get($breakpoints, eta);
+$bp-omega: map-get($breakpoints, omega);
+
+
+
+$gutter: gutter();
+$gutter-small: gutter() / 2;
+$gutter-large: gutter() * 2;
+$vertical-rhythm-unit: map-get($measures, 'vertical-rhythm-unit');
+$site-gutter: map-get($measures, 'site-gutter');
+
+
+
+$color-primary-1: map-get-deep($colors, 'primary', 'primary-1');
+$color-primary-2: map-get-deep($colors, 'primary', 'primary-2');
+
+$color-black: map-get-deep($colors, 'greyscale', 'black');
+$color-white: map-get-deep($colors, 'greyscale', 'white');
+$color-grey: map-get-deep($colors, 'greyscale', 'grey');
+
+$color-grey-light: lighten($color-grey, 20%);
+$color-grey-lighter: lighten($color-grey, 30%);
+$color-grey-lightest: lighten($color-grey, 50%);
+$color-grey-dark: darken($color-grey, 20%);
+$color-grey-darker: darken($color-grey, 30%);
+$color-grey-darkest: darken($color-grey, 50%);
+
+
+$color-accent-info: map-get-deep($colors, 'accents', 'info');
+$color-accent-warning: map-get-deep($colors, 'accents', 'warning');
+$color-accent-danger: map-get-deep($colors, 'accents', 'danger');
+$color-accent-success: map-get-deep($colors, 'accents', 'success');
+
+
+
+$font-serif: map-get-deep($typography, 'families', 'serif');
+$font-sans-serif: map-get-deep($typography, 'families', 'sans-serif');
+
+$base-font-size: map-get-deep($typography, 'base', 'font-size');
+$base-line-height: map-get-deep($typography, 'base', 'line-height');
+
+
+$anim-base-easing: map-get($animations, 'base-easing');
+$anim-base-duration: map-get($animations, 'base-duration');

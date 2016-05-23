@@ -1,0 +1,29 @@
+body > header {
+    @include container;
+    padding: $vertical-rhythm-unit 0;
+
+    background-color: map-get-deep($header-config, 'colors', 'background-color');
+    border-bottom: 1px solid map-get-deep($header-config, 'colors', 'border-color');
+
+    .logo {
+        float: left;
+        display: block;
+        img {
+            height: map-get-deep($header-config, 'structure', 'elements-height');
+            display: block;
+        }
+    }
+
+    nav {
+        font-family: map-get-deep($typography, families, headings) map-get-deep($typography, families, sans-serif);
+        text-transform: uppercase;
+    }
+
+    nav > [role="menu"] {
+        float: right;
+
+        & > [role="menuitem"] {
+            line-height: map-get-deep($header-config, 'structure', 'elements-height');
+        }
+    }
+}

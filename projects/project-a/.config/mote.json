@@ -1,0 +1,24 @@
+{
+    "globals_dir": "website/src/globals",
+    "pattern_dir": "website/src/patterns",
+    "sorting": {
+        "molecules": [
+            "mooole",
+            "button"
+        ],
+        "atoms": [
+            "atooms",
+            "button",
+            "peter"
+        ]
+    },
+    "title": "Kevro",
+    "ui_config": {
+        "colors": {
+            "primary": "#ffffff",
+            "secondary": "#000000",
+            "tertiary": "#b4da55"
+        },
+        "logo": "logo.png"
+    }
+}

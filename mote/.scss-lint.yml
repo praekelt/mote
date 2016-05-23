@@ -1,0 +1,22 @@
+scss_files: 'project-source/fed-src/app/**/*.scss'
+
+linters:
+    PlaceholderInExtend:
+        enabled: false
+
+    Indentation:
+        character: space
+        width: 4
+
+    NestingDepth:
+        max_depth: 5
+
+    PropertySortOrder:
+        enabled: true
+        order: smacss
+
+    StringQuotes:
+        style: double_quotes
+
+    DuplicateProperty:
+        enabled: false

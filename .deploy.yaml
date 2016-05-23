@@ -1,0 +1,10 @@
+buildscript: scripts/build
+postinstall: scripts/postinstall.sh
+pip:
+ - gunicorn
+dependencies:
+ - nginx
+ - postgresql-server-dev-all
+ - postgresql
+ - postgis
+ - postgresql-9.3-postgis-scripts

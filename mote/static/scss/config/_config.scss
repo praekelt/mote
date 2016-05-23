@@ -1,0 +1,137 @@
+$susy: (
+    columns: 12,
+    gutters: 0.5,
+    math: fluid,
+    output: float,
+    gutter-position: after,
+    global-box-sizing: border-box
+);
+
+$breakpoints: (
+    alpha: em(320),
+    beta: em(408),
+    gamma: em(992),
+    delta: em(1200),
+    iota: em(1441),
+    zeta: em(1921),
+    eta: em(2561),
+    omega: em(3361)
+);
+
+$measures: (
+    "vertical-rhythm-unit": rem(20),
+    "site-gutter": rem(40)
+);
+
+$colors: (
+    "primary": (
+        "primary-1": #4252a4,
+        "primary-2": #555555
+    ),
+    "greyscale": (
+        "black": #000000,
+        "white": #ffffff,
+        "grey": #697077
+    ),
+    "accents": (
+        "info": #25A7CF,
+        "warning": #d7750b,
+        "danger": #b11f1f,
+        "success": #0aa20a
+    )
+);
+
+$animations: (
+    "base-duration": .25s,
+    "base-easing": ease-in-out
+);
+
+$typography: (
+    "families": (
+        "serif": (Georgia, serif),
+        "sans-serif": (Helvetica, Arial, sans-serif),
+        "headings": "Lato Thin",
+        "body": "Mote Regular"
+    ),
+    "base": (
+        "font-size": 14px,
+        "line-height": 1.618
+    )
+);
+
+$headings: (
+    h1: (
+        "font-size": rem(70),
+        "line-height": 1,
+        "letter-spacing": 0,
+        "word-spacing": 0,
+        "margin": rem(20)
+    ),
+    h2: (
+        "font-size": rem(55),
+        "line-height": 1,
+        "letter-spacing": 0,
+        "word-spacing": 0,
+        "margin": rem(20)
+    ),
+    h3: (
+        "font-size": rem(35),
+        "line-height": 1,
+        "letter-spacing": 0,
+        "word-spacing": 0,
+        "margin": rem(20)
+    ),
+    h4: (
+        "font-size": rem(25),
+        "line-height": 1,
+        "letter-spacing": 0,
+        "word-spacing": 0,
+        "margin": rem(20)
+    ),
+    h5: (
+        "font-size": rem(18),
+        "line-height": 1,
+        "letter-spacing": 0,
+        "word-spacing": 0,
+        "margin": rem(20)
+    ),
+    h6: (
+        "font-size": rem(16),
+        "line-height": 1,
+        "letter-spacing": 0,
+        "word-spacing": 0,
+        "margin": rem(20)
+    )
+);
+
+
+
+$menu-config: (
+    "colors": (
+        "default": map-get-deep($colors, "greyscale", "grey"),
+        "interactive": map-get-deep($colors, "primary", "primary-1")
+    ),
+    "structure": (
+        "horizontal-spacing": map-get($measures, "vertical-rhythm-unit") * 1.25,
+        "vertical-spacing": map-get($measures, "vertical-rhythm-unit")
+    )
+);
+
+$header-config: (
+    "colors": (
+        "background-color": map-get-deep($colors, "greyscale", "white"),
+        "border-color": map-get-deep($colors, "greyscale", "grey")
+    ),
+    "structure": (
+        "elements-height": map-get($measures, "vertical-rhythm-unit") * 2
+    )
+);
+
+$body-config: (
+    "colors": (
+        "background-color": map-get-deep($colors, "greyscale", "white")
+    ),
+    "structure": (
+        "gutters": map-get($measures, "vertical-rhythm-unit") * 2
+    )
+);

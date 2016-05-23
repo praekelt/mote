@@ -1,0 +1,34 @@
+.sg-hidden-area-toggler {
+
+    display: inline-block;
+    margin-left: $vertical-rhythm-unit;
+    text-decoration: none;
+
+
+    .off-text,
+    .on-text {
+        font-size: 1rem;
+        line-height: 1rem;
+        font-weight: 100;
+    }
+
+    &.off {
+        .on-text {
+            display: none;
+        }
+
+        .off-text {
+            color: $color-accent-success;
+        }
+    }
+
+    &.on {
+        .on-text {
+            color: $color-accent-danger;
+        }
+
+        .off-text {
+            display: none;
+        }
+    }
+}

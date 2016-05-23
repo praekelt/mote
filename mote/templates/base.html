@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+{% load staticfiles %}
+
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" type="text/css" href="{% static "css/fonts.css" %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static "css/mote.css" %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static "js/libs/prism/css/prism.css" %}"/>
+    <script src="{% static "js/libs/jquery/js/jquery.js" %}"></script>
+    <script src="{% static "js/libs/sticky-kit/js/jquery.sticky-kit.js" %}"></script>
+    <script src="{% static "js/libs/prism/js/prism.js" %}"></script>
+    <script src="{% static "js/libs/hideseek/js/jquery.hideseek.js" %}"></script>
+    <script src="{% static "js/libs/lazysizes/js/lazysizes.js" %}"></script>
+    <script src="{% static "js/mote.js" %}"></script>
+
+</head>
+<body data-library="{{ library }}">
+
+    {% block header %}
+    <header role="banner">
+        <div class="wrapper">
+            <a href="{% url "mote:home" %}" class="logo">
+                <img src="{% static "img/logo.png" %}" alt="" />
+            </a>
+            <nav>
+                <ul role="menu" class="horizontal">
+                    {% comment %}
+                    <li role="menuitem">
+                        <a href="{% url "mote:documentation" %}" class="{% if active_page == 'docs' %}active{% endif %}">Documentation</a>
+                    </li>
+                    <li role="menuitem" >
+                        <a href="{% url "mote:brand" %}" class="{% if active_page == 'brand' %}active{% endif %}">Brand Guide</a>
+                    </li>
+                    <li role="menuitem">
+                        <a href="{% url 'mote:project' library=library %}" class="{% if active_page == 'patterns' %}active{% endif %}">Pattern Library</a>
+                    </li>
+                    {% endcomment %}
+                </ul>
+            </nav>
+        </div>
+    </header>
+    {% endblock %}
+
+    <section role="section" class="hero {{ pattern.id }}">
+        <div class="wrapper">
+            {% block hero %}
+            {% endblock %}
+        </div>
+    </section>
+
+    {% comment %}
+    {% block toolbar %}
+    {% endblock %}
+    {% endcomment %}
+
+    <main role="main">
+        <div class="wrapper">
+            <aside role="sidebar">
+
+
+                {% if active_category %}
+
+                    <form class="sidebar-search">
+                        <input type="search" placeholder="Search pattern library">
+                        <div class="search-results">
+                            <ul role="menu" class="search-list vertical">
+
+                                {% for dict in menu_items %}
+                                    {% for category, items in dict.items %}
+                                        {% for item in items %}
+
+                                        <li role="menuitem">
+                                            <a href="{% url 'mote:project' category %}#mote_{{ item }}" class="">{{ category }} - {{ item }}</a>
+                                        </li>
+                                        {% endfor %}
+
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </form>
+                {% endif %}
+
+                {% comment %}
+                <div class="creator">
+                  <button id="create-pattern">Create New</button>
+                  <div class="creator-input">
+                    <label for="pattern-type">Pattern:</label>
+                    <select id="pattern-type" required>
+                        {% for key, value in menu_items.items %}
+
+                            <option value="{{ key }}">{{ key|title }}</option>
+
+                        {% endfor %}
+                    </select>
+                    <br/>
+                    <label for="pattern-name">Name:</label>
+                    <input type="text" required id="pattern-name"/>
+                    <label for="pattern-desc">Description:</label>
+                    <input type="text" required id="pattern-desc"/>
+
+                  </div>
+                  <button id="submit-pattern">Submit</button>
+                </div>
+                {% endcomment %}
+
+                {% block menu %}
+                {% endblock %}
+
+            </aside>
+
+            <section role="section">
+                {% block content %}
+                {% endblock %}
+            </section>
+
+        </div>
+    </main>
+
+</body>
+</html>
+
+<script src="{% static "js/animations.js" %}"></script>

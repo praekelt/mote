@@ -1,0 +1,31 @@
+{
+    "ecmaFeatures": {
+        "jsx": true
+    },
+    "rules": {
+        "quotes": [1, "single"],
+        "strict": [2, "global"],
+        "require-jsdoc": [1],
+        "valid-jsdoc": [2],
+        "block-spacing": [2],
+        "brace-style": [2, "1tbs", { "allowSingleLine": false }],
+        "camelcase": [2, { "properties": "always" }],
+        "block-spacing": [2, "always"],
+        "comma-style": [2, "last"],
+        "comma-spacing": [2, { "before": false, "after": true }],
+        "indent": [2, 4],
+        "no-ternary": [0],
+        "quote-props": [2, "always"],
+        "space-before-function-paren": [2, "never"],
+        "padded-blocks": [2, "never"],
+        "semi-spacing": [2],
+        "space-infix-ops": [2],
+        "space-before-keywords": [2, "always"],
+        "space-in-parens": [2, "never"],
+        "no-mixed-spaces-and-tabs": [2]
+    },
+    "env": {
+        "amd": true,
+        "es6": true
+    }
+}

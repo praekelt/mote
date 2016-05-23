@@ -1,0 +1,7 @@
+{
+    "Button": {
+        "tag": "button",
+        "modifiers": "Button--solid Button--yellowButtercup",
+        "text": "Lorem ipsum"
+    }
+}

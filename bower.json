@@ -1,0 +1,45 @@
+{
+  "name": "kevro-styleguide",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "CSergienko <chris@praekelt.com>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/praekelt/kevro-styleguide",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "modular-scale": "2.1.1",
+    "susy": "2.2.12",
+    "bourbon": "4.2.6",
+    "compass-breakpoint": "breakpoint-sass#2.6.1",
+    "sassy-maps": "0.4.0",
+    "saffron": "0.2.3",
+    "sanitize-css": "3.3.0"
+  },
+  "dependencies": {
+    "AppendAround": "1.0.0",
+    "classlist": "2014.12.13",
+    "conditionizr": "4.5.1",
+    "filament-sticky": "0.1.6",
+    "html-inspector": "0.8.2",
+    "jquery": "2.2.1",
+    "lazysizes": "1.4.0",
+    "owl.carousel": "OwlCarousel2#2.0.0-beta.3",
+    "picturefill": "3.0.2",
+    "respond": "1.4.2",
+    "sumoselect": "2.0.2",
+    "webfontloader": "1.6.21",
+    "zepto": "1.1.6",
+    "tether-drop": "1.4.2",
+    "vex": "2.3.3"
+  }
+}

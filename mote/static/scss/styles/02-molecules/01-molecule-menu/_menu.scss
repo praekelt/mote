@@ -1,0 +1,131 @@
+[role="menu"] {
+    @include no-list;
+    position: relative;
+
+    &.horizontal {
+        & > [role="menuitem"] {
+            float: left;
+
+            & + [role="menuitem"] {
+                margin-left: map-get-deep($menu-config, 'structure', 'horizontal-spacing');
+            }
+        }
+    }
+
+    &.vertical {
+        &.tier-1 {
+            & > [role="menuitem"] {
+                margin-bottom: map-get-deep($menu-config, 'structure', 'vertical-spacing');
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        &.tier-2 {
+
+        }
+    }
+
+    [role="menuitem"] {
+
+
+        &.sortable-ghost {
+            background-color: $color-grey-lighter;
+            opacity: 0.3;
+        }
+
+        &.sortable-chosen {
+            background-color: lighten($color-grey-lighter, 15%);
+        }
+
+        a {
+            text-decoration: none;
+            color: map-get-deep($menu-config, 'colors', 'default');
+            display: block;
+            height: 100%;
+            transition: color $anim-base-duration $anim-base-easing;
+
+            &:hover,
+            &:focus,
+            &:visited:hover,
+            &:visited:focus,
+            &:active,
+            &.active {
+                color: map-get-deep($menu-config, 'colors', 'interactive');
+            }
+
+            // Sub Navigation
+            & + [role="menu"] {
+                display: none;
+
+                [role="menuitem"] {
+                    padding-left: map-get-deep($menu-config, 'structure', 'horizontal-spacing');
+                    font-size: 80%;
+
+                    padding: rem(8) 0 rem(8) map-get-deep($menu-config, 'structure', 'horizontal-spacing');
+                    border-top: 1px solid $color-grey-lighter;
+
+
+                    &.sortable-ghost {
+                        background-color: $color-grey-lighter;
+                        opacity: 0.3;
+                    }
+
+                    &.sortable-chosen {
+                        background-color: lighten($color-grey-lighter, 15%);
+                        border-bottom: 1px solid $color-grey-lighter;
+                    }
+
+                    &.orange {
+                        color: red;
+                        &:after{
+                            background-color: lighten($color-accent-warning, 15%);
+                        }
+                    }
+
+                    &.green {
+                        &:after{
+                            background-color: lighten($color-accent-success, 15%);
+                        }
+                    }
+
+                    &.blue {
+                        &:after{
+                            background-color: lighten($color-accent-info, 15%);
+                        }
+                    }
+
+                    &.red {
+                        &:after{
+                            background-color: lighten($color-accent-danger, 15%);
+                        }
+                    }
+
+                    &:last-child {
+                        border-bottom: 1px solid $color-grey-lighter;
+                    }
+
+                    &:after {
+                        background-color: $color-grey-lightest;
+                        width:8px;
+                        height:8px;
+                        content: "";
+                        position:absolute;
+                        left:rem(8);
+                        margin-top:-15px;
+                    }
+                }
+            }
+
+            &.active {
+                & + [role="menu"] {
+                    display: block;
+                    margin-top: rem(8);
+                }
+            }
+
+        }
+    }
+}

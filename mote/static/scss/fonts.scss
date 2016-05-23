@@ -1,0 +1,10 @@
+@import "../../bower_components/bourbon/app/assets/stylesheets/_bourbon";
+
+@include font-face("Lato Light", "../fonts/Lato/lato-light", $file-formats: eot woff2 woff svg ttf);
+
+@include font-face("Novecento Regular", "../fonts/Novecento/Novecentosanswide-Normal", $file-formats: eot woff2 woff svg ttf);
+
+
+@include font-face("Lato Thin", "../fonts/Lato/lato-hairline-webfont", $file-formats: eot woff2 woff svg ttf);
+
+@include font-face("Lato Bold", "../fonts/Lato/lato-bold-webfont", $file-formats: eot woff2 woff svg ttf);
