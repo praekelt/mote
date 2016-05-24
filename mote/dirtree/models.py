@@ -255,7 +255,7 @@ class Project(MetadataMixin):
     def __init__(self, id):
         self._id = id
         self._parent = None
-        self._root = os.path.join(os.path.dirname(__file__), "..", "projects", id)
+        self._root = os.path.join(settings.ROOT_DIR, "projects", id)
         super(Project, self).__init__()
 
     @cached_property

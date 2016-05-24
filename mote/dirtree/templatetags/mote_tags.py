@@ -81,7 +81,7 @@ class RenderElementNode(CachedNode):
                     r = unicode(r)
                 resolved[k] = r
 
-        from mote.models import Variation
+        from mote.dirtree.models import Variation
         if isinstance(obj, Variation):
             url = reverse(
                 "mote:variation-partial",

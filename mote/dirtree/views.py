@@ -14,7 +14,7 @@ from django.templatetags.static import PrefixNode
 from django.utils.six.moves.urllib.parse import urljoin
 from django.conf import settings
 
-from mote.models import Project, Aspect, Pattern, Element, Variation, get_object
+from .models import Project, Aspect, Pattern, Element, Variation, get_object
 
 
 class HomeView(TemplateView):
@@ -23,7 +23,7 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
-        li = [get_object(Project, id) for id in os.listdir(os.path.join(os.path.dirname(__file__), "..", "projects"))]
+        li = [get_object(Project, id) for id in os.listdir(os.path.join(settings.ROOT_DIR, "projects"))]
         li.sort(lambda a, b: cmp(a.metadata.get("position"), a.metadata.get("position")))
         context["projects"] = li
         return context
