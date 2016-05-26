@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'mote',
     'mote.repositories',
     'mote.projects',
+    'mote.utils',
     'mote.dirtree',
 ]
 

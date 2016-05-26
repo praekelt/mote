@@ -1,22 +1,24 @@
+# Python and Django
 *.swp
 *.pyc
 *.egg-info
-*.swo
-mote.sqlite3
 .pydevproject
-.project
-.installed.cfg
-.mr.developer.cfg
-bin/
-develop-eggs/
 media/
-parts/
-.DS_Store
+develop-eggs/
+ve/
+
+# JS
 node_modules
 bower_components
-ve/
 .sass-cache/
 npm-debug.log
-add_test_users.py
-project/settings_local.py
+
+# Other
+*.swo
+.DS_Store
+
+# Mote
+/repositories/
+mote/settings/local*
+mote.sqlite3
 dist/

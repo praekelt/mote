@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block content %}
+    <h2>{{ object.name }}</h2>
+    <p>Slug: {{ object.slug }}</p>
+    <p>Description: {{ object.description }}</p>
+    <p>Created: {{ object.created_on|date:"DATETIME_FORMAT" }}</p>
+{% endblock %}
