@@ -1,9 +1,7 @@
 from __future__ import unicode_literals
 
 from celery import shared_task
-from django.utils.timezone import now
 from structlog import get_logger
-from columbia import git
 
 from . import models
 from mote.utils.models import TaskLock
@@ -23,41 +21,30 @@ def _get_repository_copy(repository_pk):
         log.warn("Could not find a Repository with given pk")
         return
 
-    if not repository.handler.ready:
-        try:
-                repository.handler.clone()
-        except git.RepositoryError as exc:
-            # Cloning the repository has failed, log the failure.
-            message = str(exc)
-            log.error("Could not clone repository", message=message)
-            return
-    else:
-        repository.handler.update()
+    try:
+        repository.clone()
+    except models.RepositoryAlreadyExists:
+        repository.update()
+    except models.MoteRepositoryError as exc:
+        # Cloning the repository has failed, log the failure for now but
+        # we could potentially retry here.
+        message = str(exc)
+        log.error("Could not clone repository", message=message)
+        return
 
-    updated_on = now()
-    repository.ready = True
-    repository.updated_on = updated_on
-    repository.save()
-    # Add all worktrees
-    for wt in repository.handler.worktrees():
-        worktree, created = repository.worktrees.get_or_create(
-            branch=wt.branch,
-            defaults={
-                "path": wt.path,
-                "ready": True,
-                "head": wt.head,
-                "updated_on": updated_on
-            }
-        )
+    # Add all the worktrees currently defined in the repo. This will normally
+    # be just the single default worktree after a repo is cloned.
+    repository.sync_worktrees()
 
 
 @shared_task(ignore_result=True)
 def get_repository_copy_with_lock(repository_pk, expire=300):
+    """A wraper task to call _get_repository_copy with a DB-backed lock."""
     log = logger.bind(repository_pk=repository_pk)
     # We need a lock here to prevent multiple processess trying to access the
     # same repository on disk, so we want to lock on the repository pk as that
     # will guarantee repo level isolation. This is also why we can't use the
-    # generic anduin.utils lock decorator.
+    # generic mote.utils lock decorator.
     creator = "{function}-{repository_pk}".format(
         function="mote.repositories.tasks.get_repository_copy_with_lock",
         repository_pk=repository_pk
