@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block content %}
+    <h2>Aspects</h2>
+    {% for aspect in aspects %}
+        <p>Name: <a href="{% url 'projects:patterns:aspect-detail' project_slug=base_url_kwargs.project_slug repository_slug=base_url_kwargs.repository_slug aspect_slug=aspect.name %}">{{ aspect.name }}</a></p>
+    {% endfor %}
+{% endblock %}

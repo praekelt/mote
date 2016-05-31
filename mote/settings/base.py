@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'mote.projects',
     'mote.utils',
     'mote.dirtree',
+    'mote.patterns',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -46,7 +47,7 @@ ROOT_URLCONF = 'mote.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(ROOT_DIR, 'projects')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

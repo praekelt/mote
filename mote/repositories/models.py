@@ -5,6 +5,7 @@ try:
 except ImportError:
     from urlparse import urlparse
 
+import os
 from posixpath import basename
 
 import wrapt
@@ -82,6 +83,10 @@ class Repository(models.Model):
                 sender=self.__class__,
                 repository_pk=self.pk
             )
+
+    @property
+    def default_worktree(self):
+        return self.worktrees.filter(default=True).first()
 
     @classmethod
     def from_db(cls, db, field_names, values):
@@ -195,9 +200,14 @@ class Worktree(models.Model):
     path = models.CharField(max_length=255)
     ready = models.BooleanField(default=False)
     head = models.CharField(max_length=255, default="")
+    default = models.BooleanField(default=False)
     updated_on = models.DateTimeField(null=True)
 
     @require_ready_state
     def pull(self):
         self.repository.handler.update_worktree(self.branch)
         self.updated_on = now()
+
+    @property
+    def patterns_path(self):
+        return os.path.join(self.path, self.repository.patterns_path)

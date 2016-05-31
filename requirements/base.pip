@@ -9,4 +9,5 @@ redis==2.10.5
 celery==3.1.23
 wrapt==1.10.8
 structlog==16.1.0
+scandir==1.2
 -e git+https://github.com/jpaidoussi/columbia-git.git#egg=columbia.git

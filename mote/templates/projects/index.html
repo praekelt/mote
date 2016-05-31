@@ -7,7 +7,7 @@
     <ul>
         {% for project in object_list %}
             <li>
-                <a href="{% url 'mote-projects:project-detail' pk=project.pk %}">{{ project.name }}</a>
+                <a href="{% url 'projects:project-detail' slug=project.slug %}">{{ project.name }}</a>
             </li>
         {% endfor %}
     </ul>

@@ -7,6 +7,6 @@ urlpatterns = [
     url(r"^d/", include("mote.dirtree.urls", namespace="mote")),
     url(
         r"^projects/",
-        include("mote.projects.urls", namespace="mote-projects")
+        include("mote.projects.urls", namespace="projects")
     ),
 ]

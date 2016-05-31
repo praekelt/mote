@@ -18,7 +18,10 @@ class Project(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
 
     def get_absolute_url(self):
-        return reverse("mote-projects:project-detail", kwargs={"pk": self.pk})
+        return reverse(
+            "projects:project-detail",
+            kwargs={"slug": self.slug}
+        )
 
     def add_repository_from_url(self, url):
         repo, created = Repository.objects.get_or_create_from_url(url)
@@ -35,7 +38,7 @@ class Project(models.Model):
 
 
 class ProjectRepository(models.Model):
-    project = models.ForeignKey(Project)
-    repository = models.ForeignKey(Repository)
+    project = models.ForeignKey(Project, related_name="repos_link")
+    repository = models.ForeignKey(Repository, related_name="project_link")
     name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
