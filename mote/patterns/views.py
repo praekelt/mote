@@ -4,17 +4,17 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView, RedirectView
 
 from mote.projects.models import Project
-from mote.livedtl.library import Pattern
+from mote.livedtl.library import Aspect
 
 
 class PatternView(TemplateView):
 
     def dispatch(self, request, *args, **kwargs):
-        self.aspect = kwargs.get("aspect_slug", None)
+        aspect_slug = kwargs.get("aspect_slug", None)
         self.base_url_kwargs = {
             "project_slug": kwargs["project_slug"],
             "repository_slug": kwargs["repository_slug"],
-            "aspect_slug": self.aspect
+            "aspect_slug": aspect_slug
         }
         self.project = get_object_or_404(Project, slug=kwargs["project_slug"])
         self.repository = get_object_or_404(
@@ -22,7 +22,9 @@ class PatternView(TemplateView):
             project_link__slug=kwargs["repository_slug"],
         )
         self.worktree = self.repository.default_worktree
-        self.renderer = Pattern
+        self.renderer = Aspect
+        if aspect_slug is not None:
+            self.aspect = Aspect(aspect_slug, self.worktree.patterns_path)
         return super(PatternView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -37,8 +39,7 @@ class IndexView(PatternView):
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
         context["aspects"] = self.renderer.discover(
-            self.worktree.patterns_path,
-            "aspects"
+            self.worktree.patterns_path
         )
         return context
 
@@ -60,11 +61,7 @@ class PatternIndexView(PatternView):
     def get_context_data(self, **kwargs):
         context = super(PatternIndexView, self).get_context_data(**kwargs)
         kind = kwargs["kind"]
-        context["patterns"] = self.renderer.pattern_types
+        context["patterns"] = self.renderer.kinds
         context["kind"] = kind
-        context["elements"] = self.renderer.discover(
-            self.worktree.patterns_path,
-            kind,
-            aspect=self.aspect
-        )
+        context["elements"] = getattr(self.aspect, kind)
         return context
