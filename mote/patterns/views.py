@@ -24,7 +24,11 @@ class PatternView(TemplateView):
         self.worktree = self.repository.default_worktree
         self.renderer = Aspect
         if aspect_slug is not None:
-            self.aspect = Aspect(aspect_slug, self.worktree.patterns_path)
+            self.aspect = Aspect.get(
+                aspect_slug,
+                self.worktree.patterns_path,
+                extra_context=self.base_url_kwargs
+            )
         return super(PatternView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -64,4 +68,17 @@ class PatternIndexView(PatternView):
         context["patterns"] = self.renderer.kinds
         context["kind"] = kind
         context["elements"] = getattr(self.aspect, kind)
+        return context
+
+
+class PatternIframeView(PatternView):
+    template_name = "patterns/patterns-iframe.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(PatternIframeView, self).get_context_data(**kwargs)
+        kind = kwargs["kind"]
+        element_name = kwargs["element"]
+        context["kind"] = kind
+        elements = getattr(self.aspect, kind)
+        context["element"] = getattr(elements, element_name)
         return context

@@ -18,6 +18,11 @@ urlpatterns = [
                 views.PatternIndexView.as_view(),
                 name="pattern-list"
             ),
+            url(
+                r"^(?P<kind>[\w-]+)/(?P<element>[\w-]+)/iframe$",
+                views.PatternIframeView.as_view(),
+                name="pattern-iframe"
+            ),
         ])
     )
 ]

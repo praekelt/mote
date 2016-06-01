@@ -5,6 +5,9 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, os.pardir))
 
+# Mote repository checkout location
+REPOSITORY_BASE_DIR = os.path.join(ROOT_DIR, 'repositories')
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'agkw^b9n$+e5pe^lm4pila$lnv+h495b!+)5z!m#mcdv793102'
 
@@ -27,8 +30,8 @@ INSTALLED_APPS = [
     'mote.repositories',
     'mote.projects',
     'mote.utils',
-    'mote.dirtree',
     'mote.patterns',
+    'mote.livedtl',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -47,7 +50,7 @@ ROOT_URLCONF = 'mote.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [REPOSITORY_BASE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,4 +124,3 @@ STATICFILES_DIRS = [
 # Mote Specific Settings
 ALLOWED_URL_SCHEMES = ['http', 'https', 'git']
 GIT_BINARY = '/usr/local/bin/git'
-REPOSITORY_BASE_DIR = os.path.join(ROOT_DIR, 'repositories')

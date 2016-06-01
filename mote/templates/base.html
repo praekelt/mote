@@ -27,7 +27,7 @@
     {% block header %}
     <header role="banner">
         <div class="wrapper">
-            <a href="{% url "mote:home" %}" class="logo">
+            <a href="" class="logo">
                 <img src="{% static "img/logo.png" %}" alt="" />
             </a>
             <nav>
@@ -78,7 +78,7 @@
                                         {% for item in items %}
 
                                         <li role="menuitem">
-                                            <a href="{% url 'mote:project' category %}#mote_{{ item }}" class="">{{ category }} - {{ item }}</a>
+                                            <a href="" class="">{{ category }} - {{ item }}</a>
                                         </li>
                                         {% endfor %}
 

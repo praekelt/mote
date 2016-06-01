@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% load staticfiles mote_tags %}
+{% load staticfiles %}
 
 {% block hero %}
     {% if intro %}
@@ -31,8 +31,6 @@
 {% block content %}
     {% for element in elements %}
         <a name="element-{{ element.name }}">&nbsp;</a>
-        {% comment %}
-        {% render_element_index element %}
-        {% endcomment %}
+        {{ element.index|safe }}
     {% endfor %}
 {% endblock %}
