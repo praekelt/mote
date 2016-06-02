@@ -45,45 +45,28 @@ class BasePatternElement(object):
         """Return the relative path to this element."""
         return self.path.split(self.engine.base_path)[1]
 
-    def get_template(self):
+    @cached_property
+    def template(self):
         path = os.path.join(self.relative_path, self.template_name)
         return self.engine.template_engine.get_template(path)
 
     @cached_property
-    def node(self):
-        # The actual element is expected to a defined as a macro inside
-        # the retrieved template.
-        template = self.get_template()
-        try:
-            macro = getattr(template.template.module, self.name)
-        except AttributeError:
-            # todo: think of appropriate error to raise here
-            raise
-        return macro
-
-    @cached_property
     def variants(self):
         # Variants are defined inline with the base element as macros.
-        template = self.get_template()
+        template = self.template
         macro_names = [
             macro for macro in template.template.module.__dict__
-            if not macro.startswith("_")
+            if macro.startswith("{0}__".format(self.name))
         ]
-        variants = {}
+        variants = []
         for name in macro_names:
-            try:
-                macro = getattr(template.template.module, name)
-            except AttributeError:
-                # Could not actually resolve name into Macro
-                continue
             # Variations of this element are named <name>__<variant>.
             try:
                 element, variant = name.split("__")
             except ValueError:
                 # Not a variant name pattern, skip.
                 continue
-            variants[variant] = macro
-
+            variants.append(variant)
         return variants
 
     # -- Core API --
@@ -94,8 +77,10 @@ class BasePatternElement(object):
         pass
 
     def html(self, data, variant_name=None):
+        template = self.template
+        node = getattr(template.template.module, self.name)
         # Calling the node / macro will render the HTML.
-        return self.node(**data)
+        return node(**data)
 
     def source(self):
         pass

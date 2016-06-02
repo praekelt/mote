@@ -135,5 +135,5 @@ GIT_BINARY = '/usr/local/bin/git'
 
 MOTE_PATTERN_ENGINES = {
     'base': 'mote.patterns.library.BasePatternEngine',
-    'jinja2': 'mote.jina2fs.library.PatternEngine',
+    'jinja2': 'mote.jinja2fs.library.JinjaPatternEngine',
 }

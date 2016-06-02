@@ -3,3 +3,11 @@
         <a href="{{ item.url }}" class="">{{ item.name }}</a>
     </li>
 {%- endmacro %}
+
+{% macro menu_item__para(item) -%}
+    <li role="menuitem">
+        <p>
+        <a href="{{ item.url }}" class="">{{ item.name }}</a>
+        </p>
+    </li>
+{%- endmacro %}
