@@ -65,14 +65,16 @@ class JinjaPatternEngine(BasePatternEngine):
         ]
         elements = []
         for name in macro_names:
-            elements.append(
-                self.element_class(
-                    name,
-                    pattern,
-                    self,
-                    full_path
+            # Ignore variants
+            if "__" not in name:
+                elements.append(
+                    self.element_class(
+                        name,
+                        pattern,
+                        self,
+                        full_path
+                    )
                 )
-            )
 
         return elements
 

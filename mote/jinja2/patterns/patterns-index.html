@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block hero %}
+    {% if intro %}
+        {{ intro|safe }}
+    {% endif %}
+{% endblock %}
+
+{% block menu %}
+    <ul role="menu" class="vertical tier-1" id="sidebar-nav">
+        {% for ptn in patterns %}
+            <li role="menuitem">
+                {% do url_kwargs.update({'pattern':ptn}) %}
+                {% set the_url = url(url_namespace+':pattern-list', kwargs=url_kwargs) %}
+                <a href="{{ the_url }}" {% if ptn == pattern %} class="active"{% endif %}>{{ ptn }}</a>
+                {% if ptn == pattern %}
+                    <ul role="menu" class="vertical tier-2">
+                        {% for element in elements %}
+                        <li role="menuitem">
+                            <a href="{{ the_url }}#element-{{ element.name }}">{{ element.name }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+{% block content %}
+    {% for element in elements %}
+        <a name="element-{{ element.name }}">&nbsp;</a>
+        {{ element.index|safe }}
+    {% endfor %}
+{% endblock %}

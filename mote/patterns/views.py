@@ -1,39 +1,54 @@
 from __future__ import unicode_literals
 
+from django.conf import settings
+from django.core.urlresolvers import resolve
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView, RedirectView
 
 from mote.projects.models import Project
-from mote.livedtl.library import Aspect
+from .library import PatternLibrary
 
 
 class PatternView(TemplateView):
 
-    def dispatch(self, request, *args, **kwargs):
-        aspect_slug = kwargs.get("aspect_slug", None)
-        self.base_url_kwargs = {
-            "project_slug": kwargs["project_slug"],
-            "repository_slug": kwargs["repository_slug"],
-            "aspect_slug": aspect_slug
-        }
-        self.project = get_object_or_404(Project, slug=kwargs["project_slug"])
-        self.repository = get_object_or_404(
-            self.project.repositories,
-            project_link__slug=kwargs["repository_slug"],
-        )
-        self.worktree = self.repository.default_worktree
-        self.renderer = Aspect
-        if aspect_slug is not None:
-            self.aspect = Aspect.get(
-                aspect_slug,
-                self.worktree.patterns_path,
-                extra_context=self.base_url_kwargs
+    def _setup_instances(self):
+        # todo: get library type from repo
+        self.library_type = "jinja2"
+        if self.internal:
+            self.library_path = settings.MOTE_INTERNAL_PATTERN_LIBRARY
+        else:
+            self.project = get_object_or_404(
+                Project,
+                slug=self.url_kwargs["project"]
             )
+            self.repository = get_object_or_404(
+                self.project.repositories,
+                project_link__slug=self.url_kwargs["repository"],
+            )
+            self.worktree = self.repository.default_worktree
+            self.library_path = self.worktree.patterns_path
+
+    def dispatch(self, request, *args, **kwargs):
+        # Match the current URL to determine which namespace was called.
+        self.url_details = resolve(request.path_info)
+        self.url_kwargs = kwargs
+
+        # Determine if we are viewing the internal mote pattern library.
+        if "internal" in self.url_details.namespaces:
+            self.internal = True
+        else:
+            self.internal = False
+
+        self._setup_instances()
+
+        self.library = PatternLibrary(self.library_type, *self.library_path)
+
         return super(PatternView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(PatternView, self).get_context_data(**kwargs)
-        context["base_url_kwargs"] = self.base_url_kwargs
+        context["url_kwargs"] = self.url_kwargs
+        context["url_namespace"] = self.url_details.namespace
         return context
 
 
@@ -42,9 +57,7 @@ class IndexView(PatternView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
-        context["aspects"] = self.renderer.discover(
-            self.worktree.patterns_path
-        )
+        context["aspects"] = self.library.aspects()
         return context
 
 
@@ -52,10 +65,19 @@ class AspectIndexView(RedirectView):
     """Redirect to the Atom view as there is nothing to show in an aspect
     detail view.
     """
-    pattern_name = "projects:patterns:pattern-list"
+    pattern_name = ":pattern-list"
+
+    def dispatch(self, request, *args, **kwargs):
+        # Match the current URL to determine which namespace was called.
+        self.url_details = resolve(request.path_info)
+        return super(AspectIndexView, self).dispatch(request, *args, **kwargs)
 
     def get_redirect_url(self, *args, **kwargs):
-        kwargs["kind"] = "atoms"
+        kwargs["pattern"] = "atoms"
+        self.pattern_name = "{0}{1}".format(
+            self.url_details.namespace,
+            self.pattern_name
+        )
         return super(AspectIndexView, self).get_redirect_url(*args, **kwargs)
 
 
@@ -64,10 +86,13 @@ class PatternIndexView(PatternView):
 
     def get_context_data(self, **kwargs):
         context = super(PatternIndexView, self).get_context_data(**kwargs)
-        kind = kwargs["kind"]
-        context["patterns"] = self.renderer.kinds
-        context["kind"] = kind
-        context["elements"] = getattr(self.aspect, kind)
+        pattern = kwargs["pattern"]
+        context["patterns"] = self.library.patterns(self.url_kwargs["aspect"])
+        context["pattern"] = pattern
+        context["elements"] = self.library.elements(
+            self.url_kwargs["aspect"],
+            pattern
+        )
         return context
 
 
@@ -76,9 +101,13 @@ class PatternIframeView(PatternView):
 
     def get_context_data(self, **kwargs):
         context = super(PatternIframeView, self).get_context_data(**kwargs)
-        kind = kwargs["kind"]
+        pattern = kwargs["pattern"]
         element_name = kwargs["element"]
-        context["kind"] = kind
-        elements = getattr(self.aspect, kind)
-        context["element"] = getattr(elements, element_name)
+        context["pattern"] = pattern
+        element = self.library.element(
+            self.url_kwargs["aspect"],
+            pattern,
+            element_name
+        )
+        context["element_html"] = element.html()
         return context

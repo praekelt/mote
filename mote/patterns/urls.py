@@ -9,17 +9,20 @@ urlpatterns = [
     # List of available aspects.
     url(r"^$", views.IndexView.as_view(), name="aspect-list"),
     url(
-        r"(?P<aspect_slug>[\w-]+)/",
+        r"(?P<aspect>[\w-]+)/",
         include([
-            # Base aspect index.
-            url(r"^$", views.AspectIndexView.as_view(), name="aspect-detail"),
             url(
-                r"^(?P<kind>[\w-]+)/$",
+                r"^$",
+                views.AspectIndexView.as_view(),
+                name="aspect-detail"
+            ),
+            url(
+                r"^(?P<pattern>[\w-]+)/$",
                 views.PatternIndexView.as_view(),
                 name="pattern-list"
             ),
             url(
-                r"^(?P<kind>[\w-]+)/(?P<element>[\w-]+)/iframe$",
+                r"^(?P<pattern>[\w-]+)/(?P<element>[\w-]+)/iframe$",
                 views.PatternIframeView.as_view(),
                 name="pattern-iframe"
             ),

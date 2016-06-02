@@ -13,7 +13,8 @@ class SilentUndefined(Undefined):
 
 
 def environment(**options):
-    # options["undefined"] = SilentUndefined
+    options["undefined"] = SilentUndefined
+    options["extensions"] = ['jinja2.ext.do']
     env = Environment(**options)
     env.globals.update({
         "static": staticfiles_storage.url,

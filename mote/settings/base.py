@@ -137,3 +137,8 @@ MOTE_PATTERN_ENGINES = {
     'base': 'mote.patterns.library.BasePatternEngine',
     'jinja2': 'mote.jinja2fs.library.JinjaPatternEngine',
 }
+
+MOTE_INTERNAL_PATTERN_LIBRARY = (
+    os.path.join(BASE_DIR, 'jinja2'),
+    'library'
+)

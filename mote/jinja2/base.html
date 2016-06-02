@@ -28,7 +28,7 @@
             <a href="" class="logo">
                 <img src="{{ static('img/logo.png') }}" alt="" />
             </a>
-            {% import 'library/patterns/molecules.html' as molecules %}
+            {% import 'library/site/patterns/molecules.html' as molecules %}
             {% set nav_items = [{'url': url('projects:project-list'), 'name': 'Projects'},] %}
             {{ molecules.menu(nav_items) }}
         </div>

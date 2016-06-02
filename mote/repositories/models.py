@@ -210,4 +210,4 @@ class Worktree(models.Model):
 
     @property
     def patterns_path(self):
-        return os.path.join(self.path, self.repository.patterns_path)
+        return (self.path, self.repository.patterns_path)
