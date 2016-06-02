@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Projects</h2>
+    <ul>
+        {% for project in object_list %}
+            <li>
+                <a href="{{ url("projects:project-detail", kwargs={"slug": project.slug}) }}">{{ project.name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -49,6 +49,14 @@ ROOT_URLCONF = 'mote.urls'
 
 TEMPLATES = [
     {
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'environment': 'mote.jinja2.environment',
+        },
+    },
+    {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [REPOSITORY_BASE_DIR],
         'APP_DIRS': True,
@@ -124,3 +132,8 @@ STATICFILES_DIRS = [
 # Mote Specific Settings
 ALLOWED_URL_SCHEMES = ['http', 'https', 'git']
 GIT_BINARY = '/usr/local/bin/git'
+
+MOTE_PATTERN_ENGINES = {
+    'base': 'mote.patterns.library.BasePatternEngine',
+    'jinja2': 'mote.jina2fs.library.PatternEngine',
+}

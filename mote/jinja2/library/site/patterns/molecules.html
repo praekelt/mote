@@ -1,0 +1,11 @@
+{% import 'library/patterns/atoms.html' as atoms %}
+
+{% macro menu(items) -%}
+    <nav>
+        <ul role="menu" class="horizontal">
+        {% for item in items %}
+            {{ atoms.menu_item(item) }}
+        {% endfor %}
+        </ul>
+    </nav>
+{%- endmacro %}
