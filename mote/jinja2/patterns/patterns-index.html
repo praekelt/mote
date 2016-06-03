@@ -28,8 +28,8 @@
 {% endblock %}
 
 {% block content %}
-    {% for element in elements %}
+    {% for element, iframe_url in elements.items() %}
         <a name="element-{{ element.name }}">&nbsp;</a>
-        {{ element.index|safe }}
+        {% include [ element.get_index_template(), "patterns/element/index.html"] %}
     {% endfor %}
 {% endblock %}

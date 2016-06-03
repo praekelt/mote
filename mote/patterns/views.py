@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 from django.conf import settings
-from django.core.urlresolvers import resolve
+from django.core.urlresolvers import resolve, reverse
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView, RedirectView
 
@@ -84,15 +84,24 @@ class AspectIndexView(RedirectView):
 class PatternIndexView(PatternView):
     template_name = "patterns/patterns-index.html"
 
+    def get_element_url(self, element):
+        kwargs = self.url_kwargs.copy()
+        kwargs.update({"element": element})
+        return reverse(
+            self.url_details.namespace + ":pattern-iframe",
+            kwargs=kwargs
+        )
+
     def get_context_data(self, **kwargs):
         context = super(PatternIndexView, self).get_context_data(**kwargs)
         pattern = kwargs["pattern"]
         context["patterns"] = self.library.patterns(self.url_kwargs["aspect"])
         context["pattern"] = pattern
-        context["elements"] = self.library.elements(
+        elements = self.library.elements(
             self.url_kwargs["aspect"],
             pattern
         )
+        context["elements"] = {e: self.get_element_url(e.name) for e in elements}
         return context
 
 

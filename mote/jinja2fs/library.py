@@ -22,7 +22,14 @@ class JinjaPatternElement(BasePatternElement):
         )
         return self.engine.template_engine.get_template(path)
 
-    def html(self, data, variant_name=None):
+    def get_metadata_path(self):
+        return os.path.join(
+            self.relative_path,
+            self.pattern,
+            self.name
+        )
+
+    def html(self, data={}, variant_name=None):
         node = self._get_template_node(self.name)
         return node(**data)
 

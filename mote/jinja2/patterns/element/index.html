@@ -1,0 +1,137 @@
+<div class="sg-wrapper" id="element-{{ element.id }}">
+
+    <h2 class="title">
+        {{ element.title }}
+        <small>
+            <a class="link-out" data-linksto="#iframe-{{ element.id }}" href="{{ iframe_url }}" target="_blank">
+                <img src="{{ static('img/rocket.png') }}" alt="">
+            </a>
+        </small>
+    </h2>
+
+    {% if element.description %}
+        <p class="description">
+            {{ element.description|safe }}
+        </p>
+    {% endif %}
+
+    <ul class="tags">
+        {% if 'refactor' in element.metadata.flags %}
+            <li class="tag-warning">
+                Needs Refactoring
+                {% if element.metadata.flags.refactor %}
+                    <div class="tooltip">
+                        {{ element.metadata.flags.refactor }}
+                    </div>
+                {% endif %}
+            </li>
+        {% endif %}
+
+        {% if 'ready' in element.metadata.flags %}
+            <li class="tag-success">
+                Production Ready
+                {% if element.metadata.flags.ready %}
+                    <div class="tooltip">
+                        {{ element.metadata.flags.ready }}
+                    </div>
+                {% endif %}
+            </li>
+        {% endif %}
+
+        {% if 'deprecated' in element.metadata.flags %}
+            <li class="tag-danger">
+                Deprecated
+                {% if element.metadata.flags.deprecated %}
+                    <div class="tooltip">
+                        {{ element.metadata.flags.deprecated }}
+                    </div>
+                {% endif %}
+            </li>
+        {% endif %}
+
+        {% if 'busy' in element.metadata.flags %}
+            <li class="tag-info">
+                Work in Progress
+                {% if element.metadata.flags.busy %}
+                    <div class="tooltip">
+                        {{ element.metadata.flags.busy }}
+                    </div>
+                {% endif %}
+            </li>
+        {% endif %}
+    </ul>
+
+    {#
+    {% if element.variations %}
+        <label for="#iframe-{{ element.id }}-variation-toggler">Variations:</label>
+        <select class="iframe-variation-toggler" id="iframe-{{ element.id }}-variation-toggler" data-target="#iframe-{{ element.id }}">
+            <option value="{% url "mote:element-iframe" id=element.project.id aspect=element.aspect.id pattern=element.pattern.id element=element.id %}" selected>
+                {{ element.id }} base
+            </option>
+            {% for variation in element.variations %}
+                <option value="{% url "mote:variation-iframe" id=element.project.id aspect=element.aspect.id pattern=element.pattern.id element=element.id variation=variation.id %}">
+                    {{ variation.title }}
+                </option>
+            {% endfor %}
+        </select>
+    {% endif %}
+    #}
+
+    <div class="clear"></div>
+    <div class="iframe ui-widget-content">
+        <div class="iframe-status">
+            <b id="pixels">1000</b> px
+            <br/>
+            <b id="rems">48</b> em
+        </div>
+        <iframe class="lazyload" frameBorder="0" width="100%" height="100%" data-src="{{ iframe_url }}"
+                id="iframe-{{ element.id }}">
+        </iframe>
+        <div class="handle">
+            <?xml version="1.0" encoding="iso-8859-1"?>
+            <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+            <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+            <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            	  viewBox="0 0 408 408" style="enable-background:new 0 0 408 408;" xml:space="preserve">
+            <g>
+            	<g id="more-vert">
+            		<path d="M204,102c28.05,0,51-22.95,51-51S232.05,0,204,0s-51,22.95-51,51S175.95,102,204,102z M204,153c-28.05,0-51,22.95-51,51
+            			s22.95,51,51,51s51-22.95,51-51S232.05,153,204,153z M204,306c-28.05,0-51,22.95-51,51s22.95,51,51,51s51-22.95,51-51
+            			S232.05,306,204,306z"/>
+            	</g>
+            </g>
+            </svg>
+
+        </div>
+    </div>
+
+    <div class="styleguide-pattern">
+        <h3>Usage <a class="sg-hidden-area-toggler off" href="#element-{{ element.id }}-examples"><span class="off-text">Show</span><span class="on-text">Hide</span></a></h3>
+        <div id="element-{{ element.id }}-examples" class="sg-hidden-area hide">
+            <div class="sg-code-block">
+                <h4 class="title">
+                    {% block codetitle %}
+                        {{ element.title }}
+                    {% endblock %}
+                </h4>
+                <div class="description">
+                    {% block codedescription %}
+                        {{ element.metadata.description|safe }}
+                    {% endblock %}
+                </div>
+                <div class="code-example">
+                    <pre>
+                        <code class="language-markup">
+                            <xmp>
+                                {% block codesample %}
+
+                                {% endblock %}
+                            </xmp>
+                        </code>
+                    </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

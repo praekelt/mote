@@ -9,13 +9,15 @@ import os.path
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
-from django.template import engines
+from django.template import engines, TemplateDoesNotExist
 from django.utils.functional import cached_property
 from django.utils.module_loading import import_string
 
 
 class BasePatternElement(object):
+    default_index_template = "element/index.html"
     template_name = "element.html"
+    index_template_name = "index.html"
     usage_name = "usage.md"
     changelog_name = "changelog.md"
     metadata_name = "metadata.json"
@@ -39,6 +41,21 @@ class BasePatternElement(object):
             path=self.path
         )
 
+    def select_template(self, template_name_list):
+        chain = []
+        for template_name in template_name_list:
+            try:
+                return self.engine.template_engine.get_template(template_name)
+            except TemplateDoesNotExist as e:
+                chain.append(e)
+
+        if template_name_list:
+            raise TemplateDoesNotExist(
+                ", ".join(template_name_list), chain=chain
+            )
+        else:
+            raise TemplateDoesNotExist("No template names provided")
+
     # -- Helpers --
     @property
     def relative_path(self):
@@ -50,6 +67,13 @@ class BasePatternElement(object):
         path = os.path.join(self.relative_path, self.template_name)
         return self.engine.template_engine.get_template(path)
 
+    def get_metadata_path(self):
+        return self.relative_path
+
+    def get_index_template(self):
+        return os.path.join(self.get_metadata_path(), self.index_template_name)
+
+    # -- Core API --
     @cached_property
     def variants(self):
         # Variants are defined inline with the base element as macros.
@@ -69,7 +93,6 @@ class BasePatternElement(object):
             variants.append(variant)
         return variants
 
-    # -- Core API --
     def metadata(self):
         pass
 
