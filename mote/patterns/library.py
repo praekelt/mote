@@ -22,9 +22,10 @@ class BasePatternElement(object):
     changelog_name = "changelog.md"
     metadata_name = "metadata.json"
 
-    def __init__(self, name, pattern, engine, path):
+    def __init__(self, name, pattern, aspect, engine, path):
         self.name = name
         self.pattern = pattern
+        self.aspect = aspect
         self.engine = engine
         self.path = path
 
@@ -183,6 +184,7 @@ class BasePatternEngine(object):
                         self.element_class(
                             entry.name,
                             pattern,
+                            aspect,
                             self,
                             entry.path
                         )
@@ -191,7 +193,7 @@ class BasePatternEngine(object):
 
     def element(self, aspect, pattern, name):
         path = self.get_element_location(aspect, pattern, name)
-        return self.element_class(name, pattern, self, path)
+        return self.element_class(name, pattern, aspect, self, path)
 
 
 class PatternLibrary(object):

@@ -78,6 +78,7 @@ class JinjaPatternEngine(BasePatternEngine):
                     self.element_class(
                         name,
                         pattern,
+                        aspect,
                         self,
                         full_path
                     )
@@ -87,4 +88,4 @@ class JinjaPatternEngine(BasePatternEngine):
 
     def element(self, aspect, pattern, name):
         path = self.get_element_location(aspect, pattern, name)
-        return self.element_class(name, pattern, self, path)
+        return self.element_class(name, pattern, aspect, self, path)
