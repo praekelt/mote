@@ -40,9 +40,7 @@ class PatternView(TemplateView):
             self.internal = False
 
         self._setup_instances()
-
         self.library = PatternLibrary(self.library_type, *self.library_path)
-
         return super(PatternView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -101,7 +99,10 @@ class PatternIndexView(PatternView):
             self.url_kwargs["aspect"],
             pattern
         )
-        context["elements"] = {e: self.get_element_url(e.name) for e in elements}
+        context["elements"] = {
+            e: self.get_element_url(e.name)
+            for e in elements
+        }
         return context
 
 

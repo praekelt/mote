@@ -1,8 +1,11 @@
+{# === Menu Item === #}
 {% macro menu_item(item) -%}
     <li role="menuitem">
         <a href="{{ item.url }}" class="">{{ item.name }}</a>
     </li>
 {%- endmacro %}
+
+{# --- Menu Item:Variations --- #}
 
 {% macro menu_item__para(item) -%}
     <li role="menuitem">
@@ -10,4 +13,42 @@
         <a href="{{ item.url }}" class="">{{ item.name }}</a>
         </p>
     </li>
+{%- endmacro %}
+
+{# === Button === #}
+
+{% macro button(text, url, classes='', attributes=[]) -%}
+    <button class="Button {{ classes }}"
+        {% if attributes -%}
+            {% for attribute in attributes -%}
+                {{ attribute }}
+            {%- endfor %}
+        {%- endif %}>
+        <span class="Button-text">{{ text }}</span>
+    </button>
+{%- endmacro %}
+
+{# --- Button:Variations --- #}
+
+{% macro button__anchor(text, url, classes='', attributes=[]) -%}
+    <a href="{{ url }}" class="Button {{ classes }}"
+        {% if attributes -%}
+            {% for attribute in attributes -%}
+                {{ attribute }}
+            {%- endfor %}
+        {%- endif %}>
+        <span class="Button-text">{{ text }}</span>
+    </a>
+{%- endmacro %}
+
+{% macro button__input(text, url, classes='', attributes=[]) -%}
+    <label class="Button {{ classes }}">
+        <input class="Button-input" type="submit" value="{{ text }}"
+        {% if attributes -%}
+            {% for attribute in attributes -%}
+                {{ attribute }}
+            {%- endfor %}
+        {%- endif %}/>
+        <span class="Button-text">{{ text }}</span>
+    </label>
 {%- endmacro %}

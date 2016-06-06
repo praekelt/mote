@@ -1,0 +1,7 @@
+---
+item:
+  name: Menu item
+  url: ""
+include:
+  file: atoms.button.default
+  name: button

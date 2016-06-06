@@ -12,15 +12,24 @@ from django.core.exceptions import ImproperlyConfigured
 from django.template import engines, TemplateDoesNotExist
 from django.utils.functional import cached_property
 from django.utils.module_loading import import_string
+import ruamel.yaml
+
+from mote.patterns.parser import DataParser
 
 
 class BasePatternElement(object):
-    default_index_template = "element/index.html"
+    # The default name of the template an element is expected to be in.
     template_name = "element.html"
+    # The default name of the optional index template override.
     index_template_name = "index.html"
+    # The default name of the usage text file.
     usage_name = "usage.md"
+    # The default name of the changelog text file.
     changelog_name = "changelog.md"
-    metadata_name = "metadata.json"
+    # The default name of the metadata file.
+    metadata_name = "metadata.yml"
+    # The default folder of the mock data.
+    data_path = "data"
 
     def __init__(self, name, pattern, aspect, engine, path):
         self.name = name
@@ -57,22 +66,81 @@ class BasePatternElement(object):
         else:
             raise TemplateDoesNotExist("No template names provided")
 
+    def get_element_from_reference(self, reference):
+        """Loads a named element in the current aspect based on a dotted
+        reference.
+        """
+        try:
+            kind, name, data = reference.split(".")
+        except ValueError:
+            return None, None
+
+        return self.engine.element(self.aspect, kind, name), data
+
+    def load_from_yaml(self, path):
+        data = None
+        with open(path, "r") as fp:
+            data = ruamel.yaml.load(fp)
+        return data
+
+    def parse_yaml(self, path):
+        data = self.load_from_yaml(path)
+        parsed = {}
+        # Expect data to be a dictionary.
+        for key, value in data.items():
+            if key == "include":
+                try:
+                    element_ref = value["file"]
+                    bind_name = value["name"]
+                except KeyError:
+                    continue
+
+                element, data_ref = self.get_element_from_reference(
+                    element_ref
+                )
+                try:
+                    parsed[bind_name] = element.data[data_ref]
+                except KeyError:
+                    # The given data ref doesn't exist in the target element.
+                    pass
+                continue
+            parsed[key] = value
+        return parsed
+
     # -- Helpers --
+    @property
+    def base_path(self):
+        return self.engine.base_path
+
     @property
     def relative_path(self):
         """Return the relative path to this element."""
-        return self.path.split(self.engine.base_path)[1]
+        # Ensure base path has trailing slash before trying to split.
+        base_path = os.path.join(self.base_path, "")
+        return self.path.split(base_path)[1]
 
     @cached_property
     def template(self):
         path = os.path.join(self.relative_path, self.template_name)
         return self.engine.template_engine.get_template(path)
 
+    def get_meta_path(self):
+        return self.base_path
+
     def get_metadata_path(self):
-        return self.relative_path
+        return os.path.join(self.get_meta_path(), self.metadata_name)
+
+    def get_usage_path(self):
+        return os.path.join(self.get_meta_path(), self.usage_name)
+
+    def get_changelog_path(self):
+        return os.path.join(self.get_meta_path(), self.changelog_name)
+
+    def get_data_dir(self):
+        return os.path.join(self.get_meta_path(), self.data_path)
 
     def get_index_template(self):
-        return os.path.join(self.get_metadata_path(), self.index_template_name)
+        return os.path.join(self.get_meta_path(), self.index_template_name)
 
     # -- Core API --
     @cached_property
@@ -94,11 +162,22 @@ class BasePatternElement(object):
             variants.append(variant)
         return variants
 
+    @cached_property
     def metadata(self):
-        pass
+        return self.load_from_yaml(self.get_metadata_path())
 
-    def mock_data(self):
-        pass
+    @cached_property
+    def data(self):
+        _data = {}
+        path = self.get_data_dir()
+        if os.path.exists(path):
+            for entry in scandir(path):
+                if (entry.is_file() and not entry.name.startswith(".") and
+                        entry.name.endswith(".yml")):
+                    name = entry.name.rstrip(".yml")
+                    _data[name] = self.parse_yaml(entry.path)
+
+        return _data
 
     def html(self, data, variant_name=None):
         template = self.template
