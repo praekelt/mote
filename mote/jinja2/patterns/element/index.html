@@ -1,4 +1,4 @@
-<div class="sg-wrapper" id="element-{{ element.id }}">
+<div class="sg-wrapper" id="element-{{ element.name }}">
 
     <h2 class="title">
         {{ element.metadata.title }}
@@ -108,6 +108,12 @@
     <div class="styleguide-pattern">
         <h3>Usage <a class="sg-hidden-area-toggler off" href="#element-{{ element.name }}-examples"><span class="off-text">Show</span><span class="on-text">Hide</span></a></h3>
         <div id="element-{{ element.name }}-examples" class="sg-hidden-area hide">
+            <div class="sg-usage-block">
+                {{ element.usage|safe }}
+            </div>
+            <div class="sg-changelog-block">
+                {{ element.changelog|safe }}
+            </div>
             <div class="sg-code-block">
                 <h4 class="title">
                     {% block codetitle %}
@@ -124,7 +130,7 @@
                         <code class="language-markup">
                             <xmp>
                                 {% block codesample %}
-
+                                    {{ element.html()|safe }}
                                 {% endblock %}
                             </xmp>
                         </code>

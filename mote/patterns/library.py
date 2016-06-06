@@ -12,6 +12,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.template import engines, TemplateDoesNotExist
 from django.utils.functional import cached_property
 from django.utils.module_loading import import_string
+import mistune
 import ruamel.yaml
 
 
@@ -107,6 +108,13 @@ class BasePatternElement(object):
             parsed[key] = value
         return parsed
 
+    def parse_markdown(self, path):
+        try:
+            with open(path, "r") as md_file:
+                return mistune.markdown(md_file.read())
+        except IOError:
+            return ""
+
     # -- Helpers --
     @property
     def base_path(self):
@@ -188,11 +196,13 @@ class BasePatternElement(object):
     def source(self):
         pass
 
+    @cached_property
     def changelog(self):
-        pass
+        return self.parse_markdown(self.get_changelog_path())
 
+    @cached_property
     def usage(self):
-        pass
+        return self.parse_markdown(self.get_usage_path())
 
 
 class BasePatternEngine(object):
