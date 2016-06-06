@@ -14,8 +14,6 @@ from django.utils.functional import cached_property
 from django.utils.module_loading import import_string
 import ruamel.yaml
 
-from mote.patterns.parser import DataParser
-
 
 class BasePatternElement(object):
     # The default name of the template an element is expected to be in.
@@ -88,6 +86,8 @@ class BasePatternElement(object):
         parsed = {}
         # Expect data to be a dictionary.
         for key, value in data.items():
+            # If the base dictionary has an include key, parse it as an
+            # include of another element's data.
             if key == "include":
                 try:
                     element_ref = value["file"]
