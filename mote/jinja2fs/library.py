@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import os.path
 
+from django.conf import settings
 from django.utils.functional import cached_property
 
 from mote.patterns.library import BasePatternElement, BasePatternEngine
@@ -45,7 +46,13 @@ class JinjaPatternEngine(BasePatternEngine):
     def get_elements_location(self, aspect, pattern, relative=False):
         path = self.get_patterns_location(aspect)
         if relative:
-            path = path.split(self.base_path)[1]
+            if settings.REPOSITORY_BASE_DIR in self.base_path:
+                # This is from a repo, use that as the base path
+                base_path = settings.REPOSITORY_BASE_DIR
+            else:
+                base_path = self.base_path
+            base_path = os.path.join(base_path, "")
+            path = path.split(base_path)[1]
         return path
 
     def get_element_location(self, aspect, pattern, name):
@@ -83,7 +90,6 @@ class JinjaPatternEngine(BasePatternEngine):
                         full_path
                     )
                 )
-
         return elements
 
     def element(self, aspect, pattern, name):

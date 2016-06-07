@@ -124,7 +124,12 @@ class BasePatternElement(object):
     def relative_path(self):
         """Return the relative path to this element."""
         # Ensure base path has trailing slash before trying to split.
-        base_path = os.path.join(self.base_path, "")
+        if settings.REPOSITORY_BASE_DIR in self.base_path:
+            # This is from a repo, use that as the base path
+            base_path = settings.REPOSITORY_BASE_DIR
+        else:
+            base_path = self.base_path
+        base_path = os.path.join(base_path, "")
         return self.path.split(base_path)[1]
 
     @cached_property

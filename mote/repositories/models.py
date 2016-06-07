@@ -5,7 +5,6 @@ try:
 except ImportError:
     from urlparse import urlparse
 
-import os
 from posixpath import basename
 
 import wrapt

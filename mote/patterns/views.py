@@ -25,7 +25,14 @@ class PatternView(TemplateView):
                 self.project.repositories,
                 project_link__slug=self.url_kwargs["repository"],
             )
-            self.worktree = self.repository.default_worktree
+            branch = self.url_kwargs.get("branch", None)
+            if branch is not None:
+                self.worktree = get_object_or_404(
+                    self.repository.worktrees,
+                    branch=branch,
+                )
+            else:
+                self.worktree = self.repository.default_worktree
             self.library_path = self.worktree.patterns_path
 
     def dispatch(self, request, *args, **kwargs):

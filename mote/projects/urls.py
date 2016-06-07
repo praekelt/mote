@@ -18,7 +18,7 @@ urlpatterns = [
         r"^mote/",
         include([
             url(
-                r"patterns/",
+                r"^patterns/",
                 include("mote.patterns.urls", namespace="internal")
             ),
         ])
@@ -27,12 +27,12 @@ urlpatterns = [
         r"^(?P<project>[\w-]+)/(?P<repository>[\w-]+)/",
         include([
             url(
-                r"patterns/",
+                r"^patterns/",
                 include("mote.patterns.urls", namespace="patterns")
             ),
             url(
-                r"(?P<branch>[\w-]+)/patterns/",
-                include("mote.patterns.urls", namespace="patterns2")
+                r"^(?P<branch>[\w-]+)/patterns/",
+                include("mote.patterns.urls", namespace="patterns-branch")
             ),
         ])
     ),

@@ -50,7 +50,7 @@ ROOT_URLCONF = 'mote.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.jinja2.Jinja2',
-        'DIRS': [],
+        'DIRS': [REPOSITORY_BASE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'environment': 'mote.jinja2.environment',

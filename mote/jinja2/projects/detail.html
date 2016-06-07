@@ -6,8 +6,8 @@
     <p>Description: {{ object.description }}</p>
     <p>Created: {{ object.created_on }}</p>
     <h3>Repos</h3>
-    {% for link in object.repos_link.all %}
-        <p>Name: <a href="{{ url('projects:patterns:aspect-list', project_slug=object.slug, repository_slug=link.slug) }}">{{ link.name }}</a></p>
+    {% for link in object.repos_link.all() %}
+        <p>Name: <a href="{{ url('projects:patterns:aspect-list', kwargs={'project':object.slug, 'repository':link.slug}) }}">{{ link.name }}</a></p>
         <p>Slug: {{ link.slug }}</p>
         <p>URL: {{ link.repository.fetch_url }}</p>
     {% endfor %}

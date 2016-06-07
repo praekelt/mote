@@ -9,7 +9,7 @@ urlpatterns = [
     # List of available aspects.
     url(r"^$", views.IndexView.as_view(), name="aspect-list"),
     url(
-        r"(?P<aspect>[\w-]+)/",
+        r"^(?P<aspect>[\w-]+)/",
         include([
             url(
                 r"^$",

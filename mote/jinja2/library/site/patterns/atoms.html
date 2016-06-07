@@ -17,16 +17,11 @@
 
 {# === Button === #}
 
-{% macro button(text, url, classes='', attributes=[]) -%}
-    <button class="Button {{ classes }}"
-        {% if attributes -%}
-            {% for attribute in attributes -%}
-                {{ attribute }}
-            {%- endfor %}
-        {%- endif %}>
-        <span class="Button-text">{{ text }}</span>
-    </button>
-{%- endmacro %}
+{%- macro button(text, url, classes='', attributes=[]) -%}
+<button class="Button {{ classes }}"{% for attribute in attributes %}{{ attribute }}{% endfor %}>
+    <span class="Button-text">{{ text }}</span>
+</button>
+{%- endmacro -%}
 
 {# --- Button:Variations --- #}
 
