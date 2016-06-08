@@ -30,6 +30,11 @@ class RepositoryNotReady(MoteRepositoryError):
     """The repo is not ready."""
 
 
+def pattern_engines_from_settings():
+    choices = getattr(settings, "MOTE_PATTERN_ENGINES", {})
+    return [(k, k.capitalize()) for k in choices.keys()]
+
+
 @wrapt.decorator
 def require_ready_state(wrapped, instance, args, kwargs):
     """An Model instance method that checks a ready flag and raises a
@@ -54,6 +59,8 @@ class RepositoryManager(models.Manager):
 
 
 class Repository(models.Model):
+    PATTERN_ENGINE_CHOICES = pattern_engines_from_settings()
+
     fetch_url = models.URLField(
         unique=True,
         validators=[
@@ -62,6 +69,11 @@ class Repository(models.Model):
     )
     path = models.CharField(max_length=255, unique=True)
     patterns_path = models.CharField(max_length=255, default="")
+    pattern_engine = models.CharField(
+        max_length=255,
+        choices=PATTERN_ENGINE_CHOICES,
+        default="jinja2"
+    )
     ready = models.BooleanField(default=False)
     updated_on = models.DateTimeField(null=True)
     objects = RepositoryManager()

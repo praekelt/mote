@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     'mote.projects',
     'mote.utils',
     'mote.patterns',
-    'mote.livedtl',
+    'mote.djangofs',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -136,6 +136,7 @@ GIT_BINARY = '/usr/local/bin/git'
 MOTE_PATTERN_ENGINES = {
     'base': 'mote.patterns.library.BasePatternEngine',
     'jinja2': 'mote.jinja2fs.library.JinjaPatternEngine',
+    'django': 'mote.djangofs.library.DjangoPatternEngine',
 }
 
 MOTE_INTERNAL_PATTERN_LIBRARY = (

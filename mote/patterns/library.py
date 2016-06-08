@@ -78,8 +78,12 @@ class BasePatternElement(object):
 
     def load_from_yaml(self, path):
         data = None
-        with open(path, "r") as fp:
-            data = ruamel.yaml.load(fp)
+        try:
+            with open(path, "r") as fp:
+                data = ruamel.yaml.load(fp)
+        except IOError:
+            # No file, empty data.
+            pass
         return data
 
     def parse_yaml(self, path):
@@ -138,7 +142,7 @@ class BasePatternElement(object):
         return self.engine.template_engine.get_template(path)
 
     def get_meta_path(self):
-        return self.base_path
+        return self.path
 
     def get_metadata_path(self):
         return os.path.join(self.get_meta_path(), self.metadata_name)

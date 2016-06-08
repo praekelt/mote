@@ -12,7 +12,6 @@ from .library import PatternLibrary
 class PatternView(TemplateView):
 
     def _setup_instances(self):
-        # todo: get library type from repo
         self.library_type = "jinja2"
         if self.internal:
             self.library_path = settings.MOTE_INTERNAL_PATTERN_LIBRARY
@@ -25,6 +24,7 @@ class PatternView(TemplateView):
                 self.project.repositories,
                 project_link__slug=self.url_kwargs["repository"],
             )
+            self.library_type = self.repository.pattern_engine
             branch = self.url_kwargs.get("branch", None)
             if branch is not None:
                 self.worktree = get_object_or_404(
@@ -126,5 +126,6 @@ class PatternIframeView(PatternView):
             pattern,
             element_name
         )
-        context["element_html"] = element.html()
+        data = {}
+        context["element_html"] = element.html(data)
         return context
