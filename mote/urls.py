@@ -7,7 +7,8 @@ from django.views.generic import RedirectView
 urlpatterns = [
     url(
         r"^$",
-        RedirectView.as_view(pattern_name="projects:project-list")
+        RedirectView.as_view(pattern_name="projects:project-list"),
+        name="home"
     ),
     url(
         r"^projects/",
