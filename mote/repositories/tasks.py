@@ -24,7 +24,9 @@ def _get_repository_copy(repository_pk):
     try:
         repository.clone()
     except models.RepositoryAlreadyExists:
-        repository.update()
+        repository.ready = True
+        repository.save()
+        repository.pull()
     except models.MoteRepositoryError as exc:
         # Cloning the repository has failed, log the failure for now but
         # we could potentially retry here.

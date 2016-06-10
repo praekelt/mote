@@ -5,6 +5,7 @@ try:
 except ImportError:
     from urlparse import urlparse
 
+import os
 from posixpath import basename
 
 import wrapt
@@ -13,9 +14,13 @@ from django.core import validators
 from django.db import models
 from django.utils.timezone import now
 from django.utils.functional import cached_property
+import ruamel.yaml
 from columbia import git
 
 from . import signals
+
+
+CONFIG_FILE_NAME = ".mote.yml"
 
 
 class MoteRepositoryError(Exception):
@@ -68,7 +73,6 @@ class Repository(models.Model):
         ]
     )
     path = models.CharField(max_length=255, unique=True)
-    patterns_path = models.CharField(max_length=255, default="")
     pattern_engine = models.CharField(
         max_length=255,
         choices=PATTERN_ENGINE_CHOICES,
@@ -184,6 +188,14 @@ class Repository(models.Model):
                     "updated_on": now()
                 }
             )
+            if created:
+                worktree.load_config_from_repo()
+
+        # If there isn't a default worktree set yet, set it to the first one.
+        if self.default_worktree is None:
+            wt = self.worktrees.all().first()
+            wt.default = True
+            wt.save()
 
     @require_ready_state
     def pull_all_worktrees(self):
@@ -206,6 +218,8 @@ class Repository(models.Model):
 
 
 class Worktree(models.Model):
+    PATTERN_ENGINE_CHOICES = pattern_engines_from_settings()
+
     repository = models.ForeignKey(Repository, related_name="worktrees")
     branch = models.CharField(max_length=255)
     path = models.CharField(max_length=255)
@@ -213,6 +227,15 @@ class Worktree(models.Model):
     head = models.CharField(max_length=255, default="")
     default = models.BooleanField(default=False)
     updated_on = models.DateTimeField(null=True)
+    library_root_path = models.CharField(max_length=255, default="")
+    static_path = models.CharField(max_length=255, default="")
+    static_build_cmd = models.CharField(max_length=255, default="")
+    static_setup_cmd = models.CharField(max_length=255, default="")
+    pattern_engine = models.CharField(
+        max_length=255,
+        choices=PATTERN_ENGINE_CHOICES,
+        default="jinja2"
+    )
 
     @require_ready_state
     def pull(self):
@@ -221,4 +244,35 @@ class Worktree(models.Model):
 
     @property
     def patterns_path(self):
-        return (self.path, self.repository.patterns_path)
+        return (self.path, self.library_root_path)
+
+    @require_ready_state
+    def load_config_from_repo(self):
+        path = os.path.join(self.path, CONFIG_FILE_NAME)
+        if not os.path.exists(path):
+            return
+        with open(path, "r") as fp:
+            data = ruamel.yaml.load(fp)
+            self.pattern_engine = data.get("pattern_engine", "jinja2")
+            self.library_root_path = data.get("library_root_path", "")
+            self.static_path = data.get("static_path", "")
+            self.static_build_cmd = data.get("static_build_cmd", "")
+            self.static_setup_cmd = data.get("static_setup_cmd", "")
+            self.save()
+
+    def static_link_name(self, project_id):
+        pl = self.repository.project_link.get(pk=project_id)
+        return "{repo}-{branch}".format(
+            repo=pl.slug,
+            branch=self.branch
+        )
+
+    @require_ready_state
+    def link_static_directory(self, project_id):
+        if not os.path.exists(settings.MOTE_REPO_STATIC_ROOT):
+            os.mkdir(settings.MOTE_REPO_STATIC_ROOT)
+        link_target = os.path.join(
+            settings.MOTE_REPO_STATIC_ROOT,
+            self.static_link_name(project_id)
+        )
+        os.symlink(os.path.join(self.path, self.static_path), link_target)

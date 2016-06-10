@@ -143,3 +143,5 @@ MOTE_INTERNAL_PATTERN_LIBRARY = (
     os.path.join(BASE_DIR, 'jinja2'),
     'library'
 )
+
+MOTE_REPO_STATIC_ROOT = os.path.join(STATIC_ROOT, 'repositories')
