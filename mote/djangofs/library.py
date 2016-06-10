@@ -48,14 +48,15 @@ class DjangoPatternElement(BasePatternElement):
         base = {"element": self}
         return base
 
-    def html(self, data, variant_name=None):
-        context = self.get_context()
-        context.update(data)
+    def html(self, data, variant_name=None, context={}):
+        ctx = self.get_context()
+        ctx.update(data)
+        ctx.update(context)
         try:
             template = self.template
         except TemplateDoesNotExist:
             return ""
-        return template.render(context)
+        return template.render(ctx)
 
 
 class DjangoPatternEngine(BasePatternEngine):

@@ -196,7 +196,7 @@ class BasePatternElement(object):
 
         return _data
 
-    def html(self, data, variant_name=None):
+    def html(self, data, variant_name=None, context={}):
         try:
             template = self.template
         except TemplateDoesNotExist:

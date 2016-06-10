@@ -152,5 +152,12 @@ class PatternIframeView(PatternView):
             data = element.data[mock_data_name]
         except KeyError:
             data = {}
-        context["element_html"] = element.html(data)
+        if self.library_type == "django":
+            # Add the request to the passed context, but only for django.
+            ctx = {
+             "request": self.request
+            }
+        else:
+            ctx = {}
+        context["element_html"] = element.html(data, context=ctx)
         return context

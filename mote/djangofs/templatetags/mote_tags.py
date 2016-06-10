@@ -1,16 +1,8 @@
-import re
-import md5
-
-from bs4 import BeautifulSoup
-
 from django import template
 from django.utils.functional import Promise
 from django.template.base import VariableDoesNotExist
 from django.core.cache import cache
-from django.core.urlresolvers import reverse, resolve, get_script_prefix
 
-from django.template.response import TemplateResponse
-from django.http import HttpResponse
 from django.conf import settings
 
 
@@ -65,7 +57,14 @@ class RenderElementNode(CachedNode):
 
     def render(self, context):
         super(RenderElementNode, self).render(context)
-        obj = self.obj.resolve(context)
+        # Use current element to access engine to render related elements
+        parts = self.obj.var.split(".")
+        pattern = parts[2]
+        name = parts[3]
+        cur_element = context["element"]
+        rel_element = cur_element.engine.element(
+            cur_element.aspect, pattern, name
+        )
         resolved = {}
         for k, v in self.kwargs.items():
             try:
@@ -76,12 +75,11 @@ class RenderElementNode(CachedNode):
                 if isinstance(r, Promise):
                     r = unicode(r)
                 resolved[k] = r
-
-        html = obj.render()
-
-        # Make output beautiful for Chris
-        beauty = BeautifulSoup(html)
-        html = beauty.prettify()
+        new_context = {
+            "request": context["request"],
+            "element": rel_element
+        }
+        html = rel_element.html(resolved, context=new_context)
 
         return html
 

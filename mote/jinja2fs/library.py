@@ -30,7 +30,7 @@ class JinjaPatternElement(BasePatternElement):
             self.name
         )
 
-    def html(self, data={}, variant_name=None):
+    def html(self, data={}, variant_name=None, context={}):
         try:
             node = self._get_template_node(self.name)
         except TemplateDoesNotExist:
