@@ -109,10 +109,10 @@ class PatternIndexView(PatternView):
             self.url_kwargs["aspect"],
             pattern
         )
-        context["elements"] = {
-            e: self.get_element_url(e.name)
+        context["elements"] = [
+            (e, self.get_element_url(e.name))
             for e in elements
-        }
+        ]
         return context
 
 
@@ -142,11 +142,15 @@ class PatternIframeView(PatternView):
         context["head"] = head.html({
             "static_root": static_root
         })
+        mock_data_name = self.request.GET.get("data", "default")
         element = self.library.element(
             self.url_kwargs["aspect"],
             pattern,
             element_name
         )
-        data = {}
+        try:
+            data = element.data[mock_data_name]
+        except KeyError:
+            data = {}
         context["element_html"] = element.html(data)
         return context
