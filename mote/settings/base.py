@@ -145,3 +145,4 @@ MOTE_INTERNAL_PATTERN_LIBRARY = (
 )
 
 MOTE_REPO_STATIC_ROOT = os.path.join(STATIC_ROOT, 'repositories')
+MOTE_REPO_STATIC_URL = 'repositories/'

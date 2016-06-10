@@ -3,7 +3,8 @@ from __future__ import unicode_literals
 from django.utils.functional import cached_property
 import ujson as json
 
-from mote.patterns.library import BasePatternElement, BasePatternEngine
+from mote.patterns.library import (BasePatternElement, BasePatternEngine,
+                                   TemplateDoesNotExist)
 
 
 class DjangoPatternElement(BasePatternElement):
@@ -28,8 +29,13 @@ class DjangoPatternElement(BasePatternElement):
         return base
 
     def html(self, data, variant_name=None):
-        template = self.template
-        return template.render(self.get_context())
+        context = self.get_context()
+        context.update(data)
+        try:
+            template = self.template
+        except TemplateDoesNotExist:
+            return ""
+        return template.render(context)
 
 
 class DjangoPatternEngine(BasePatternEngine):

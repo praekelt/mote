@@ -5,8 +5,8 @@ import os.path
 from django.conf import settings
 from django.utils.functional import cached_property
 
-from mote.patterns.library import BasePatternElement, BasePatternEngine
-from mote.patterns.library import scandir
+from mote.patterns.library import (BasePatternElement, BasePatternEngine,
+                                   TemplateDoesNotExist, scandir)
 
 
 class JinjaPatternElement(BasePatternElement):
@@ -31,7 +31,10 @@ class JinjaPatternElement(BasePatternElement):
         )
 
     def html(self, data={}, variant_name=None):
-        node = self._get_template_node(self.name)
+        try:
+            node = self._get_template_node(self.name)
+        except TemplateDoesNotExist:
+            return ""
         return node(**data)
 
 

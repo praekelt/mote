@@ -197,7 +197,12 @@ class BasePatternElement(object):
         return _data
 
     def html(self, data, variant_name=None):
-        template = self.template
+        try:
+            template = self.template
+        except TemplateDoesNotExist:
+            # Return an empty string when trying to render a element that
+            # doesn't exist.
+            return ""
         node = getattr(template.template.module, self.name)
         # Calling the node / macro will render the HTML.
         return node(**data)

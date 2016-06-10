@@ -1,6 +1,9 @@
 from __future__ import unicode_literals
 
+import os.path
+
 from django.conf import settings
+from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.core.urlresolvers import resolve, reverse
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView, RedirectView
@@ -121,6 +124,24 @@ class PatternIframeView(PatternView):
         pattern = kwargs["pattern"]
         element_name = kwargs["element"]
         context["pattern"] = pattern
+        head = self.library.element(
+            self.url_kwargs["aspect"],
+            "global",
+            "site_head"
+        )
+        if self.internal:
+            static_root = static("")
+        else:
+            static_url = os.path.join(
+                settings.MOTE_REPO_STATIC_URL,
+                self.worktree.static_link_name(self.project.id)
+            )
+            static_root = static(static_url)
+        # Ensure static root has a trailing slash.
+        static_root = os.path.join(static_root, "")
+        context["head"] = head.html({
+            "static_root": static_root
+        })
         element = self.library.element(
             self.url_kwargs["aspect"],
             pattern,
