@@ -261,7 +261,7 @@ class Worktree(models.Model):
             self.save()
 
     def static_link_name(self, project_id):
-        pl = self.repository.project_link.get(pk=project_id)
+        pl = self.repository.project_link.get(project_id=project_id)
         return "{repo}-{branch}".format(
             repo=pl.slug,
             branch=self.branch
