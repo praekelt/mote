@@ -11,7 +11,7 @@ class ProjectQuickCreateForm(forms.ModelForm):
     repository_url = forms.CharField(
         required=False,
         validators=[
-            validators.URLValidator(schemes=settings.ALLOWED_URL_SCHEMES)
+            # validators.URLValidator(schemes=settings.ALLOWED_URL_SCHEMES)
         ]
     )
 
