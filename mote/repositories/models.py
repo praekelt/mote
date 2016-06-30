@@ -1,6 +1,10 @@
 from __future__ import unicode_literals
 
 try:
+    from pathlib import Path
+except ImportError:
+    from pathlib2 import Path
+try:
     from urllib.parse import urlparse
 except ImportError:
     from urlparse import urlparse
@@ -12,12 +16,12 @@ import wrapt
 from django.conf import settings
 from django.core import validators
 from django.db import models
-from django.utils.timezone import now
 from django.utils.functional import cached_property
+from django.utils.text import slugify
+from django.utils.timezone import now
 import ruamel.yaml
-from columbia import git
 
-from . import signals
+from . import signals, git
 
 
 CONFIG_FILE_NAME = ".mote.yml"
@@ -48,6 +52,36 @@ def require_ready_state(wrapped, instance, args, kwargs):
     if not instance.ready:
         raise RepositoryNotReady
     return wrapped(*args, **kwargs)
+
+
+# Custom repo location class for more humane repo clone names.
+class MoteRepositoryLocation(git.RepositoryLocation):
+    def __init__(self, working_directory, repository_url):
+        self.working_directory = working_directory
+        self.url = repository_url
+        self.repository_url = urlparse(repository_url)
+        # root_path is the container directory that will hold the core clone
+        # along with any worktrees created later.
+        self.root_path = Path(working_directory)
+        # path is where the core clone is located. Defaults to a full hash
+        # of the repo URL.
+        self.path = self.root_path / self.project_name
+
+    def worktree_path(self, branch_name):
+        wt_name = "{project}-{branch}".format(
+            project=self.project_name,
+            branch=slugify(branch_name)
+        )
+        return self.root_path / wt_name
+
+    @property
+    def project_name(self):
+        """Guess the project name from the URL."""
+        path = basename(self.repository_url.path)
+        git_in_path = path.find(".git")
+        if git_in_path > 0:
+            path = path[:git_in_path]
+        return path
 
 
 class RepositoryManager(models.Manager):

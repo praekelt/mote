@@ -1,0 +1,6 @@
+---
+pattern_engine: "django"
+library_root_path: "projects/barron/"
+static_path: "projects/barron/website/dist/"
+static_build_command: "npm"
+static_setup_command: "npm"

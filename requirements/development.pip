@@ -1,0 +1,2 @@
+-r base.pip
+django-pdb==0.5.1
