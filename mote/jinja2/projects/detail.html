@@ -1,10 +1,10 @@
-{% extends "base.html" %}
+{% extends "projects/base.html" %}
 
 {% block content %}
-    <h2>{{ object.name }}</h2>
+    <h3>{{ object.name }}</h3>
     <p>Slug: {{ object.slug }}</p>
     <p>Description: {{ object.description }}</p>
-    <p>Created: {{ object.created_on }}</p>
+    <p>Created: {{ object.created_on.strftime('%c') }}</p>
     <h3>Repos</h3>
     {% for link in object.repos_link.all() %}
         <p>Name: <a href="{{ url('projects:patterns:aspect-list', kwargs={'project':object.slug, 'repository':link.slug}) }}">{{ link.name }}</a></p>

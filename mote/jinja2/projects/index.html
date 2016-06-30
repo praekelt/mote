@@ -1,11 +1,15 @@
-{% extends "base.html" %}
+{% extends "projects/base.html" %}
 
 {% block content %}
-    <h2>Projects</h2>
     <ul>
         {% for project in object_list %}
             <li>
-                <a href="{{ url("projects:project-detail", kwargs={"slug": project.slug}) }}">{{ project.name }}</a>
+                <h3><a href="{{ url("projects:project-detail", kwargs={"slug": project.slug}) }}">{{ project.name }}</a></h3>
+                <p>{{ project.description }}</p>
+                <ul role="menu" class="horizontal">
+                    <li role="menuitem"><a href="{{ url("projects:project-update", kwargs={"slug": project.slug}) }}">Update</a></li>
+                    <li role="menuitem"><a href="{{ url("projects:project-delete", kwargs={"slug": project.slug}) }}">Remove</a></li>
+                </ul>
             </li>
         {% endfor %}
     </ul>

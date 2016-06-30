@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block hero %}
+<h3><a href="{{ url("projects:project-list") }}">Projects</a></h3>
+<ul role="menu" class="horizontal">
+    <li role="menuitem"><a href="{{ url("projects:project-add") }}">Add new project</a></li>
+</ul>
+{% endblock %}

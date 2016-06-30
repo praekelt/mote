@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from django.core.urlresolvers import reverse_lazy
 from django.views import generic
 
 from .models import Project
@@ -20,4 +21,15 @@ class DetailView(generic.DetailView):
 
 class CreateView(generic.CreateView):
     model = Project
-    form_class = forms.ProjectQuickCreateForm
+    fields = ["name", "slug", "description"]
+    # form_class = forms.ProjectQuickCreateForm
+
+
+class UpdateView(generic.UpdateView):
+    model = Project
+    fields = ["name", "slug", "description"]
+
+
+class DeleteView(generic.DeleteView):
+    model = Project
+    success_url = reverse_lazy("projects:project-list")

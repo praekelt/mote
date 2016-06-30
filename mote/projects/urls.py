@@ -9,9 +9,24 @@ urlpatterns = [
     url(r"^$", views.IndexView.as_view(), name="project-list"),
     url(r"^add/$", views.CreateView.as_view(), name="project-add"),
     url(
-        r"^(?P<slug>[\w-]+)/$",
-        views.DetailView.as_view(),
-        name="project-detail"
+        r"^(?P<slug>[\w-]+)/",
+        include([
+            url(
+                r"^$",
+                views.DetailView.as_view(),
+                name="project-detail"
+            ),
+            url(
+                r"^update/$",
+                views.UpdateView.as_view(),
+                name="project-update"
+            ),
+            url(
+                r"^delete/$",
+                views.DeleteView.as_view(),
+                name="project-delete"
+            ),
+        ])
     ),
     # The mote internal pattern library doesn't use a repo.
     url(
