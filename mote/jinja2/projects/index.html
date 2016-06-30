@@ -10,6 +10,7 @@
                     <li role="menuitem"><a href="{{ url("projects:project-update", kwargs={"slug": project.slug}) }}">Update</a></li>
                     <li role="menuitem"><a href="{{ url("projects:project-delete", kwargs={"slug": project.slug}) }}">Remove</a></li>
                 </ul>
+                <br>
             </li>
         {% endfor %}
     </ul>
