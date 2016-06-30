@@ -82,11 +82,11 @@ class MoteRepositoryLocation(git.RepositoryLocation):
 
 class RepositoryManager(models.Manager):
     def get_or_create_from_url(self, url):
-        handler = git.setup_repository(
+        location = MoteRepositoryLocation(
             settings.REPOSITORY_BASE_DIR,
-            url,
-            binary=settings.GIT_BINARY
+            url
         )
+        handler = git.Repository(location, settings.GIT_BINARY)
         path = str(handler.location.path)
         return self.get_or_create(
             fetch_url=url, defaults={"path": path}
@@ -157,11 +157,11 @@ class Repository(models.Model):
         # NOTE: This property will point to the wrong repo if fetch_url or path
         # are changed on the instance and hence needs to be invalidated when
         # that happens ("del <instance>.handler" will invalidate).
-        handler = git.setup_repository(
+        location = MoteRepositoryLocation(
             settings.REPOSITORY_BASE_DIR,
-            self.fetch_url,
-            binary=settings.GIT_BINARY,
+            self.fetch_url
         )
+        handler = git.Repository(location, settings.GIT_BINARY)
         return handler
 
     def clone(self):
