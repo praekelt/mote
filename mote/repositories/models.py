@@ -77,11 +77,7 @@ class MoteRepositoryLocation(git.RepositoryLocation):
     @property
     def project_name(self):
         """Guess the project name from the URL."""
-        path = basename(self.repository_url.path)
-        git_in_path = path.find(".git")
-        if git_in_path > 0:
-            path = path[:git_in_path]
-        return path
+        return Repository.get_name_from_url(self.url)
 
 
 class RepositoryManager(models.Manager):
