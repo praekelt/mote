@@ -6,6 +6,11 @@
     <p>Description: {{ object.description }}</p>
     <p>Created: {{ object.created_on.strftime('%c') }}</p>
     <h3>Repos</h3>
+    <ul role="menu" class="horizontal">
+        <li role="menuitem"><a href="{{ url("projects:repository-quick-add", kwargs={'slug':object.slug}) }}">Quick add</a></li>
+        <li role="menuitem"><a href="{{ url("projects:repository-add", kwargs={'slug':object.slug}) }}">Custom add</a></li>
+    </ul>
+    <br>
     {% for link in object.repos_link.all() %}
         <p>Name: <a href="{{ url('projects:patterns:aspect-list', kwargs={'project':object.slug, 'repository':link.slug}) }}">{{ link.name }}</a></p>
         <p>Slug: {{ link.slug }}</p>

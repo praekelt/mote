@@ -4,10 +4,10 @@ from django import forms
 from django.conf import settings
 from django.core import validators
 
-from .models import Project
+from .models import Project, ProjectRepository
 
 
-class ProjectQuickCreateForm(forms.ModelForm):
+class RepositoryQuickCreateForm(forms.Form):
     repository_url = forms.CharField(
         required=False,
         validators=[
@@ -15,16 +15,7 @@ class ProjectQuickCreateForm(forms.ModelForm):
         ]
     )
 
-    class Meta:
-        model = Project
-        fields = [
-            "name",
-            "slug",
-            "description",
-            "repository_url",
-        ]
-
     def save(self):
-        instance = super(ProjectQuickCreateForm, self).save()
+        instance = super(RepositoryQuickCreateForm, self).save()
         instance.add_repository_from_url(self.cleaned_data["repository_url"])
         return instance

@@ -26,6 +26,16 @@ urlpatterns = [
                 views.DeleteView.as_view(),
                 name="project-delete"
             ),
+            url(
+                r"^repos/add$",
+                views.RepositoryCreateView.as_view(),
+                name="repository-add"
+            ),
+            url(
+                r"^repos/quick-add$",
+                views.RepositoryQuickCreateView.as_view(),
+                name="repository-quick-add"
+            ),
         ])
     ),
     # The mote internal pattern library doesn't use a repo.
@@ -38,6 +48,7 @@ urlpatterns = [
             ),
         ])
     ),
+    # Pattern views
     url(
         r"^(?P<project>[\w-]+)/(?P<repository>[\w-]+)/",
         include([
