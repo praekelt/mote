@@ -2,6 +2,11 @@
 
 {% block content %}
     <h3>{{ object.name }}</h3>
+    <ul role="menu" class="horizontal">
+        <li role="menuitem"><a href="{{ url("projects:project-update", kwargs={"slug": object.slug}) }}">Update</a></li>
+        <li role="menuitem"><a href="{{ url("projects:project-delete", kwargs={"slug": object.slug}) }}">Remove</a></li>
+    </ul>
+    <br>
     <p>Slug: {{ object.slug }}</p>
     <p>Description: {{ object.description }}</p>
     <p>Created: {{ object.created_on.strftime('%c') }}</p>

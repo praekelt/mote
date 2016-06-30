@@ -1,10 +1,6 @@
 from __future__ import unicode_literals
 
 from django import forms
-from django.conf import settings
-from django.core import validators
-
-from .models import Project, ProjectRepository
 
 
 class RepositoryQuickCreateForm(forms.Form):

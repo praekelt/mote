@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.views import generic
 
 from . import forms
-from .models import Project, Repository, ProjectRepository
+from .models import Project
 
 
 class IndexView(generic.ListView):
@@ -63,7 +63,9 @@ class RepositoryQuickCreateView(generic.FormView):
     form_class = forms.RepositoryQuickCreateForm
 
     def get_context_data(self, **kwargs):
-        context = super(RepositoryQuickCreateView, self).get_context_data(**kwargs)
+        context = super(
+            RepositoryQuickCreateView, self
+        ).get_context_data(**kwargs)
         project = get_object_or_404(Project, slug=self.kwargs['slug'])
         context['project'] = project
         return context
