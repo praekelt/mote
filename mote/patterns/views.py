@@ -21,7 +21,7 @@ class PatternView(TemplateView):
         else:
             self.project = get_object_or_404(
                 Project,
-                slug=self.url_kwargs["project"]
+                slug=self.url_kwargs["slug"]
             )
             self.repository = get_object_or_404(
                 self.project.repositories,

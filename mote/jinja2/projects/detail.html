@@ -17,7 +17,7 @@
     </ul>
     <br>
     {% for link in object.repos_link.all() %}
-        <p>Name: <a href="{{ url('projects:patterns:aspect-list', kwargs={'project':object.slug, 'repository':link.slug}) }}">{{ link.name }}</a></p>
+        <p>Name: <a href="{{ url('projects:patterns:aspect-list', kwargs={'slug':object.slug, 'repository':link.slug}) }}">{{ link.name }}</a></p>
         <p>Slug: {{ link.slug }}</p>
         <p>URL: {{ link.repository.fetch_url }}</p>
     {% endfor %}
