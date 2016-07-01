@@ -48,17 +48,47 @@ urlpatterns = [
             ),
         ])
     ),
-    # Pattern views
     url(
-        r"^(?P<project>[\w-]+)/(?P<repository>[\w-]+)/",
+        r"^(?P<project>[\w-]+)/",
         include([
             url(
-                r"^patterns/",
-                include("mote.patterns.urls", namespace="patterns")
+                r"^$",
+                views.DetailView.as_view(),
+                name="project-detail"
             ),
             url(
-                r"^(?P<branch>[\w-]+)/patterns/",
-                include("mote.patterns.urls", namespace="patterns-branch")
+                r"^update/$",
+                views.UpdateView.as_view(),
+                name="project-update"
+            ),
+            url(
+                r"^delete/$",
+                views.DeleteView.as_view(),
+                name="project-delete"
+            ),
+            url(
+                r"^repos/add$",
+                views.RepositoryCreateView.as_view(),
+                name="repository-add"
+            ),
+            url(
+                r"^repos/quick-add$",
+                views.RepositoryQuickCreateView.as_view(),
+                name="repository-quick-add"
+            ),
+            # Pattern views
+            url(
+                r"^(?P<repository>[\w-]+)/",
+                include([
+                    url(
+                        r"^patterns/",
+                        include("mote.patterns.urls", namespace="patterns")
+                    ),
+                    url(
+                        r"^(?P<branch>[\w-]+)/patterns/",
+                        include("mote.patterns.urls", namespace="patterns-branch")
+                    ),
+                ])
             ),
         ])
     ),
