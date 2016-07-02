@@ -17,8 +17,27 @@
     </ul>
     <br>
     {% for link in object.repos_link.all() %}
-        <p>Name: <a href="{{ url('projects:patterns:aspect-list', kwargs={'slug':object.slug, 'repository':link.slug}) }}">{{ link.name }}</a></p>
-        <p>Slug: {{ link.slug }}</p>
-        <p>URL: {{ link.repository.fetch_url }}</p>
+        <h4>{{ link.name }}</h4>
+        <ul role="menu" class="horizontal">
+            <li role="menuitem"><a href="">Sync worktrees</a></li>
+            <li role="menuitem"><a href="">Add worktree</a></li>
+        </ul>
+        <br>
+        <ul>
+            {% for wt in link.repository.worktrees.all() %}
+                <li>
+                    <p>Branch: <a href="{{ url('projects:patterns-branch:aspect-list', kwargs={'slug':object.slug, 'repository':link.slug, 'branch':wt.branch}) }}">{{ wt.branch }}</a></p>
+                    <ul role="menu" class="horizontal">
+                        <li role="menuitem"><a href="{{ url('projects:repositories:worktree-update', kwargs={'slug':object.slug, 'repository':link.slug, 'pk':wt.id}) }}">Update</a></li>
+                        <li role="menuitem"><a href="">Pull</a></li>
+                    </ul>
+                    <br>
+                    <p>Type: {{ wt.pattern_engine }}</p>
+                    <p>Ready: {{ wt.ready }}</p>
+                    <p>Default: {{ wt.default }}</p>
+                    <p>Last Pull: {{ wt.updated_on.strftime('%c') }}</p>
+                </li>
+            {% endfor %}
+        </ul>
     {% endfor %}
 {% endblock %}

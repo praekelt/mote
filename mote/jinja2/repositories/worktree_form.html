@@ -1,0 +1,9 @@
+{% extends "projects/base.html" %}
+
+{% block content %}
+    <h2>Quick Add Repository for {{ project.name }}</h2>
+    <form action="" method="post">{{ csrf_input }}
+        {{ form.as_p() }}
+        <input type="submit" value="Save" />
+    </form>
+{% endblock %}

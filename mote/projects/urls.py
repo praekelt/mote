@@ -6,8 +6,8 @@ from . import views
 
 
 urlpatterns = [
-    url(r"^$", views.IndexView.as_view(), name="project-list"),
-    url(r"^add/$", views.CreateView.as_view(), name="project-add"),
+    url(r"^$", views.ProjectIndex.as_view(), name="project-list"),
+    url(r"^add/$", views.ProjectCreate.as_view(), name="project-add"),
     # The mote internal pattern library doesn't use a repo.
     url(
         r"^mote/",
@@ -23,17 +23,17 @@ urlpatterns = [
         include([
             url(
                 r"^$",
-                views.DetailView.as_view(),
+                views.ProjectDetail.as_view(),
                 name="project-detail"
             ),
             url(
                 r"^update/$",
-                views.UpdateView.as_view(),
+                views.ProjectUpdate.as_view(),
                 name="project-update"
             ),
             url(
                 r"^delete/$",
-                views.DeleteView.as_view(),
+                views.ProjectDelete.as_view(),
                 name="project-delete"
             ),
             url(
@@ -56,7 +56,17 @@ urlpatterns = [
                     ),
                     url(
                         r"^(?P<branch>[\w-]+)/patterns/",
-                        include("mote.patterns.urls", namespace="patterns-branch")
+                        include(
+                            "mote.patterns.urls",
+                            namespace="patterns-branch"
+                        )
+                    ),
+                    url(
+                        r"wt/",
+                        include(
+                            "mote.repositories.urls",
+                            namespace="repositories"
+                        )
                     ),
                 ])
             ),

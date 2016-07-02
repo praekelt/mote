@@ -8,30 +8,30 @@ from . import forms
 from .models import Project
 
 
-class IndexView(generic.ListView):
+class ProjectIndex(generic.ListView):
     template_name = "projects/index.html"
 
     def get_queryset(self):
         return Project.objects.order_by("-created_on")
 
 
-class DetailView(generic.DetailView):
+class ProjectDetail(generic.DetailView):
     model = Project
     template_name = "projects/detail.html"
 
 
-class CreateView(generic.CreateView):
+class ProjectCreate(generic.CreateView):
     model = Project
     fields = ["name", "slug", "description"]
     # form_class = forms.ProjectQuickCreateForm
 
 
-class UpdateView(generic.UpdateView):
+class ProjectUpdate(generic.UpdateView):
     model = Project
     fields = ["name", "slug", "description"]
 
 
-class DeleteView(generic.DeleteView):
+class ProjectDelete(generic.DeleteView):
     model = Project
     success_url = reverse_lazy("projects:project-list")
 

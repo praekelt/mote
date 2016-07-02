@@ -257,8 +257,16 @@ class Worktree(models.Model):
     head = models.CharField(max_length=255, default="")
     default = models.BooleanField(default=False)
     updated_on = models.DateTimeField(null=True)
-    library_root_path = models.CharField(max_length=255, default="")
-    static_path = models.CharField(max_length=255, default="")
+    library_root_path = models.CharField(
+        max_length=255,
+        default="",
+        help_text="Relative path to the location of the pattern library"
+    )
+    static_path = models.CharField(
+        max_length=255,
+        default="",
+        help_text="Relative path to the static files target build directory"
+    )
     static_build_cmd = models.CharField(max_length=255, default="")
     static_setup_cmd = models.CharField(max_length=255, default="")
     pattern_engine = models.CharField(
