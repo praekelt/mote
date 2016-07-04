@@ -19,7 +19,7 @@
     {% for link in object.repos_link.all() %}
         <h4>{{ link.name }}</h4>
         <ul role="menu" class="horizontal">
-            <li role="menuitem"><a href="">Sync worktrees</a></li>
+            <li role="menuitem"><a href="{{ url('projects:repositories:worktree-sync', kwargs={'slug':object.slug, 'repository':link.slug}) }}">Sync worktrees</a></li>
             <li role="menuitem"><a href="">Add worktree</a></li>
         </ul>
         <br>

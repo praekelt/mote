@@ -79,3 +79,18 @@ def pull_worktree(worktree_pk):
         return
 
     worktree.pull()
+
+
+@shared_task(ignore_result=True)
+def sync_worktrees(repository_pk):
+    log = logger.bind(repository_pk=repository_pk)
+    try:
+        repository = models.Repository.objects.get(pk=repository_pk)
+    except models.Project.DoesNotExist:
+        # An invalid repository_pk here is an edge case that could happen in
+        # the situation where a repository was deleted while this task was in
+        # the queue. Log the error and return.
+        log.warn("Could not find a Repository with given pk")
+        return
+
+    repository.sync_worktrees()

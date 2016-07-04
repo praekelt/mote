@@ -21,5 +21,9 @@ urlpatterns = [
             ),
         ])
     ),
-
+    url(
+        r"^sync/$",
+        views.WorktreeSync.as_view(),
+        name="worktree-sync"
+    ),
 ]
