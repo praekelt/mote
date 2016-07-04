@@ -64,3 +64,18 @@ def get_repository_copy_with_lock(repository_pk, expire=300):
     finally:
         if lock is not None:
             lock.release()
+
+
+@shared_task(ignore_result=True)
+def pull_worktree(worktree_pk):
+    log = logger.bind(worktree_pk=worktree_pk)
+    try:
+        worktree = models.Worktree.objects.get(pk=worktree_pk)
+    except models.Worktree.DoesNotExist:
+        # An invalid worktree_pk here is an edge case that could happen in
+        # the situation where a repository was deleted while this task was in
+        # the queue. Log the error and return.
+        log.warn("Could not find a Worktree with given pk")
+        return
+
+    worktree.pull()

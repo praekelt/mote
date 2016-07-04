@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 
-from django.conf.urls import url
+from django.conf.urls import url, include
 
 from . import views
 
@@ -8,8 +8,18 @@ from . import views
 urlpatterns = [
     url(
         r"^(?P<pk>[0-9]+)/",
-        views.WorktreeUpdate.as_view(),
-        name="worktree-update"
+        include([
+            url(
+                r"^$",
+                views.WorktreeUpdate.as_view(),
+                name="worktree-update"
+            ),
+            url(
+                r"^pull/$",
+                views.WorktreePull.as_view(),
+                name="worktree-pull"
+            ),
+        ])
     ),
 
 ]

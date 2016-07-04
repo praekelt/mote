@@ -42,7 +42,7 @@ class RepositoryCreateView(generic.FormView):
 
     def get_context_data(self, **kwargs):
         context = super(RepositoryCreateView, self).get_context_data(**kwargs)
-        project = get_object_or_404(Project, slug=self.kwargs['slug'])
+        project = get_object_or_404(Project, slug=self.kwargs["slug"])
         context['project'] = project
         return context
 
@@ -53,7 +53,7 @@ class RepositoryCreateView(generic.FormView):
         )
 
     def form_valid(self, form):
-        project = get_object_or_404(Project, slug=self.kwargs['slug'])
+        project = get_object_or_404(Project, slug=self.kwargs["slug"])
         project.add_repository_from_url(form.cleaned_data["repository_url"])
         return super(RepositoryCreateView, self).form_valid(form)
 
@@ -66,7 +66,7 @@ class RepositoryQuickCreateView(generic.FormView):
         context = super(
             RepositoryQuickCreateView, self
         ).get_context_data(**kwargs)
-        project = get_object_or_404(Project, slug=self.kwargs['slug'])
+        project = get_object_or_404(Project, slug=self.kwargs["slug"])
         context['project'] = project
         return context
 
@@ -77,6 +77,6 @@ class RepositoryQuickCreateView(generic.FormView):
         )
 
     def form_valid(self, form):
-        project = get_object_or_404(Project, slug=self.kwargs['slug'])
+        project = get_object_or_404(Project, slug=self.kwargs["slug"])
         project.add_repository_from_url(form.cleaned_data["repository_url"])
         return super(RepositoryQuickCreateView, self).form_valid(form)

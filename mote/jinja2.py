@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+from django.contrib import messages
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.core.urlresolvers import reverse
 
@@ -19,5 +20,6 @@ def environment(**options):
     env.globals.update({
         "static": staticfiles_storage.url,
         "url": reverse,
+        "get_messages": messages.get_messages,
     })
     return env

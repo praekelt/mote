@@ -29,7 +29,7 @@
                     <p>Branch: <a href="{{ url('projects:patterns-branch:aspect-list', kwargs={'slug':object.slug, 'repository':link.slug, 'branch':wt.branch}) }}">{{ wt.branch }}</a></p>
                     <ul role="menu" class="horizontal">
                         <li role="menuitem"><a href="{{ url('projects:repositories:worktree-update', kwargs={'slug':object.slug, 'repository':link.slug, 'pk':wt.id}) }}">Update</a></li>
-                        <li role="menuitem"><a href="">Pull</a></li>
+                        <li role="menuitem"><a href="{{ url('projects:repositories:worktree-pull', kwargs={'slug':object.slug, 'repository':link.slug, 'pk':wt.id}) }}">Pull</a></li>
                     </ul>
                     <br>
                     <p>Type: {{ wt.pattern_engine }}</p>

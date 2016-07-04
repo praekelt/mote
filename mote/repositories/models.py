@@ -279,6 +279,7 @@ class Worktree(models.Model):
     def pull(self):
         self.repository.handler.update_worktree(self.branch)
         self.updated_on = now()
+        self.save()
 
     @property
     def patterns_path(self):
