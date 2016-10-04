@@ -1,6 +1,0 @@
----
-text: Hello
-url: http://www.google.com
-include:
-    file: atoms.field_label.default
-    name: label

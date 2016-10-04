@@ -1,0 +1,23 @@
+{% load index %}
+
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Basic Patterns</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <h1>Basic Patterns</h1>
+    {% for category, items in menu_items %}
+        <h2>{{ category }}</h2>
+        {% for item in items %}
+        <li role="menuitem">
+            <a href="{% url 'mote:iframe' "view_mote_"|add:item %}?version=basic">{{ item }}</a>
+        </li>
+        {% endfor %}
+
+    {% endfor %}
+</body>
+</html>

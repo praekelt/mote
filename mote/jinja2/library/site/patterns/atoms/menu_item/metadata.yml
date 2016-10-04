@@ -1,8 +1,0 @@
----
-title: Menu Item
-description: at item in a menu
-flags:
-  busy: still needs testing
-include:
-  file: atoms.items
-  name: items

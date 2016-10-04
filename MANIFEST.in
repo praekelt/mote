@@ -1,0 +1,7 @@
+include AUTHORS.rst
+include CHANGELOG.rst
+include LICENSE
+include README.rst
+recursive-include mote/templates *
+recursive-include mote/templatetags *
+recursive-include mote/static *

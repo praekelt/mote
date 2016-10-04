@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% load index staticfiles %}
+
+{% block hero %}
+<section role="section" class="hero">
+    <div class="wrapper">
+        <div class="background"></div>
+        <div class="foreground">
+            <h1>Documentation</h1>
+            <p>Javascript module documentation</p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block content %}
+    <iframe src="{% static "jsdoc/index.html" %}"></iframe>
+    <style>
+        iframe {
+            width:100%;
+            border:0;
+            height:100vh;
+        }
+
+    </style>
+{% endblock %}

@@ -2,16 +2,11 @@ import os
 from setuptools import setup, find_packages
 
 
-def read(*paths):
-    """Build a file path from *paths* and return the contents."""
-    with open(os.path.join(*paths), 'r') as f:
-        return f.read()
-
 setup(
     name="mote",
     version="0.1",
     description="Core of the Mote styleguide framework.",
-    long_description=read('README.rst'),
+    long_description = open("README.rst", "r").read() + open("AUTHORS.rst", "r").read() + open("CHANGELOG.rst", "r").read(),
     author="Praekelt Consulting",
     author_email="dev@praekelt.com",
     license="BSD",
@@ -24,7 +19,6 @@ setup(
         "tox",
     ],
     classifiers=[
-        "Development Status :: 4 - Beta",
         "Framework :: Django",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: BSD License",
