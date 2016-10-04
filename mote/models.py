@@ -250,7 +250,6 @@ class Project(MetadataMixin):
     def __init__(self, id):
         self._id = id
         self._parent = None
-        #self._root = os.path.join(os.path.dirname(__file__), "..", "projects", id)
         self._root = os.path.join(PROJECT_PATHS[id], id)
         super(Project, self).__init__()
 
