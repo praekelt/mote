@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "mote/base.html" %}
 
 {% block hero %}
     <div class="background"></div>
@@ -8,7 +8,6 @@
 {% endblock %}
 
 {% block menu %}
-    {% comment %}List projects by default{% endcomment %}
     <ul role="menu" class="vertical tier-1" id="sidebar-nav">
         {% for project in projects %}
             <li role="menuitem">

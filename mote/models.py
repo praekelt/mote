@@ -1,9 +1,11 @@
 """Model the elements picked up from the filesystem"""
 
 import os
-import ujson as json
 
+import ujson as json
 from cached_property import cached_property
+
+from mote import PROJECT_PATHS
 
 
 RESERVED_IDS = (
@@ -248,7 +250,8 @@ class Project(MetadataMixin):
     def __init__(self, id):
         self._id = id
         self._parent = None
-        self._root = os.path.join(os.path.dirname(__file__), "..", "projects", id)
+        #self._root = os.path.join(os.path.dirname(__file__), "..", "projects", id)
+        self._root = os.path.join(PROJECT_PATHS[id], id)
         super(Project, self).__init__()
 
     @cached_property

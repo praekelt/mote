@@ -46,10 +46,4 @@ urlpatterns = patterns("",
         views.ProjectView.as_view(),
         name="project"
     ),
-
-    url(r"^brand-guide/$", views.Brand.as_view(), name="brand"),
-    url(r"^documentation/$", views.Docs.as_view(), name="documentation"),
-    url(r"^basic/$", views.Basic.as_view(), name="basic"),
-    url(r"^create_pattern/(?P<library>\w+)?/$", views.create_pattern, name="create_pattern"),
-    url(r"^sort_menu/$", views.sort_menu, name="sort_menu"),
 )
