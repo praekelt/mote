@@ -1,5 +1,6 @@
 import re
 import md5
+import json
 
 from bs4 import BeautifulSoup
 
@@ -214,7 +215,10 @@ class MaskNode(template.Node):
 
     def render(self, context):
         var = self.var.resolve(context)
-        if self.name in context:
+        request = context["request"]
+        if self.name in request.GET:
+            var.update(json.loads(request.GET[self.name]))
+        elif self.name in context:
             var.update(context[self.name])
         context[self.name] = var
         return ""
