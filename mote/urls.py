@@ -1,49 +1,84 @@
 from django.conf.urls import patterns, url, include
 
-from mote import views
+from rest_framework.urlpatterns import format_suffix_patterns
+
+from mote import views, api
 
 
-urlpatterns = patterns("",
+app_name = "mote"
+
+urlpatterns = [
     url(r"^$", views.HomeView.as_view(), name="home"),
 
     url(
-        r"^project/partial/(?P<id>[\w-]+)/(?P<aspect>[\w-]+)/(?P<pattern>[\w-]+)/(?P<element>[\w-]+)/(?P<variation>[\w-]+)/$",
+        r"^project/partial/(?P<project>[\w-]+)/(?P<aspect>[\w-]+)/(?P<pattern>[\w-]+)/(?P<element>[\w-]+)/(?P<variation>[\w-]+)/$",
         views.VariationPartialView.as_view(),
         name="variation-partial"
     ),
     url(
-        r"^project/iframe/(?P<id>[\w-]+)/(?P<aspect>[\w-]+)/(?P<pattern>[\w-]+)/(?P<element>[\w-]+)/(?P<variation>[\w-]+)/$",
+        r"^project/iframe/(?P<project>[\w-]+)/(?P<aspect>[\w-]+)/(?P<pattern>[\w-]+)/(?P<element>[\w-]+)/(?P<variation>[\w-]+)/$",
         views.VariationIframeView.as_view(),
         name="variation-iframe"
     ),
     url(
-        r"^project/partial/(?P<id>[\w-]+)/(?P<aspect>[\w-]+)/(?P<pattern>[\w-]+)/(?P<element>[\w-]+)/$",
+        r"^project/partial/(?P<project>[\w-]+)/(?P<aspect>[\w-]+)/(?P<pattern>[\w-]+)/(?P<element>[\w-]+)/$",
         views.ElementPartialView.as_view(),
         name="element-partial"
     ),
     url(
-        r"^project/iframe/(?P<id>[\w-]+)/(?P<aspect>[\w-]+)/(?P<pattern>[\w-]+)/(?P<element>[\w-]+)/$",
+        r"^project/iframe/(?P<project>[\w-]+)/(?P<aspect>[\w-]+)/(?P<pattern>[\w-]+)/(?P<element>[\w-]+)/$",
         views.ElementIframeView.as_view(),
         name="element-iframe"
     ),
     url(
-        r"^project/(?P<id>[\w-]+)/(?P<aspect>[\w-]+)/(?P<pattern>[\w-]+)/(?P<element>[\w-]+)/$",
+        r"^project/(?P<project>[\w-]+)/(?P<aspect>[\w-]+)/(?P<pattern>[\w-]+)/(?P<element>[\w-]+)/$",
         views.ElementIndexView.as_view(),
         name="element-index"
     ),
     url(
-        r"^project/(?P<id>[\w-]+)/(?P<aspect>[\w-]+)/(?P<pattern>[\w-]+)/$",
+        r"^project/(?P<project>[\w-]+)/(?P<aspect>[\w-]+)/(?P<pattern>[\w-]+)/$",
         views.PatternView.as_view(),
         name="pattern"
     ),
     url(
-        r"^project/(?P<id>[\w-]+)/(?P<aspect>[\w-]+)/$",
+        r"^project/(?P<project>[\w-]+)/(?P<aspect>[\w-]+)/$",
         views.AspectView.as_view(),
         name="aspect"
     ),
     url(
-        r"^project/(?P<id>[\w-]+)/$",
+        r"^project/(?P<project>[\w-]+)/$",
         views.ProjectView.as_view(),
         name="project"
     ),
-)
+]
+
+
+api_urlpatterns = [
+    url(
+        r"^api/project/(?P<project>[\w-]+)/(?P<aspect>[\w-]+)/(?P<pattern>[\w-]+)/(?P<element>[\w-]+)/(?P<variation>[\w-]+)/$",
+        api.VariationDetail.as_view(),
+        name="api-variation-detail",
+    ),
+    url(
+        r"^api/project/(?P<project>[\w-]+)/(?P<aspect>[\w-]+)/(?P<pattern>[\w-]+)/(?P<element>[\w-]+)/$",
+        api.ElementDetail.as_view(),
+        name="api-element-detail",
+    ),
+    url(
+        r"^api/project/(?P<project>[\w-]+)/(?P<aspect>[\w-]+)/(?P<pattern>[\w-]+)/$",
+        api.PatternDetail.as_view(),
+        name="api-pattern-detail"
+    ),
+    url(
+        r"^api/project/(?P<project>[\w-]+)/(?P<aspect>[\w-]+)/$",
+        api.AspectDetail.as_view(),
+        name="api-aspect-detail"
+    ),
+    url(
+        r"^api/project/(?P<project>[\w-]+)/$",
+        api.ProjectDetail.as_view(),
+        name="api-project-detail"
+    ),
+]
+
+urlpatterns = urlpatterns + format_suffix_patterns(api_urlpatterns)

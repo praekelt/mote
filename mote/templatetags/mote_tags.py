@@ -1,5 +1,6 @@
 import re
 import md5
+import json
 
 from bs4 import BeautifulSoup
 
@@ -62,7 +63,7 @@ class RenderElementNode(template.Node):
             url = reverse(
                 "mote:variation-partial",
                 kwargs=dict(
-                    id=obj.project.id,
+                    project=obj.project.id,
                     aspect=obj.aspect.id,
                     pattern=obj.pattern.id,
                     element=obj.element.id,
@@ -73,7 +74,7 @@ class RenderElementNode(template.Node):
             url = reverse(
                 "mote:element-partial",
                 kwargs=dict(
-                    id=obj.project.id,
+                    project=obj.project.id,
                     aspect=obj.aspect.id,
                     pattern=obj.pattern.id,
                     element=obj.id
@@ -138,7 +139,7 @@ class RenderElementIndexNode(template.Node):
         url = reverse(
             "mote:element-index",
             kwargs=dict(
-                id=obj.project.id,
+                project=obj.project.id,
                 aspect=obj.aspect.id,
                 pattern=obj.pattern.id,
                 element=obj.id
@@ -214,7 +215,10 @@ class MaskNode(template.Node):
 
     def render(self, context):
         var = self.var.resolve(context)
-        if self.name in context:
+        request = context["request"]
+        if self.name in request.GET:
+            var.update(json.loads(request.GET[self.name]))
+        elif self.name in context:
             var.update(context[self.name])
         context[self.name] = var
         return ""

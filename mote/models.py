@@ -68,12 +68,16 @@ class MetadataMixin(object):
         while node._parent is not None:
             for k, v in node._json_files.items():
                 if k not in result:
+                    fp = open(v, "r")
                     try:
-                        result[k] = json.loads(open(v, "r").read())
-                    except ValueError:
-                        raise "Invalid JSON at %s" % v
-                    # todo: do lazy loading properly
-                    #result[k] = lambda: json.loads(open(v, "r"))
+                        buf = fp.read()
+                    finally:
+                        fp.close()
+                    if buf:
+                        try:
+                            result[k] = json.loads(buf)
+                        except ValueError:
+                            raise RuntimeError, "Invalid JSON at %s" % v
             node = node._parent
         return result
 

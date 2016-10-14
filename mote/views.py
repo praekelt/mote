@@ -43,7 +43,7 @@ class ProjectView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ProjectView, self).get_context_data(**kwargs)
-        context["project"] = Project(kwargs["id"])
+        context["project"] = Project(kwargs["project"])
         return context
 
 
@@ -54,7 +54,7 @@ class AspectView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(AspectView, self).get_context_data(**kwargs)
-        project = Project(kwargs["id"])
+        project = Project(kwargs["project"])
         context["aspect"] = Aspect(kwargs["aspect"], project)
         return context
 
@@ -66,7 +66,7 @@ class PatternView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PatternView, self).get_context_data(**kwargs)
-        project = Project(kwargs["id"])
+        project = Project(kwargs["project"])
         aspect = Aspect(kwargs["aspect"], project)
         pattern = Pattern(kwargs["pattern"], aspect)
         context["pattern"] = pattern
@@ -94,7 +94,7 @@ class ElementBaseView(TemplateView):
 
     @cached_property
     def element(self):
-        project = Project(self.kwargs["id"])
+        project = Project(self.kwargs["project"])
         aspect = Aspect(self.kwargs["aspect"], project)
         pattern = Pattern(self.kwargs["pattern"], aspect)
         element = Element(self.kwargs["element"], pattern)
