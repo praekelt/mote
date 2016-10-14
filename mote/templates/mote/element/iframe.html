@@ -2,7 +2,10 @@
 <!DOCTYPE html>
 
 <html class="no-js" lang="">
-{% render_element element.aspect.global.site_head %}
+    <head>
+        {% block mote-site-head %}
+        {% endblock %}
+    </head>
     <body>
 
     {% render_element element %}
