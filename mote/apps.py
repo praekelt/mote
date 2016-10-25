@@ -17,4 +17,5 @@ class MoteConfig(AppConfig):
             pth = os.path.join(os.path.dirname(mod.__file__), "..", "mote", "projects")
             if os.path.exists(pth):
                 for id in os.listdir(pth):
-                    PROJECT_PATHS[id] = pth
+                    if not id.startswith("."):
+                        PROJECT_PATHS[id] = pth
