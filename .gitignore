@@ -16,6 +16,7 @@ npm-debug.log
 # Other
 *.swo
 .DS_Store
+.idea/
 
 # Mote
 /repositories/
@@ -23,3 +24,6 @@ mote/settings/local*
 mote.sqlite3
 dist/
 mote/static/repositories
+
+# Sphinx documentation
+docs/_build/
