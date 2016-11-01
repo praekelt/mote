@@ -16,6 +16,7 @@ npm-debug.log
 # Other
 *.swo
 .DS_Store
+.idea/
 
 # Mote
 /repositories/
