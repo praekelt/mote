@@ -13,6 +13,7 @@ Contents:
 
    gettingstarted
    pattern
+   metadata
 
 Indices and tables
 ==================
