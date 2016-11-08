@@ -10,7 +10,6 @@
     <title></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link rel="stylesheet" type="text/css" href="{% static "mote/css/fonts.css" %}"/>
     <link rel="stylesheet" type="text/css" href="{% static "mote/css/mote.css" %}"/>
     <link rel="stylesheet" type="text/css" href="{% static "mote/js/libs/prism/css/prism.css" %}"/>
@@ -20,8 +19,8 @@
     <script src="{% static "mote/js/libs/hideseek/js/jquery.hideseek.js" %}"></script>
     <script src="{% static "mote/js/libs/lazysizes/js/lazysizes.js" %}"></script>
     <script src="{% static "mote/js/mote.js" %}"></script>
-
 </head>
+
 <body data-library="{{ library }}">
 
     {% block header %}
@@ -30,21 +29,6 @@
             <a href="{% url "mote:home" %}" class="logo">
                 <img src="{% static "mote/img/logo.png" %}" alt="" />
             </a>
-            <nav>
-                <ul role="menu" class="horizontal">
-                    {% comment %}
-                    <li role="menuitem">
-                        <a href="{% url "mote:documentation" %}" class="{% if active_page == 'docs' %}active{% endif %}">Documentation</a>
-                    </li>
-                    <li role="menuitem" >
-                        <a href="{% url "mote:brand" %}" class="{% if active_page == 'brand' %}active{% endif %}">Brand Guide</a>
-                    </li>
-                    <li role="menuitem">
-                        <a href="{% url 'mote:project' library=library %}" class="{% if active_page == 'patterns' %}active{% endif %}">Pattern Library</a>
-                    </li>
-                    {% endcomment %}
-                </ul>
-            </nav>
         </div>
     </header>
     {% endblock %}
@@ -56,15 +40,9 @@
         </div>
     </section>
 
-    {% comment %}
-    {% block toolbar %}
-    {% endblock %}
-    {% endcomment %}
-
     <main role="main">
         <div class="wrapper">
             <aside role="sidebar">
-
 
                 {% if active_category %}
 
@@ -89,28 +67,6 @@
                     </form>
                 {% endif %}
 
-                {% comment %}
-                <div class="creator">
-                  <button id="create-pattern">Create New</button>
-                  <div class="creator-input">
-                    <label for="pattern-type">Pattern:</label>
-                    <select id="pattern-type" required>
-                        {% for key, value in menu_items.items %}
-
-                            <option value="{{ key }}">{{ key|title }}</option>
-
-                        {% endfor %}
-                    </select>
-                    <br/>
-                    <label for="pattern-name">Name:</label>
-                    <input type="text" required id="pattern-name"/>
-                    <label for="pattern-desc">Description:</label>
-                    <input type="text" required id="pattern-desc"/>
-
-                  </div>
-                  <button id="submit-pattern">Submit</button>
-                </div>
-                {% endcomment %}
 
                 {% block menu %}
                 {% endblock %}
@@ -127,5 +83,3 @@
 
 </body>
 </html>
-
-<script src="{% static "js/animations.js" %}"></script>

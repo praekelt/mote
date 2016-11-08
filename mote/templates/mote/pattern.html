@@ -56,6 +56,5 @@
     {% for element in pattern.elements %}
         <a name="element-{{ element.id }}">&nbsp;</a>
         {% render_element_index element %}
-        {% comment %}{% include element.index_template_path %}{% endcomment %}
     {% endfor %}
 {% endblock %}
