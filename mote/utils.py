@@ -17,4 +17,4 @@ def _deepmerge(source, delta):
 def deepmerge(source, delta):
     """Return a deep merge of two dictionaries"""
 
-    return _merge(deepcopy(source), delta)
+    return _deepmerge(deepcopy(source), delta)
