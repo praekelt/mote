@@ -1,22 +1,12 @@
-import os
-import glob
-import re
-from collections import OrderedDict
-
-import ujson as json
-from termcolor import cprint
-
 from cached_property import cached_property
 
 from django.views.generic.base import TemplateView
-from django.conf import settings
 from django.http import HttpResponse
-from django.template import loader
 from django.template import TemplateDoesNotExist
 from django.template.loader import render_to_string
-from django.template import engines
 from django.templatetags.static import PrefixNode
 from django.utils.six.moves.urllib.parse import urljoin
+from django.conf import settings
 
 from mote import PROJECT_PATHS
 from mote.models import Project, Aspect, Pattern, Element, Variation
