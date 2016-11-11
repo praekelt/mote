@@ -4,19 +4,17 @@ import json
 
 from bs4 import BeautifulSoup
 
+from django.core.cache import cache
+from django.core.urlresolvers import reverse, resolve, get_script_prefix
+from django.http import HttpResponse
 from django import template
+from django.template.base import VariableDoesNotExist
+from django.template.response import TemplateResponse
 from django.utils.translation import ugettext as _
 from django.utils.functional import Promise
-from django.templatetags.cache import CacheNode
-from django.template import resolve_variable
-from django.template.base import VariableDoesNotExist
-from django.core.cache import cache
-from django.core.cache.utils import make_template_fragment_key
-from django.core.urlresolvers import reverse, resolve, get_script_prefix
-
-from django.template.response import TemplateResponse
-from django.http import HttpResponse
 from django.conf import settings
+
+from mote.utils import deepmerge
 
 
 register = template.Library()
@@ -217,8 +215,8 @@ class MaskNode(template.Node):
         var = self.var.resolve(context)
         request = context["request"]
         if self.name in request.GET:
-            var.update(json.loads(request.GET[self.name]))
+            var = deepmerge(var, json.loads(request.GET[self.name]))
         elif self.name in context:
-            var.update(context[self.name])
+            var = deepmerge(var, context[self.name])
         context[self.name] = var
         return ""
