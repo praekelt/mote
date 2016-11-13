@@ -12,7 +12,7 @@ class TagsTestCase(TestCase):
         super(TagsTestCase, cls).setUpTestData()
         cls.factory = RequestFactory()
 
-    def test_render_element(self):
+    def test_render_element_by_identifier(self):
         request = self.factory.get("/")
         t = template.Template("""{% load mote_tags %}
             {% render_element "myproject.website.atoms.button" %}"""
