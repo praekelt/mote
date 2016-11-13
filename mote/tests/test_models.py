@@ -3,11 +3,11 @@ from django.test import TestCase
 from mote import models
 
 
-class TestModels(TestCase):
+class ModelsTestCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        super(TestModels, cls).setUpTestData()
+        super(ModelsTestCase, cls).setUpTestData()
         cls.project = models.Project("myproject")
         cls.aspect = models.Aspect("website", cls.project)
         cls.pattern = models.Pattern("atoms", cls.aspect)

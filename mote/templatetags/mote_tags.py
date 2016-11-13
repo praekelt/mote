@@ -1,6 +1,7 @@
 import re
 import md5
 import json
+import types
 
 from bs4 import BeautifulSoup
 
@@ -23,11 +24,11 @@ register = template.Library()
 # todo: consolidate render_element and render_element_index
 @register.tag
 def render_element(parser, token):
-    """{% render_element object [k=v] [k=v] ... %}"""
+    """{% render_element element_or_identifier [k=v] [k=v] ... %}"""
     tokens = token.split_contents()
     if len(tokens) < 2:
         raise template.TemplateSyntaxError(
-            "render_element object [k=v] [k=v] ... %}"
+            "render_element element_or_identifier [k=v] [k=v] ... %}"
         )
     di = {}
     for t in tokens[2:]:
@@ -38,14 +39,36 @@ def render_element(parser, token):
 
 class RenderElementNode(template.Node):
 
-    def __init__(self, obj, **kwargs):
-        self.obj = template.Variable(obj)
+    def __init__(self, element_or_identifier, **kwargs):
+        self.element_or_identifier = template.Variable(element_or_identifier)
         self.kwargs = {}
         for k, v in kwargs.items():
             self.kwargs[k] = template.Variable(v)
 
     def render(self, context):
-        obj = self.obj.resolve(context)
+        # We must import late
+        from mote.models import Project, Aspect, Pattern, Element, Variation
+
+        element_or_identifier = self.element_or_identifier.resolve(context)
+
+        # If element_or_identifier is not an element or variation convert it
+        if not isinstance(element_or_identifier, (Element, Variation)):
+            parts = element_or_identifier.split(".")
+            length = len(parts)
+            if length not in (4, 5):
+                raise template.TemplateSyntaxError(
+                    "Invalid identifier %s" % element_or_identifier
+                )
+            project = Project(parts[0])
+            aspect = Aspect(parts[1], project)
+            pattern = Pattern(parts[2], aspect)
+            obj = Element(parts[3], pattern)
+            if length == 5:
+                obj = Variation(parts[4], obj)
+        else:
+            obj = element_or_identifier
+
+        # Resolve the kwargs
         resolved = {}
         for k, v in self.kwargs.items():
             try:
@@ -56,7 +79,6 @@ class RenderElementNode(template.Node):
                 r = unicode(r)
             resolved[k] = r
 
-        from mote.models import Variation
         if isinstance(obj, Variation):
             url = reverse(
                 "mote:variation-partial",
