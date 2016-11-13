@@ -77,7 +77,13 @@ class RenderElementNode(template.Node):
                 continue
             if isinstance(r, Promise):
                 r = unicode(r)
-            resolved[k] = r
+            # Attempt to convert to JSON
+            #if "{" in r:
+            #    import pdb;pdb.set_trace()
+            try:
+                resolved[k] = json.loads(unicode(r))
+            except ValueError:
+                resolved[k] = r
 
         if isinstance(obj, Variation):
             url = reverse(
