@@ -5,10 +5,12 @@ Docs: https://pypi.praekelt.com/root/praekelt/mote/latest/+doc/index.html
 
 Quick start:
 
-- virtualenv ve
-- ./ve/bin/pip install -r requirements,txt
-- ./ve/bin/python manage.py migrate --run-syncdb
-- ./ve/bin/python manage.py runserver 0.0.0.0:8000
+Mote is intended to be a standalone library, not a project, but it can indeed be run with::
+
+    - virtualenv ve
+    - ./ve/bin/pip install -r mote/tests/requirements/19.txt
+    - ./ve/bin/python mote/tests/manage.py migrate --run-syncdb
+    - ./ve/bin/python mote/tests/manage.py runserver 0.0.0.0:8000
 
 metadata.json
 Per project metadata

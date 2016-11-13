@@ -14,7 +14,11 @@ class MoteConfig(AppConfig):
     def ready(self):
         for name in settings.INSTALLED_APPS:
             mod = import_module(name)
-            pth = os.path.join(os.path.dirname(mod.__file__), "..", "mote", "projects")
+            # The test environment unfortunately requires special handling
+            if name == "mote.tests":
+                pth = os.path.join(os.path.dirname(mod.__file__), "projects")
+            else:
+                pth = os.path.join(os.path.dirname(mod.__file__), "..", "mote", "projects")
             if os.path.exists(pth):
                 for id in os.listdir(pth):
                     if not id.startswith("."):
