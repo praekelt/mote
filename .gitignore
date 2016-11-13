@@ -27,3 +27,6 @@ mote/static/repositories
 
 # Sphinx documentation
 docs/_build/
+
+db.sqlite3
+.tox

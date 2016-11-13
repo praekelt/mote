@@ -16,7 +16,7 @@ class MoteConfig(AppConfig):
             mod = import_module(name)
             # The test environment unfortunately requires special handling
             if name == "mote.tests":
-                pth = os.path.join(os.path.dirname(mod.__file__), "projects")
+                pth = os.path.join(os.path.dirname(mod.__file__), "mote", "projects")
             else:
                 pth = os.path.join(os.path.dirname(mod.__file__), "..", "mote", "projects")
             if os.path.exists(pth):

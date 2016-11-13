@@ -1,6 +1,5 @@
 from django.test import TestCase
 
-from mote import PROJECT_PATHS
 from mote import models
 
 
@@ -8,6 +7,7 @@ class TestModels(TestCase):
 
     @classmethod
     def setUpTestData(cls):
+        super(TestModels, cls).setUpTestData()
         cls.project = models.Project("myproject")
         cls.aspect = models.Aspect("website", cls.project)
         cls.pattern = models.Pattern("atoms", cls.aspect)

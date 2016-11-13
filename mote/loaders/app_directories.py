@@ -7,4 +7,6 @@ from django.template.loaders.filesystem import Loader as FilesystemLoader
 class Loader(FilesystemLoader):
 
     def get_dirs(self):
-        return get_app_template_dirs(os.path.join("..", "mote", "projects"))
+        # The testing environment does not require upward traversal
+        return get_app_template_dirs(os.path.join("..", "mote", "projects")) \
+            + get_app_template_dirs(os.path.join("mote", "projects"))

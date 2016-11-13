@@ -9,8 +9,8 @@ Mote is intended to be a standalone library, not a project, but it can indeed be
 
     - virtualenv ve
     - ./ve/bin/pip install -r mote/tests/requirements/19.txt
-    - ./ve/bin/python mote/tests/manage.py migrate --run-syncdb
-    - ./ve/bin/python mote/tests/manage.py runserver 0.0.0.0:8000
+    - ./ve/bin/python manage.py migrate --run-syncdb
+    - ./ve/bin/python manage.py runserver 0.0.0.0:8000 --settings=mote.tests.settings.19
 
 metadata.json
 Per project metadata
