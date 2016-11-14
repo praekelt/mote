@@ -59,15 +59,15 @@ class TagsTestCase(TestCase):
             </button>"""
         )
 
-    def xtest_render_element_with_kwargs_combo(self):
-        # todo: this is a hard one
+    def test_render_element_with_kwargs_variables(self):
         request = self.factory.get("/")
         t = template.Template("""{% load mote_tags %}
-            {% render_element "myproject.website.atoms.button" button='{"Italic": {"text": some_text}}' %}"""
+            {% render_element "myproject.website.atoms.button" button='{"Italic": {"text": "{{ foo }}"}}' number=number %}"""
         )
         result = t.render(template.Context({
             "request": request,
-            "some_text": "Foo"
+            "foo": "Foo",
+            "number": 1
         }))
         self.assertHTMLEqual(
             result,

@@ -51,8 +51,8 @@ class RenderElementNode(template.Node):
 
         element_or_identifier = self.element_or_identifier.resolve(context)
 
-        # If element_or_identifier is not an element or variation convert it
-        if not isinstance(element_or_identifier, (Element, Variation)):
+        # If element_or_identifier is a string convert it
+        if isinstance(element_or_identifier, (unicode, str)):
             parts = element_or_identifier.split(".")
             length = len(parts)
             if length not in (4, 5):
@@ -77,12 +77,21 @@ class RenderElementNode(template.Node):
                 continue
             if isinstance(r, Promise):
                 r = unicode(r)
-            # Attempt to convert to JSON
-            #if "{" in r:
-            #    import pdb;pdb.set_trace()
-            try:
-                resolved[k] = json.loads(unicode(r))
-            except ValueError:
+
+            # Strings may be interpreted further
+            if isinstance(r, (unicode, str)):
+
+                # Attempt to resolve any variables by rendering
+                t = template.Template(r)
+                raw_struct = t.render(context)
+
+                # Attempt to convert to JSON
+                try:
+                    resolved[k] = json.loads(raw_struct)
+                except ValueError:
+                    resolved[k] = r
+
+            else:
                 resolved[k] = r
 
         if isinstance(obj, Variation):
