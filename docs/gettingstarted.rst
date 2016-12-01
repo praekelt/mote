@@ -10,7 +10,7 @@ First, you must add Mote to your project's ``requirements.txt`` file, like so:
 
 ::
 
-    -e git+https://github.com/praekelt/mote.git@develop#egg=mote
+    mote-prk
 
 Next, you must create a route to Mote in ``urls.py``:
 
