@@ -1,0 +1,18 @@
+{
+
+    "pattern_dir": "projects",
+
+    "libraries": [
+        "barron",
+        "kevro"
+    ],
+
+    "ui_config": {
+        "logo": "logo.png",
+        "colors": {
+            "primary": "#ffffff",
+            "secondary": "#000000",
+            "tertiary": "#b4da55"
+        }
+    }
+}

@@ -1,0 +1,18 @@
+{% extends "mote/base.html" %}
+
+{% block hero %}
+    <div class="background"></div>
+    <div class="foreground">
+        <h1>Pattern Library</h1>
+    </div>
+{% endblock %}
+
+{% block menu %}
+    <ul role="menu" class="vertical tier-1" id="sidebar-nav">
+        {% for project in projects %}
+            <li role="menuitem">
+                <a href="{% url 'mote:project' project=project.id %}">{{ project.title }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
