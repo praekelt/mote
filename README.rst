@@ -5,8 +5,6 @@ Mote
    :align: center
    :alt: Travis
 
-Docs: https://pypi.praekelt.com/root/praekelt/mote/latest/+doc/index.html
-
 Quick start
 ===========
 
