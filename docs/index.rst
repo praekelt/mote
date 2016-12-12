@@ -15,6 +15,7 @@ Contents:
    pattern
    metadata
    multiple-mote-projects
+   advanced-mote
 
 Indices and tables
 ==================
