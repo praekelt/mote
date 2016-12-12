@@ -25,7 +25,7 @@ Your directory tree should now look something like this:
     │       └── iframe.html
     └── website
 
-This ``mote`` directory is reserved for overriding Mote's templates on a per-project basis. ``iframe.html`` is the template used within the iframe, and which encapsulates every pattern. Think of it as a Mote-specific ``base.html`` as one would find in any other Django project.
+This ``mote`` directory is reserved for overriding Mote's templates on a per-project basis. ``iframe.html`` is the template used within the iframe, and which encapsulates every pattern. Think of it as a Mote-specific ``base.html`` as one would find in any other Django project, and you can have a unique one for each Mote project in your repo.
 
 Iframe.html contents
 --------------------
