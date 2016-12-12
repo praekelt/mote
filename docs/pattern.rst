@@ -54,49 +54,8 @@ This is where the markup of the component resides.
 
 Congratulations! Your pattern should be appearing in the Mote interface.
 
-Pattern Documentation
-----------
-
-Ideally, each component should come with some usage examples. Simple components, such as our "Button" component, won't require much of this, but it becomes increasingly necessary as pattern complexity increases.
-
-As of the current version of Mote, this requires a bit of copying and pasting.
-
-.. code-block:: html
-
-    <!-- button/index.html -->
-    {% extends "mote/element/index.html" %}
-    {% load mote_tags %}
-
-    {% block codeblock %}
-    <div class="sg-code-block">
-        <h4 class="title">
-            Button Default State
-        </h4>
-        <div class="description">
-            Code Block Description
-        </div>
-        <div class="code-example">
-            <pre>
-                <code class="language-markup">
-                    <xmp>
-
-    <button class="Button">I am a button</button>
-
-                    </xmp>
-                </code>
-            </pre>
-        </div>
-        <!-- code-example -->
-        </div>
-    <!-- sg-code-block -->
-    {% endblock %}
-
-It is worth noting that the indentation of the button inside of the ``code-example`` tag is not an accident. Indentation is treated as part of the pre-formatted text.
-
-A useful trick is to use ``{% render_element original_element %}`` in place of manually writing the markup into the code block. Similarly, one can also do this for variations, explained further down in this document.
-
 Dummy Data
---------------
+----------
 
 When composing complex interfaces out of various patterns, it becomes necessary to inject "dummy data". This can be used to emulate content, or to apply states and additional styles to components.
 
@@ -111,7 +70,7 @@ When composing complex interfaces out of various patterns, it becomes necessary 
     }
 
 Using Dummy Data
-################
+----------------
 
 Once the dummy data has been created, it is can be consumed in ``element.html`` like so:
 
@@ -138,7 +97,7 @@ Therefore, it is strongly recommended to use the ``{% mask %}`` tag as it carrie
     <button class="Button {{ button.modifiers }}">{{ button.text }}</button>
 
 Creating variations of patterns
-###############################
+-------------------------------
 
 A single pattern may require numerous variations to fully demonstrate and document its usage. Fortunately, Mote makes this easy for us.
 
@@ -182,6 +141,47 @@ As the code suggests, this will render the original button, and perform a deep m
 If you go and edit the original button's markup, it will reflect throughout all its variations as well.
 
 Elsewhere in Mote, you may now also directly render a variation like so: ``{% render_element element.aspect.atoms.button.secondary %}``.
+
+Pattern Documentation
+---------------------
+
+Ideally, each component should come with some usage examples. Simple components, such as our "Button" component, won't require much of this, but it becomes increasingly necessary as pattern complexity increases.
+
+As of the current version of Mote, this requires a bit of copying and pasting.
+
+.. code-block:: html
+
+    <!-- button/index.html -->
+    {% extends "mote/element/index.html" %}
+    {% load mote_tags %}
+
+    {% block codeblock %}
+    <div class="sg-code-block">
+        <h4 class="title">
+            Button Default State
+        </h4>
+        <div class="description">
+            Code Block Description
+        </div>
+        <div class="code-example">
+            <pre>
+                <code class="language-markup">
+                    <xmp>
+
+    <button class="Button">I am a button</button>
+
+                    </xmp>
+                </code>
+            </pre>
+        </div>
+        <!-- code-example -->
+        </div>
+    <!-- sg-code-block -->
+    {% endblock %}
+
+It is worth noting that the indentation of the button inside of the ``code-example`` tag is not an accident. Indentation is treated as part of the pre-formatted text.
+
+A useful trick is to use ``{% render_element element %}`` in place of manually writing the markup into the code block. Similarly, one can also do this for variations, explained further down in this document.
 
 Pattern Composition
 ###################
