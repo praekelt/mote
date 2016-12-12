@@ -14,6 +14,7 @@ Contents:
    gettingstarted
    pattern
    metadata
+   multiple-mote-projects
 
 Indices and tables
 ==================

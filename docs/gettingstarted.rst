@@ -110,3 +110,7 @@ A typical Mote pattern requires the following structure in order to render that 
         ├── json
         │   └── data.json
         └── metadata.json
+
+Look at this Gist_ to get an idea of what the contents of each file are expected to look like.
+
+.. _Gist: https://gist.github.com/CSergienko/023b0066c4dedf74c98ff082d81e478c
