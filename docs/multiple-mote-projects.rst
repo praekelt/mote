@@ -42,7 +42,7 @@ The contents of this file depend entirely on what your needs are for a project. 
     <head>
         <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block extra_title %}Mobius{% endblock extra_title %}</title>
+        <title>{% block extra_title %}My Project Name{% endblock extra_title %}</title>
 
         {% block extra_meta %}
         <meta name="description" content="My Project Name" />
