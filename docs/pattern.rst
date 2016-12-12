@@ -88,7 +88,7 @@ As of the current version of Mote, this requires a bit of copying and pasting.
 
 It is worth noting that the indentation of the button inside of the ``code-example`` tag is not an accident. Indentation is treated as part of the pre-formatted text.
 
-A useful trick is to use ``{% render_element element.aspect.atoms.button %}`` in place of manually writing the markup into the code block.
+A useful trick is to use ``{% render_element original_element %}`` in place of manually writing the markup into the code block. Similarly, one can also do this for variations, explained further down in this document.
 
 Dummy Data
 --------------
