@@ -1,6 +1,11 @@
 Handling multiple projects
 ##########################
 
+.. contents::
+
+Overview
+--------
+
 Let's assume that as part of your project you need to work on two different pattern libraries and have a directory structure that looks somewhat like this:
 
 ::

@@ -1,6 +1,11 @@
 Creating a Mote Pattern
 #######################
 
+.. contents::
+
+What is a Mote pattern?
+-----------------------
+
 A pattern in Mote is a representation of a self-contained unit of reusable interface.
 
 Each pattern is displayed in the Mote interface as a resizable iframe, and can be viewed on its own page in isolation.
