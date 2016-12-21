@@ -145,4 +145,7 @@ class VariationIframeView(VariationBaseView):
     """Element view suitable for rendering in an iframe"""
 
     def get_template_names(self):
-        return ["mote/element/iframe.html"]
+        return [
+            "%s/mote/element/iframe.html" % self.element.project.id,
+            "mote/element/iframe.html"
+        ]

@@ -146,7 +146,7 @@ class RenderElementNode(template.Node):
 
         # Make output beautiful for Chris
         if not settings.DEBUG:
-            beauty = BeautifulSoup(html)
+            beauty = BeautifulSoup(html, "html.parser")
             html = beauty.prettify()
 
         cache.set(cache_key, html, 300)
