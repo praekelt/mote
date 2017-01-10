@@ -3,7 +3,8 @@
 import os
 
 import ujson as json
-from cached_property import cached_property
+
+from django.utils.functional import cached_property
 
 from mote import PROJECT_PATHS
 

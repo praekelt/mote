@@ -79,6 +79,11 @@ api_urlpatterns = [
         api.ProjectDetail.as_view(),
         name="api-project-detail"
     ),
+    url(
+        r"^api/multiplex/$",
+        api.Multiplex.as_view(),
+        name="api-multiplex"
+    ),
 ]
 
 urlpatterns = urlpatterns + format_suffix_patterns(api_urlpatterns)

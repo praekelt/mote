@@ -1,5 +1,10 @@
-from django.core.urlresolvers import reverse as django_reverse, NoReverseMatch
+import json
+import re
+
 from django import template
+from django.core.urlresolvers import resolve, get_script_prefix, Resolver404
+from django.http import JsonResponse, HttpResponseBadRequest, QueryDict
+from django.views.generic.base import View
 
 from rest_framework import serializers, viewsets, generics, mixins
 from rest_framework.views import APIView
@@ -151,3 +156,42 @@ class ProjectDetail(BaseDetail):
     def get_object(self, project):
         project = Project(project)
         return project
+
+
+class Multiplex(View):
+    """Decode multiple API call from the request and return encoded results."""
+
+    def get(self, request, *args, **kwargs):
+        try:
+            calls = json.loads(request.GET["calls"])
+        except ValueError:
+            return HttpResponseBadRequest()
+        pass
+
+        # Backup because we will be abusing the request
+        api_root = request.GET["api_root"]
+        original_get = request.GET.copy()
+
+        results = []
+        for call in calls:
+
+            # Resolve needs any possible prefix removed
+            url, qs = call.split("?")
+            url = re.sub(
+                r"^%s" % get_script_prefix().rstrip("/"), "", url
+            )
+            try:
+                view, vargs, vkwargs = resolve(api_root + url)
+            except Resolver404:
+                return HttpResponseBadRequest(
+                    "Cannot resolve %s" % (api_root + url)
+                )
+            request.GET = QueryDict(query_string=qs)
+            results.append(json.loads(
+                view(request, *vargs, **vkwargs).render().content
+            ))
+
+        # Restore the original request
+        request.GET = original_get
+
+        return JsonResponse({"results": results})

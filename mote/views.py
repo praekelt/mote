@@ -1,12 +1,11 @@
-from cached_property import cached_property
-
-from django.views.generic.base import TemplateView
+from django.conf import settings
 from django.http import HttpResponse
 from django.template import TemplateDoesNotExist
 from django.template.loader import render_to_string
 from django.templatetags.static import PrefixNode
+from django.utils.functional import cached_property
 from django.utils.six.moves.urllib.parse import urljoin
-from django.conf import settings
+from django.views.generic.base import TemplateView
 
 from mote import PROJECT_PATHS
 from mote.models import Project, Aspect, Pattern, Element, Variation
