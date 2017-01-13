@@ -1,0 +1,42 @@
+main {
+
+    @include container;
+    padding-top: $vertical-rhythm-unit;
+    padding-bottom: $vertical-rhythm-unit;
+
+    @include breakpoint($bp-gamma) {
+        aside {
+            @include span(2);
+
+            &.is_stuck {
+                @include span(2);
+            }
+        }
+        section {
+            @include span(10);
+            @include last;
+        }
+    }
+
+    .sg-wrapper {
+        margin-bottom: $gutter-large;
+        padding-left: $site-gutter;
+        border-left: $vertical-rhythm-unit solid $color-grey-lighter;
+        overflow: auto;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        h2 {
+            &:first-child {
+                color: $color-primary-1;
+                margin-top: $vertical-rhythm-unit * 2;
+            }
+        }
+
+        .styleguide-pattern {
+            margin-top: $site-gutter;
+        }
+    }
+}

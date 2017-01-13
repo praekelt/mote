@@ -1,0 +1,36 @@
+.sg-code-block {
+    @include container;
+
+    .title {
+        color: $color-grey-light;
+    }
+
+    .description {
+        //@include span(4);
+
+        code {
+            display: inline-block;
+            color: red;
+        }
+    }
+
+    .code-example {
+        //@include span(8);
+
+        code,
+        pre {
+            &[class*="language-"] {
+                font-size: small;
+                font-family: map-get-deep($typography, families, monospace);
+            }
+        }
+    }
+
+    .description + .code-example {
+        //@include last;
+    }
+
+    .code-example + .description {
+        //@include last;
+    }
+}

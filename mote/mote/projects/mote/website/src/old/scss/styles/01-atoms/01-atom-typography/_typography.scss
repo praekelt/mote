@@ -1,0 +1,76 @@
+html {
+    font-size: $base-font-size;
+    font-family: map-get-deep($typography, families, body) map-get-deep($typography, families, sans-serif);
+
+    @include breakpoint($bp-beta) {
+        font-size: $base-font-size * 1.1;
+    }
+
+    @include breakpoint($bp-zeta) {
+        font-size: $base-font-size * 1.25;
+    }
+
+    @include breakpoint($bp-eta) {
+        font-size: $base-font-size * 1.5;
+    }
+
+    @include breakpoint($bp-omega) {
+        font-size: $base-font-size * 2;
+    }
+}
+
+body {
+    color: $color-grey-dark;
+    line-height: $base-line-height;
+}
+
+p,
+ol,
+ul {
+    margin-top: $vertical-rhythm-unit;
+    margin-bottom: $vertical-rhythm-unit;
+}
+
+hr {
+    margin: $vertical-rhythm-unit * 2 0;
+    border-color: $color-grey-lighter;
+    border-style: solid;
+    border-top: 0;
+}
+
+@each $key, $values in $headings {
+    #{$key},
+    .#{$key} {
+        font-size: map-get-deep($headings, $key, font-size);
+        font-family: map-get-deep($typography, families, headings), map-get-deep($typography, families, sans-serif);
+        line-height: map-get-deep($headings, $key, line-height);
+        letter-spacing: map-get-deep($headings, $key, letter-spacing);
+        word-spacing: map-get-deep($headings, $key, word-spacing);
+        margin-top: map-get-deep($headings, $key, margin) * 2;
+        margin-bottom: map-get-deep($headings, $key, margin);
+    }
+}
+
+.sg-category-title {
+    &:first-of-type {
+        margin-top: 0;
+    }
+}
+
+
+@each $variation, $color-group in $colors {
+    @if $variation == 'accents' {
+
+        @for $i from 1 through length($color-group) {
+            $color-key: nth(nth($color-group, $i), 1);
+            $hex-value: nth(nth($color-group, $i), 2);
+
+            .text-#{$color-key} {
+                color: $hex-value;
+            }
+        }
+
+    }
+}
+
+@include font-face("ChartwellPies-Web", "/static/fonts/chartwell-pies-web", 100, $file-formats: eot svg ttf woff);

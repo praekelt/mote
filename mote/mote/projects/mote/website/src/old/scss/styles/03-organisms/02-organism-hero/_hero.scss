@@ -1,0 +1,126 @@
+.hero {
+    background-color: $color-primary-1;
+    padding: $gutter-large 0;
+    position: relative;
+
+    * {
+        color: $color-white;
+    }
+
+    h1 {
+        margin-top: 0;
+        margin-bottom: ($vertical-rhythm-unit * 2);
+    }
+
+    p {
+        margin: ($vertical-rhythm-unit) 0;
+
+        color: $color-grey-lighter;
+        line-height: 1.4rem;
+
+        max-width: 50rem;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    &:hover {
+      .progress{
+        margin-top: 0;
+        opacity: 0.4;
+      }
+    }
+
+    .foreground {
+        @include breakpoint($bp-gamma) {
+            margin: 0 (span(2) + gutter());
+        }
+        position: relative;
+        z-index: 5;
+
+        height: auto;
+
+        .title {
+          width: 50%;
+          display: inline-block;
+          float: left;
+        }
+
+        .progress {
+          width: 50%;
+          display: inline-block;
+          float: left;
+        }
+    }
+
+    .background {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        overflow: hidden;
+
+        svg {
+            * {
+                fill: tint($color-primary-1, 15%);
+            }
+        }
+    }
+
+    &.atoms {
+        .background {
+            svg {
+                height: 40rem;
+                position: absolute;
+                top: -10.7rem;
+                left: 5.2rem;
+            }
+        }
+    }
+
+    &.molecules {
+        .background {
+            svg {
+                height: 40rem;
+                position: absolute;
+                top: -5.35rem;
+                left: 1rem;
+            }
+        }
+    }
+
+    &.organisms {
+        .background {
+            svg {
+                height: 40rem;
+                position: absolute;
+                top: -10.7rem;
+                left: 5.2rem;
+            }
+        }
+    }
+
+    &.templates {
+        .background {
+            svg {
+                height: 40rem;
+                position: absolute;
+                top: -10.7rem;
+                left: 5.2rem;
+            }
+        }
+    }
+
+    &.pages {
+        .background {
+            svg {
+                height: 40rem;
+                position: absolute;
+                top: -10.7rem;
+                left: 5.2rem;
+            }
+        }
+    }
+}
