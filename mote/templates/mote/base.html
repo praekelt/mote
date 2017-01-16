@@ -11,6 +11,7 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <!-- TODO: Get rid of or move this stuff into the webpack bundle. -->>
     <link href="https://fonts.googleapis.com/css?family=PT+Sans:400,700|Prompt:100,200,300,400,700" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{% static "mote/generated_statics/bundles/mote-website.styles.css" %}"/>
 
@@ -19,12 +20,11 @@
 
     <script src="{% static "mote/js/libs/jquery/js/jquery.js" %}"></script>
     <script src="{% static "mote/js/libs/sticky-kit/js/jquery.sticky-kit.js" %}"></script>
-
     <script src="{% static "mote/js/libs/hideseek/js/jquery.hideseek.js" %}"></script>
     <script src="{% static "mote/js/libs/lazysizes/js/lazysizes.js" %}"></script>
     <script src="{% static "mote/js/mote.js" %}"></script>
 
-    <script src="{% static "mote/generated_statics/bundles/mote-website.main.js" %}"></script>
+    <script defer src="{% static "mote/generated_statics/bundles/mote-website.main.js" %}"></script>
 </head>
 
 <body data-library="{{ library }}">
