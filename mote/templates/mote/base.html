@@ -7,79 +7,56 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title></title>
+    <title>Mote</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="{% static "mote/css/fonts.css" %}"/>
-    <link rel="stylesheet" type="text/css" href="{% static "mote/css/mote.css" %}"/>
+
+    <link href="https://fonts.googleapis.com/css?family=PT+Sans:400,700|Prompt:100,200,300,400,700" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static "mote/generated_statics/bundles/mote-website.styles.css" %}"/>
+
     <link rel="stylesheet" type="text/css" href="{% static "mote/js/libs/prism/css/prism.css" %}"/>
+    <script src="{% static "mote/js/libs/prism/js/prism.js" %}"></script>
+
     <script src="{% static "mote/js/libs/jquery/js/jquery.js" %}"></script>
     <script src="{% static "mote/js/libs/sticky-kit/js/jquery.sticky-kit.js" %}"></script>
-    <script src="{% static "mote/js/libs/prism/js/prism.js" %}"></script>
+
     <script src="{% static "mote/js/libs/hideseek/js/jquery.hideseek.js" %}"></script>
     <script src="{% static "mote/js/libs/lazysizes/js/lazysizes.js" %}"></script>
     <script src="{% static "mote/js/mote.js" %}"></script>
+
+    <script src="{% static "mote/generated_statics/bundles/mote-website.main.js" %}"></script>
 </head>
 
 <body data-library="{{ library }}">
 
     {% block header %}
-    <header role="banner">
-        <div class="wrapper">
-            <a href="{% url "mote:home" %}" class="logo">
-                <img src="{% static "mote/img/logo.png" %}" alt="" />
+    <header role="banner" class="SiteHead">
+        <div class="SiteHead-brand">
+            <a href="{% url "mote:home" %}" class="Logo">
+                <span class="Logo-text">
+                    M<span>o</span>te
+                </span>
             </a>
         </div>
     </header>
     {% endblock %}
 
-    <section role="section" class="hero {{ pattern.id }}">
-        <div class="wrapper">
-            {% block hero %}
-            {% endblock %}
-        </div>
+    <section role="section" class="Hero">
+        {% block hero %}
+        {% endblock %}
     </section>
 
-    <main role="main">
-        <div class="wrapper">
-            <aside role="sidebar">
+    <main role="main" class="ContentArea">
+        {% block menu %}{% endblock %}
 
-                {% if active_category %}
-
-                    <form class="sidebar-search">
-                        <input type="search" placeholder="Search pattern library">
-                        <div class="search-results">
-                            <ul role="menu" class="search-list vertical">
-
-                                {% for dict in menu_items %}
-                                    {% for category, items in dict.items %}
-                                        {% for item in items %}
-
-                                        <li role="menuitem">
-                                            <a href="{% url 'mote:project' category %}#mote_{{ item }}" class="">{{ category }} - {{ item }}</a>
-                                        </li>
-                                        {% endfor %}
-
-                                    {% endfor %}
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </form>
-                {% endif %}
-
-
-                {% block menu %}
-                {% endblock %}
-
-            </aside>
-
-            <section role="section">
-                {% block content %}
-                {% endblock %}
-            </section>
-
-        </div>
+        <section role="section" class="ContentArea-body">
+            {% block content %}
+            {% endblock %}
+        </section>
     </main>
 
+    <footer class="SiteFoot">
+
+    </footer>
 </body>
 </html>

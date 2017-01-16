@@ -1,0 +1,57 @@
+.Hero {
+    $block: &;
+    position: relative;
+    background-color: $color-primary-1;
+    color: $color-white;
+    overflow: hidden;
+
+    &-title {
+        margin-top: 0;
+        font-family: $font-headings;
+        font-size: ms(10);
+        font-weight: 700;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+
+        & + #{$block}-description {
+            margin-left: ms(5);
+        }
+    }
+
+    &-description {
+        font-size: ms(1);
+        line-height: $phi;
+
+        p + p {
+            margin-top: ms(0);
+        }
+    }
+
+    &-content {
+        display: flex;
+    }
+
+    &-background {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+
+        svg {
+            display: block;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: .1;
+        }
+    }
+
+    &-foreground {
+        position: relative;
+        max-width: ms(26);
+        margin: auto;
+        padding: 5rem;
+        z-index: 5;
+    }
+}

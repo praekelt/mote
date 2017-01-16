@@ -33,7 +33,7 @@ const ProjectPaths = {
 };
 
 function filenamePattern(prefix, ext) {
-    return `${prefix}.[name].[chunkhash].${ext}`;
+    return `${prefix}.[name].${ext}`;
 }
 
 function bundlenamePattern(prefix) {
@@ -132,11 +132,6 @@ function configBuilder(process, config) {
                         Path.join(__dirname, MotePath + '/src/styles.scss')
                     ],
                     path: ProjectPaths.src
-                }),
-                //Helpers.minify(),
-                Helpers.trackBundles({
-                    path: ProjectPaths.dist,
-                    filename: bundlenamePattern(`${Argv.projectName}-${Argv.projectAspect}`)
                 })
             );
             break;
@@ -155,7 +150,7 @@ function configBuilder(process, config) {
                         ProjectPaths.src + '/main'
                     ],
                     output: {
-                        filename: '[name].js',
+                        filename: filenamePattern(`${Argv.projectName}-${Argv.projectAspect}`, 'js'),
                         chunkFilename: '[hash].js', // Used for require.ensure,
                         publicPath: 'http://localhost:3000' + PublicStaticPath
                     },
@@ -188,10 +183,6 @@ function configBuilder(process, config) {
                     include: [
                         Path.join(__dirname, MotePath + '/src', 'styles.scss')
                     ]
-                }),
-                Helpers.trackBundles({
-                    path: ProjectPaths.dist,
-                    filename: bundlenamePattern(`${Argv.projectName}-${Argv.projectAspect}`)
                 })
             );
             break;

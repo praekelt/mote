@@ -6,7 +6,7 @@
     "author": "",
     "license": "BSD-3-Clause",
     "scripts": {
-      "build": "gulp pre-bundle && NODE_ENV=production webpack --colors --progress",
+      "build": "gulp pre-bundle && NODE_ENV=production webpack --watch --colors --progress",
       "build:dev": "gulp pre-bundle && NODE_ENV=development webpack-dashboard -- webpack-dev-server",
       "gen:tokens": "gulp design-tokens",
       "gen:sprites": "gulp sprite-maps",
