@@ -16,7 +16,8 @@
         color: $color-primary-1;
         font-family: $font-headings;
         font-size: ms(5);
-        font-weight: 700;
+        font-weight: 300;
+        text-transform: uppercase;
     }
 
     &-description {
@@ -38,7 +39,6 @@
     }
 
     &-view {
-        overflow: scroll;
     }
 
     &-documentation {

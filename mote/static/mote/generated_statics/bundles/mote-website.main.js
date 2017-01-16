@@ -50,20 +50,16 @@
 	    require('./styles.scss');
 	}
 	
-	__webpack_require__(5);
-	__webpack_require__(7);
+	__webpack_require__(1);
+	__webpack_require__(3);
 
 /***/ },
-/* 1 */,
-/* 2 */,
-/* 3 */,
-/* 4 */,
-/* 5 */
+/* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _documentReady = __webpack_require__(6);
+	var _documentReady = __webpack_require__(2);
 	
 	(0, _documentReady.ready)(function () {
 	    var Toggles = document.querySelectorAll('[data-variation-toggle]');
@@ -91,7 +87,7 @@
 	});
 
 /***/ },
-/* 6 */
+/* 2 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -109,12 +105,12 @@
 	}
 
 /***/ },
-/* 7 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	var _documentReady = __webpack_require__(6);
+	var _documentReady = __webpack_require__(2);
 	
 	(0, _documentReady.ready)(function () {
 	    var Toggles = document.querySelectorAll('.Documentation-toggler');

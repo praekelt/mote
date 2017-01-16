@@ -178,8 +178,8 @@ html {
   .Logo-text {
     display: block;
     position: relative;
-    margin-bottom: -3.5px;
-    margin-bottom: -.25rem;
+    margin-bottom: -3.08px;
+    margin-bottom: -.22rem;
     padding: 13.427px 14.705px;
     padding: 0.95914rem 1.05041rem;
     font-family: "Prompt", helvetica, arial, sans-serif;
@@ -520,8 +520,6 @@ html {
 .iframe {
   width: 100%;
   position: relative;
-  border: 1px solid #b8bdc1;
-  overflow: hidden;
   height: 437.5px;
   height: 31.25rem;
   background-color: #ffffff; }
@@ -552,10 +550,11 @@ html {
   width: 0.625rem;
   height: 100%;
   position: absolute;
-  right: 0;
+  right: -8.75px;
+  right: -0.625rem;
   top: 0;
   cursor: col-resize;
-  background-color: #b8bdc1;
+  background-color: #00b9ae;
   -webkit-transition: background-color 0.25s ease-in-out;
   transition: background-color 0.25s ease-in-out; }
   .iframe .handle svg {
@@ -567,11 +566,9 @@ html {
     -webkit-transition: fill 0.25s ease-in-out;
     transition: fill 0.25s ease-in-out; }
     .iframe .handle svg * {
-      fill: #393d41; }
-  .iframe .handle.active, .iframe .handle:hover {
-    background-color: #037171; }
-    .iframe .handle.active svg *, .iframe .handle:hover svg * {
       fill: #ffffff; }
+  .iframe .handle.active, .iframe .handle:hover {
+    background-color: #00d3c6; }
 
 .iframe iframe {
   padding: 0 8.75px 0 0;
@@ -606,7 +603,8 @@ html {
     font-family: "Prompt", helvetica, arial, sans-serif;
     font-size: 35.154px;
     font-size: 2.51107rem;
-    font-weight: 700; }
+    font-weight: 300;
+    text-transform: uppercase; }
   .Pattern-description {
     margin-bottom: 21.727px;
     margin-bottom: 1.55193rem;
@@ -619,8 +617,6 @@ html {
   .Pattern-tools {
     margin-bottom: 14.705px;
     margin-bottom: 1.05041rem; }
-  .Pattern-view {
-    overflow: scroll; }
   .Pattern-documentation {
     margin-top: 22.652px;
     margin-top: 1.61803rem;
