@@ -1,0 +1,64 @@
+.Documentation {
+    $block: &;
+
+    &-toggler {
+        display: flex;
+        align-items: center;
+        color: $color-primary-1;
+        font-family: $font-headings;
+        font-size: ms(3);
+        font-weight: 400;
+        text-decoration: none;
+        cursor: pointer;
+
+        &:hover {
+            color: $color-primary-2;
+        }
+
+        &::after {
+            display: inline-block;
+            margin-left: ms(0);
+            color: $color-accent-danger;
+            font-size: 50%;
+            content: "Click to Hide";
+        }
+
+        &.is-off::after {
+            color: $color-accent-success;
+            content: "Click to Show";
+        }
+    }
+
+    &-panel {
+        margin-top: ms(2);
+
+        // Terrible and inconsistent declarations here.
+        // This is because the code blocks are hard-coded, and this prevents breaking backwards compatibility.
+
+        .sg-code-block  + .sg-code-block {
+            margin-top: ms(4);
+        }
+
+        .title {
+            color: $color-primary-1;
+            font-family: $font-headings;
+            font-size: ms(1);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .description {
+            margin: ms(0) 0;
+        }
+
+        .code-example {
+
+        }
+
+        // END of Terrible and inconsistent declarations
+
+        &.is-hidden {
+            display: none;
+        }
+    }
+}

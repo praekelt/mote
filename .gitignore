@@ -24,6 +24,7 @@ mote/settings/local*
 mote.sqlite3
 dist/
 mote/static/repositories
+**/mote/**/tokens/formats
 
 # Sphinx documentation
 docs/_build/
