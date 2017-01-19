@@ -76,8 +76,11 @@
 	
 	            var target = '#' + el.getAttribute('data-variation-toggle');
 	            var url = el.getAttribute('href');
+	            var linksOutButton = document.querySelector('[data-linksto="' + target + '"]');
 	
 	            document.querySelector(target).setAttribute('src', url);
+	
+	            linksOutButton.setAttribute('href', url);
 	        });
 	    }
 	

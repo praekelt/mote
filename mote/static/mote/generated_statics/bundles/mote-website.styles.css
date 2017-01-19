@@ -237,27 +237,6 @@ html {
   .Button:hover, .Button:focus, .Button:active, .Button.is-active {
     background-color: #00d3c6; }
 
-.sg-hidden-area-toggler {
-  display: inline-block;
-  margin-left: 17.5px;
-  margin-left: 1.25rem;
-  text-decoration: none; }
-  .sg-hidden-area-toggler .off-text,
-  .sg-hidden-area-toggler .on-text {
-    font-size: 14px;
-    font-size: 1rem;
-    line-height: 14px;
-    line-height: 1rem;
-    font-weight: 100; }
-  .sg-hidden-area-toggler.off .on-text {
-    display: none; }
-  .sg-hidden-area-toggler.off .off-text {
-    color: #0aa20a; }
-  .sg-hidden-area-toggler.on .on-text {
-    color: #b11f1f; }
-  .sg-hidden-area-toggler.on .off-text {
-    display: none; }
-
 .Navigation-group {
   display: block; }
 
@@ -336,23 +315,6 @@ html {
     .NavGrid-tile:hover, .NavGrid-tile:active {
       background-color: #037171;
       color: #ffffff; }
-
-.sg-code-block {
-  max-width: 100%;
-  margin-left: auto;
-  margin-right: auto; }
-  .sg-code-block:after {
-    content: " ";
-    display: block;
-    clear: both; }
-  .sg-code-block .title {
-    color: #9da3a9; }
-  .sg-code-block .description code {
-    display: inline-block;
-    color: red; }
-  .sg-code-block .code-example code[class*="language-"],
-  .sg-code-block .code-example pre[class*="language-"] {
-    font-size: small; }
 
 .Documentation-toggler {
   display: -webkit-box;

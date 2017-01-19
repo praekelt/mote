@@ -15,8 +15,11 @@ ready(function() {
 
             let target = `#${el.getAttribute('data-variation-toggle')}`;
             let url = el.getAttribute('href');
+            let linksOutButton = document.querySelector(`[data-linksto="${target}"]`);
 
             document.querySelector(target).setAttribute('src', url);
+
+            linksOutButton.setAttribute('href', url);
         });
     }
 
