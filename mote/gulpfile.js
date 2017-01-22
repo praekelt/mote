@@ -1,63 +1,78 @@
-"use strict()";
+const Gulp = require('gulp'),
+    Theo = require('theo'),
+    Path = require('path'),
+    Del = require('del'),
+    SvgStore = require('gulp-svgstore'),
+    SvgMin = require('gulp-svgmin'),
+    Cheerio = require('gulp-cheerio');
 
-var gulp = require('gulp'),
-    del = require('del'),
-    runsequence = require('run-sequence'),
-    bower = require('main-bower-files'),
-    plugins = require('gulp-load-plugins')({
-        rename: {
-            'gulp-ruby-sass': 'sass',
-            'gulp-bower-normalize': 'bowerNormalizer'
-        }
-    });
+const Argv = require('yargs')
+    .default('projectName', 'mote')
+    .default('projectAspect', 'website')
+    .argv;
 
-var paths = {
-    'static': 'static/',
-    'scss': {
-        'src': 'static/scss/',
-        'dist': 'static/css/'
-    },
-    'scripts': 'static/js'
+const MotePath = `/mote/projects/${Argv.projectName}/${Argv.projectAspect}`;
+const DjangoStaticDir = `/${Argv.projectName}/static/${Argv.projectName}/`;
+const PublicStaticPath = `/static/${Argv.projectName}/generated_statics/bundles/`;
+
+const ProjectPaths = {
+    root: Path.join(__dirname, MotePath),
+    src: Path.join(__dirname, MotePath + '/src'),
+    dist: Path.join(__dirname, DjangoStaticDir + '/generated_statics')
 };
 
-/* ===================================== */
-/* SASS */
-/* ===================================== */
+const TokenConfig = [
+    ['raw', 'raw.json'],
+    ['ios', 'ios.json'],
+    ['android', 'android.xml'],
+    ['web', 'scss'],
+    ['web', 'map.scss'],
+    ['web', 'less'],
+    ['web', 'common.js']
+];
 
-    gulp.task('sass', function () {
+Gulp.task('pre-bundle', ['design-tokens', 'sprite-maps']);
 
-        plugins.sass(paths.scss.src,
-            {
-                compass: true
-            })
-            .on('error', function (err) {
-                console.error('Error!', err.message);
-            })
-            .pipe(plugins.plumber())
-            .pipe(plugins.flatten())
-            .pipe(plugins.autoprefixer())
-            .pipe(plugins.bless({
-                imports: false
-            }))
-            //.pipe(plugins.minify({compatibility: 'ie8'}))
-            .pipe(gulp.dest(paths.scss.dist));
+Gulp.task('watch', function() {
+    Gulp.watch(ProjectPaths.src + '/tokens/*.yml', ['design-tokens']);
+    Gulp.watch(ProjectPaths.src + '/symbols/**/*.svg', ['sprite-maps']);
+});
 
+Gulp.task('design-tokens', function() {
+    Del([ProjectPaths.src + '/tokens/formats']).then(function() {
+        for (tokenType in TokenConfig) {
+            let tokenTransform = TokenConfig[tokenType][0];
+            let tokenFormat = TokenConfig[tokenType][1];
+
+            Gulp.src(ProjectPaths.src + '/tokens/props.yml')
+                .pipe(Theo.plugins.transform(tokenTransform))
+                .pipe(Theo.plugins.format(tokenFormat))
+                .pipe(Gulp.dest(ProjectPaths.src + '/tokens/formats'));
+        }
     });
+});
 
-/* ===================================== */
+Gulp.task('sprite-maps', ['symbols']);
 
-
-/* ===================================== */
-/* BOWER DEPENDENCIES */
-/* ===================================== */
-
-    gulp.task('bower', function() {
-
-        del(paths.scripts + '/libs/*/*.*');
-
-        gulp.src(bower(), {base: './bower_components'})
-            .pipe(plugins.bowerNormalizer({bowerJson: './bower.json', checkPath: true}))
-            .pipe(gulp.dest(paths.scripts + '/libs'));
-    });
-
-/* ===================================== */
+Gulp.task('symbols', function() {
+    return Gulp.src(ProjectPaths.src + '/symbols/**/*.svg')
+    .pipe(Cheerio({
+        run: function ($) {
+            $('svg:not(.KeepFills) [fill]').removeAttr('fill');
+        },
+        parserOptions: { xmlMode: true }
+    }))
+    .pipe(SvgMin(function(file) {
+        const prefix = Path.basename(file.relative, Path.extname(file.relative));
+        return {
+            plugins: [{
+                cleanupIDs: {
+                    prefix: prefix + '-',
+                    minify: true
+                }
+            }]
+        }
+    }))
+    .pipe(SvgStore())
+    .pipe(Gulp.dest(ProjectPaths.dist));
+})

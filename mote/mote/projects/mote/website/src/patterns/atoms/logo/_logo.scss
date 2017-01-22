@@ -1,0 +1,47 @@
+.Logo {
+    display: block;
+    position: relative;
+    transition: .3s ease-in-out;
+    border-width: .5rem;
+    border-style: solid;
+    border-color: $color-primary-3;
+    border-right-color: $color-primary-2;
+    color: $color-primary-3;
+    text-decoration: none;
+    overflow: hidden;
+
+    &::after {
+        display: block;
+        position: absolute;
+        top: 0;
+        right: -100%;
+        bottom: 0;
+        width: rem(70);
+        height: rem(70);
+        transform: rotate(45deg);
+        transition: .3s ease-in-out;
+        background-color: rgba($color-primary-2, .15);
+        content: "";
+    }
+
+    &-text {
+        display: block;
+        position: relative;
+        margin-bottom: -.22rem;
+        padding: ms(-1) ms(1);
+        font-family: $font-headings;
+        font-size: 3.5rem;
+        font-weight: 400;
+        line-height: .77;
+        text-transform: uppercase;
+        z-index: 5;
+    }
+
+    &:hover,
+    &:focus {
+        &::after {
+            right: -(rem(47.25));
+            background-color: rgba($color-primary-2, 1);
+        }
+    }
+}

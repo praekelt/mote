@@ -1,0 +1,35 @@
+@import "~susy/sass/susy";
+@import "~bourbon/app/assets/stylesheets/bourbon";
+@import "~modularscale-sass/stylesheets/modular-scale";
+@import "~breakpoint-sass/stylesheets/breakpoint";
+@import "~reset-css/reset";
+
+@import "./config/config";
+@import "./utilities/**/*.scss";
+@import "./config/pattern-presets";
+
+html {
+    background-color: $color-grey-lightest;
+    color: $color-grey-dark;
+    font-family: $font-body, sans-serif;
+    font-size: $base-font-size;
+    line-height: 1;
+
+    @include breakpoint($bp-beta) {
+        font-size: $base-font-size * 1.1;
+    }
+
+    @include breakpoint($bp-zeta) {
+        font-size: $base-font-size * 1.25;
+    }
+
+    @include breakpoint($bp-eta) {
+        font-size: $base-font-size * 1.5;
+    }
+
+    @include breakpoint($bp-omega) {
+        font-size: $base-font-size * 2;
+    }
+}
+
+@import "./patterns/**/*.scss";

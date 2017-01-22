@@ -1,0 +1,26 @@
+.ContentArea {
+    display: flex;
+    flex-direction: row;
+
+    &-aside {
+        flex-basis: 15%;
+        flex-grow: 1;
+        padding: ms(5);
+        background-color: $color-white;
+    }
+
+    &-body {
+        flex-basis: 85%;
+        flex-grow: 2;
+        padding: ms(5) 0;
+    }
+
+    &-title {
+        border-bottom: 5px solid $color-primary-1;
+        color: $color-primary-1;
+        font-family: $font-headings;
+        font-size: ms(5);
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+}
