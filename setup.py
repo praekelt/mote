@@ -14,6 +14,8 @@ setup(
     zip_safe=True,
     install_requires=[
         "django",
+        "bs4",
+        "xmltodict",
     ],
     tests_require=[
         "tox",

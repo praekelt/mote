@@ -4,3 +4,4 @@ ujson==1.35
 djangorestframework==3.3.2
 six==1.9.0
 djangorestframework-jwt==1.8.0
+xmltodict==0.10.2

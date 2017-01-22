@@ -1,0 +1,9 @@
+<fleet>
+{% for car in cars %}
+    <cars>
+        <brand>{{ car.brand }}</brand>
+        <model>{{ car.model }}</model>
+    </cars>
+{% endfor %}
+<value>100</value>
+</fleet>
