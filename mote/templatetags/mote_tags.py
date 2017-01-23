@@ -120,7 +120,12 @@ class RenderElementNode(template.Node):
         # Resolve needs any possible prefix removed
         url = re.sub(r"^%s" % get_script_prefix().rstrip('/'), '', url)
         view, args, kwargs = resolve(url)
-        kwargs.update(resolved)
+
+        # Construct a final kwargs that includes the context
+        final_kwargs = context.flatten()
+        del final_kwargs["request"]
+        final_kwargs.update(kwargs)
+        final_kwargs.update(resolved)
 
         # Compute a cache key
         li = [url, obj.modified]
@@ -137,7 +142,7 @@ class RenderElementNode(template.Node):
 
         # Call the view. Let any error propagate.
         request = context["request"]
-        result = view(request, *args, **kwargs)
+        result = view(request, *args, **final_kwargs)
         if isinstance(result, TemplateResponse):
             # The result of a generic view
             result.render()
