@@ -51,7 +51,7 @@ button.xml file::
         <text>I have access to context variable {{ foo }}</text>
     </button>
 
-And here we use it::
+And here we use it. Note the outermost XML tag is not part of the `button` dictionary.::
 
     {% get_element_data "button.xml" as button %}
     {% render_element "myproject.website.atoms.button" button=button %}
