@@ -1,0 +1,100 @@
+{% extends "mote/element/index.html" %}
+{% load mote_tags %}
+
+{% block codeblock %}
+<div class="sg-code-block">
+    <h4 class="title">
+        Buttons
+    </h4>
+    <div class="description">
+         <code>.Button</code> is the core class of all button variations. It provides the basic structure of buttons. <b>The styling will work on button tags, anchor tags and inputs with the submit or reset type.</b> For disabled styling, apply the <code>disabled</code> attribute to the element (note that this will not work on anchor tags).
+    </div>
+    <div class="code-example">
+        <pre>
+            <code class="language-markup">
+                <xmp>
+<button class="Button">
+    <span class="Button-text">Lorem ipsum</span>
+</button>
+
+<button class="Button" disabled>
+    <span class="Button-text">Lorem ipsum</span>
+</button>
+                </xmp>
+            </code>
+        </pre>
+    </div>
+    <!-- code-example -->
+
+    <h4 class="title">
+        Solid Buttons
+    </h4>
+    <div class="description">
+        To create a solid button, combine <code>.Button--solid</code> with either <code>.Button--yellowButtercup</code> or <code>.Button--greenOracle</code>.
+    </div>
+    <div class="code-example">
+        <pre>
+            <code class="language-markup">
+                <xmp>
+<button class="Button Button--solid Button-yellowButtercup">
+    <span class="Button-text">Lorem ipsum</span>
+</button>
+
+<button class="Button Button--solid Button-yellowButtercup" disabled>
+    <span class="Button-text">Lorem ipsum</span>
+</button>
+                </xmp>
+            </code>
+        </pre>
+    </div>
+    <!-- code-example -->
+
+    <h4 class="title">
+        Ghost Buttons
+    </h4>
+    <div class="description">
+        Ghost buttons have all of the structure of a button, but do not have a background colour. On :hover or :focus, the background colour is an rgba value of white with an alpha channel of .2. This allows the button to sit on any colour background and 'tint' the background colour of the button.
+    </div>
+    <div class="code-example">
+        <pre>
+            <code class="language-markup">
+                <xmp>
+<button class="Button Button--ghost">
+    <span class="Button-text">Lorem ipsum</span>
+</button>
+
+<button class="Button Button--ghost" disabled>
+    <span class="Button-text">Lorem ipsum</span>
+</button>
+                </xmp>
+            </code>
+        </pre>
+    </div>
+    <!-- code-example -->
+
+    <h4 class="title">
+        Bordered Buttons
+    </h4>
+    <div class="description">
+        Bordered buttons behave exactly as ghost buttons do, with the addition of a white border.
+    </div>
+    <div class="code-example">
+        <pre>
+            <code class="language-markup">
+                <xmp>
+<button class="Button Button--bordered">
+    <span class="Button-text">Lorem ipsum</span>
+</button>
+
+<button class="Button Button--bordered" disabled>
+    <span class="Button-text">Lorem ipsum</span>
+</button>
+                </xmp>
+            </code>
+        </pre>
+    </div>
+    <!-- code-example -->
+</div>
+
+<!-- sg-code-block -->
+{% endblock %}
