@@ -75,3 +75,38 @@ class TagsTestCase(TestCase):
             <i>Foo</i>
             </button>"""
         )
+
+    def test_get_element_data(self):
+        request = self.factory.get("/")
+        t = template.Template("""{% load mote_tags %}
+            {% get_element_data "tests/fleet.xml" as fleet %}
+            <fleet>
+            {% for car in fleet.cars %}
+                <car>
+                    <brand>{{ car.brand }}</brand>
+                    <model>{{ car.model }}</model>
+                </car>
+            {% endfor %}
+            <value>{{ fleet.value }}</value>
+            </fleet>"""
+        )
+        result = t.render(template.Context({
+            "request": request,
+            "cars": [
+                {"brand": "Opel", "model": "Astra"},
+                {"brand": "Ford", "model": "Ikon"}
+            ]
+        }))
+        expected = """<fleet>
+            <car>
+                <brand>Opel</brand>
+                <model>Astra</model>
+            </car>
+            <car>
+                <brand>Ford</brand>
+                <model>Ikon</model>
+            </car>
+            <value>100</value>
+        </fleet>"""
+
+        self.assertHTMLEqual(result, expected)

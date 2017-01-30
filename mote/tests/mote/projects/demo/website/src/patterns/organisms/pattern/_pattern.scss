@@ -1,0 +1,68 @@
+.Pattern {
+    $block: &;
+    padding-right: ms(5);
+    padding-left: ms(5);
+
+    & + & {
+        margin-top: ms(7);
+        padding-top: ms(7);
+        border-top: ms(1) solid $color-white;
+    }
+
+    &-title {
+        display: flex;
+        flex-direction: row;
+        margin-bottom: ms(1);
+        color: $color-primary-1;
+        font-family: $font-headings;
+        font-size: ms(5);
+        font-weight: 300;
+        text-transform: uppercase;
+    }
+
+    &-description {
+        margin-bottom: ms(2);
+        font-size: ms(1);
+        line-height: $phi;
+    }
+
+    &-actions {
+        margin-left: ms(2);
+    }
+
+    &-tools {
+        margin-bottom: ms(1);
+
+        &Item {
+
+        }
+    }
+
+    &-view {
+    }
+
+    &-documentation {
+        margin-top: ms(3);
+        padding: ms(3);
+        background-color: shade($color-white, 1%);
+    }
+
+    &-linkOut {
+        display: inline-block;
+        width: rem(46);
+        height: rem(46);
+        margin-left: 0;
+        transition: opacity $anim-base-duration $anim-base-easing;
+        border-radius: rem(26);
+        background-color: $color-grey-lighter;
+        opacity: 0.1;
+
+        img {
+            width: 100%;
+        }
+
+        &:hover {
+            opacity: .75;
+        }
+    }
+}

@@ -4,12 +4,14 @@ import json
 import types
 
 from bs4 import BeautifulSoup
+import xmltodict
 
 from django.core.cache import cache
 from django.core.urlresolvers import reverse, resolve, get_script_prefix
 from django.http import HttpResponse
 from django import template
 from django.template.base import VariableDoesNotExist
+from django.template.loader import render_to_string
 from django.template.response import TemplateResponse
 from django.utils.translation import ugettext as _
 from django.utils.functional import Promise
@@ -118,7 +120,12 @@ class RenderElementNode(template.Node):
         # Resolve needs any possible prefix removed
         url = re.sub(r"^%s" % get_script_prefix().rstrip('/'), '', url)
         view, args, kwargs = resolve(url)
-        kwargs.update(resolved)
+
+        # Construct a final kwargs that includes the context
+        final_kwargs = context.flatten()
+        del final_kwargs["request"]
+        final_kwargs.update(kwargs)
+        final_kwargs.update(resolved)
 
         # Compute a cache key
         li = [url, obj.modified]
@@ -135,7 +142,7 @@ class RenderElementNode(template.Node):
 
         # Call the view. Let any error propagate.
         request = context["request"]
-        result = view(request, *args, **kwargs)
+        result = view(request, *args, **final_kwargs)
         if isinstance(result, TemplateResponse):
             # The result of a generic view
             result.render()
@@ -146,7 +153,7 @@ class RenderElementNode(template.Node):
 
         # Make output beautiful for Chris
         if not settings.DEBUG:
-            beauty = BeautifulSoup(html)
+            beauty = BeautifulSoup(html, "html.parser")
             html = beauty.prettify()
 
         cache.set(cache_key, html, 300)
@@ -256,4 +263,42 @@ class MaskNode(template.Node):
         elif self.name in context:
             var = deepmerge(var, context[self.name])
         context[self.name] = var
+        return ""
+
+
+@register.tag(name="get_element_data")
+def do_get_element_data(parser, token):
+    """{% get_element_data template_name as name %}"""
+    tokens = token.split_contents()
+    if len(tokens) != 4:
+        raise template.TemplateSyntaxError(
+            "{% get_element_data template_name as name }"
+        )
+    return GetElementDataNode(tokens[1], tokens[3])
+
+
+class GetElementDataNode(template.Node):
+    """Use a template to assemble an XML string, convert it to a dictionary
+    and set it in the context."""
+
+    def __init__(self, template_name, name):
+        self.template_name = template.Variable(template_name)
+        # Clean up the name without resorting to resolving a variable
+        self.name = name.strip("'").strip('"')
+
+    def render(self, context):
+        template_name = self.template_name.resolve(context)
+        di = xmltodict.parse(
+            render_to_string(template_name, context=context, request=context["request"])
+        )
+
+        # Discard the root node
+        di = di[di.keys()[0]]
+
+        # In debug mode use expensive conversion for easy debugging
+        if settings.DEBUG:
+            context[self.name] = json.loads(json.dumps(di))
+        else:
+            context[self.name] = di
+
         return ""

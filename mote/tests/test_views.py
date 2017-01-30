@@ -18,4 +18,3 @@ class ViewsTestCase(TestCase):
         url = reverse("mote:element-partial", args=("myproject", "website", "atoms", "button"))
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        print response.content

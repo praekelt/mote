@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="mote-prk",
-    version="0.1.1",
+    version="0.2",
     description="Mote - the pattern library framework.",
     long_description = open("README.rst", "r").read() + open("AUTHORS.rst", "r").read() + open("CHANGELOG.rst", "r").read(),
     author="Praekelt Consulting",
@@ -14,6 +14,11 @@ setup(
     zip_safe=True,
     install_requires=[
         "django",
+        "beautifulsoup4",
+        "ujson",
+        "six",
+        "djangorestframework-jwt",
+        "xmltodict"
     ],
     tests_require=[
         "tox",

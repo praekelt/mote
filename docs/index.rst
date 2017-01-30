@@ -14,6 +14,9 @@ Contents:
    gettingstarted
    pattern
    metadata
+   multiple-mote-projects
+   advanced-mote
+   api
 
 Indices and tables
 ==================

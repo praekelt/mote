@@ -1,6 +1,11 @@
 Creating a Mote Pattern
 #######################
 
+.. contents::
+
+What is a Mote pattern?
+-----------------------
+
 A pattern in Mote is a representation of a self-contained unit of reusable interface.
 
 Each pattern is displayed in the Mote interface as a resizable iframe, and can be viewed on its own page in isolation.
@@ -16,7 +21,11 @@ Mote expects the following directory and file structure per pattern:
     │   └── data.json
     └── metadata.json
 
-For the sake of example, from here we will be referring to the "button" component.
+Have a look at this Gist_ for an example of a minimally functional set of content to get a pattern working in Mote.
+
+.. _Gist: https://gist.github.com/CSergienko/023b0066c4dedf74c98ff082d81e478c
+
+For the sake of example, from here we will be referring to the "button" component and we'll go through the process of creating a pattern step-by-step.
 
 Metadata
 -------------
@@ -45,8 +54,96 @@ This is where the markup of the component resides.
 
 Congratulations! Your pattern should be appearing in the Mote interface.
 
-Pattern Documentation
+Dummy Data
 ----------
+
+When composing complex interfaces out of various patterns, it becomes necessary to inject "dummy data". This can be used to emulate content, or to apply states and additional styles to components.
+
+.. code-block:: json
+
+    // button/json/data.json
+    {
+        "Button": {
+            "text": "I am a button",
+            "modifiers": "Button--big Button--red"
+        }
+    }
+
+Using Dummy Data
+----------------
+
+Once the dummy data has been created, it is can be consumed in ``element.html`` like so:
+
+.. code-block:: html
+
+    <!-- button/element.html -->
+    {% load mote_tags %}
+
+    <button class="Button {{ element.json.data.Button.modifiers }}">{{ element.json.data.Button.text }}</button>
+
+Note that ``element.json.data`` refers to the name of the JSON file, and ``element.json.data.Button`` refers to the "Button" object inside of the JSON.
+
+Obviously, this is a rather verbose syntax, and can get a bit overwhelming as the depth of the JSON increases in more complex use cases.
+
+Therefore, it is strongly recommended to use the ``{% mask %}`` tag as it carries benefits beyond terse code. See the following example:
+
+.. code-block:: html
+
+    <!-- button/element.html -->
+    {% load mote_tags %}
+
+    {% mask element.json.data.Button as "button" %}
+
+    <button class="Button {{ button.modifiers }}">{{ button.text }}</button>
+
+Creating variations of patterns
+-------------------------------
+
+A single pattern may require numerous variations to fully demonstrate and document its usage. Fortunately, Mote makes this easy for us.
+
+In the ``button`` pattern's directory, create a new directory called ``variations``, with a subdirectory called ``secondary`` so that your file tree looks as follows:
+
+::
+
+    button
+    ├── element.html
+    ├── index.html
+    ├── json
+    │   └── data.json
+    │── variations
+    │   └── secondary
+    └── metadata.json
+
+Next, copy the json directory from the parent button into the variation, like so:
+
+.. code-block:: json
+
+    // button/variations/secondary/json/data.json
+    {
+        "Button": {
+            "modifiers": "Button--secondary"
+        }
+    }
+
+Once done, create an ``element.html`` for the variation, the contents of which should look something like this:
+
+.. code-block:: html
+
+    <!-- button/variations/secondary/element.html -->
+    {% load mote_tags %}
+
+    {% mask element.json.data.Button as "button" %}
+
+    {% render_element original_element button=button %}
+
+As the code suggests, this will render the original button, and perform a deep merge of the dummy data to override only the "modifiers" key, thus creating a variation.
+
+If you go and edit the original button's markup, it will reflect throughout all its variations as well.
+
+Elsewhere in Mote, you may now also directly render a variation like so: ``{% render_element element.aspect.atoms.button.secondary %}``.
+
+Pattern Documentation
+---------------------
 
 Ideally, each component should come with some usage examples. Simple components, such as our "Button" component, won't require much of this, but it becomes increasingly necessary as pattern complexity increases.
 
@@ -84,52 +181,7 @@ As of the current version of Mote, this requires a bit of copying and pasting.
 
 It is worth noting that the indentation of the button inside of the ``code-example`` tag is not an accident. Indentation is treated as part of the pre-formatted text.
 
-Dummy Data
---------------
-
-When composing complex interfaces out of various patterns, it becomes necessary to inject "dummy data". This can be used to emulate content, or to apply states and additional styles to components.
-
-.. code-block:: json
-
-    // button/json/data.json
-    {
-        "Button": {
-            "text": "I am a button",
-            "modifiers": "Button--big Button--red"
-        }
-    }
-
-Using Dummy Data
-################
-
-Once the dummy data has been created, it is can be consumed in ``element.html`` like so:
-
-.. code-block:: html
-
-    <!-- button/element.html -->
-    {% load mote_tags %}
-
-    <button class="Button {{ element.json.data.Button.modifiers }}">{{ element.json.data.Button.text }}</button>
-
-Note that ``element.json.data`` refers to the name of the JSON file, and ``element.json.data.Button`` refers to the "Button" object inside of the JSON.
-
-Obviously, this is a rather verbose syntax, and can get a bit overwhelming as the depth of the JSON increases in more complex use cases.
-
-Therefore, it is strongly recommended to use the ``{% mask %}`` tag as it carries benefits beyond terse code. See the following example:
-
-.. code-block:: html
-
-    <!-- button/element.html -->
-    {% load mote_tags %}
-
-    {% mask element.json.data.Button as "button" %}
-
-    <button class="Button {{ button.modifiers }}">{{ button.text }}</button>
-
-Variations
-##########
-
-Often, it is necessary to demonstrate different states of a component in the Mote interface.
+A useful trick is to use ``{% render_element element %}`` in place of manually writing the markup into the code block. Similarly, one can also do this for variations of a pattern as such: ``{% render_element element.variationName %}``.
 
 Pattern Composition
 ###################
