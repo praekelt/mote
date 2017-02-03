@@ -17,7 +17,7 @@ from django.utils.translation import ugettext as _
 from django.utils.functional import Promise
 from django.conf import settings
 
-from mote.utils import deepmerge
+from mote.utils import deepmerge, deephash
 
 
 register = template.Library()
@@ -128,11 +128,7 @@ class RenderElementNode(template.Node):
         final_kwargs.update(resolved)
 
         # Compute a cache key
-        li = [url, obj.modified]
-        keys = resolved.keys()
-        keys.sort()
-        for key in keys:
-            li.append('%s,%s' % (key, str(resolved[key])))
+        li = [url, obj.modified, deephash(resolved)]
         hashed = md5.new(':'.join([str(l) for l in li])).hexdigest()
         cache_key = 'render-element-%s' % hashed
 

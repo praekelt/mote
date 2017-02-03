@@ -3,6 +3,10 @@ Changelog
 
 next
 ----
+#. Consider the entire nested structure when computing a cache key.
+
+0.2
+---
 #. Make it possible to override `iframe.html` for each project.
 #. New UI theme.
 #. Django template and RESTful API.
