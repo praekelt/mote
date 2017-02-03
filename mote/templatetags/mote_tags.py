@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 import xmltodict
 
 from django.core.cache import cache
-from django.core.urlresolvers import reverse, resolve, get_script_prefix
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django import template
 from django.template.base import VariableDoesNotExist
@@ -18,6 +18,8 @@ from django.utils.functional import Promise
 from django.conf import settings
 
 from mote.utils import deepmerge, deephash
+from mote.views import ElementPartialView, VariationPartialView,\
+    ElementIndexView
 
 
 register = template.Library()
@@ -96,39 +98,27 @@ class RenderElementNode(template.Node):
             else:
                 resolved[k] = r
 
+        # Find the correct view and construct view kwargs
+        view_kwargs = dict(
+            project=obj.project.id,
+            aspect=obj.aspect.id,
+            pattern=obj.pattern.id,
+        )
         if isinstance(obj, Variation):
-            url = reverse(
-                "mote:variation-partial",
-                kwargs=dict(
-                    project=obj.project.id,
-                    aspect=obj.aspect.id,
-                    pattern=obj.pattern.id,
-                    element=obj.element.id,
-                    variation=obj.id
-                )
-            )
+            view = VariationPartialView
+            view_kwargs.update(dict(
+                element=obj.element.id,
+                variation=obj.id
+            ))
         else:
-            url = reverse(
-                "mote:element-partial",
-                kwargs=dict(
-                    project=obj.project.id,
-                    aspect=obj.aspect.id,
-                    pattern=obj.pattern.id,
-                    element=obj.id
-                )
-            )
-        # Resolve needs any possible prefix removed
-        url = re.sub(r"^%s" % get_script_prefix().rstrip('/'), '', url)
-        view, args, kwargs = resolve(url)
-
-        # Construct a final kwargs that includes the context
-        final_kwargs = context.flatten()
-        del final_kwargs["request"]
-        final_kwargs.update(kwargs)
-        final_kwargs.update(resolved)
+            view = ElementPartialView
+            view_kwargs.update(dict(
+                element=obj.id
+            ))
 
         # Compute a cache key
-        li = [url, obj.modified, deephash(resolved)]
+        li = [obj.modified, deephash(resolved)]
+        li.extend(frozenset(sorted(view_kwargs.items())))
         hashed = md5.new(':'.join([str(l) for l in li])).hexdigest()
         cache_key = 'render-element-%s' % hashed
 
@@ -136,9 +126,16 @@ class RenderElementNode(template.Node):
         if cached is not None:
             return cached
 
+        # Construct a final kwargs that includes the context
+        final_kwargs = context.flatten()
+        del final_kwargs["request"]
+        final_kwargs.update(resolved)
+        final_kwargs.update(view_kwargs)
+
         # Call the view. Let any error propagate.
         request = context["request"]
-        result = view(request, *args, **final_kwargs)
+        result = view.as_view()(request, **final_kwargs)
+
         if isinstance(result, TemplateResponse):
             # The result of a generic view
             result.render()
@@ -174,21 +171,17 @@ class RenderElementIndexNode(template.Node):
 
     def render(self, context):
         obj = self.obj.resolve(context)
-        url = reverse(
-            "mote:element-index",
-            kwargs=dict(
-                project=obj.project.id,
-                aspect=obj.aspect.id,
-                pattern=obj.pattern.id,
-                element=obj.id
-            )
-        )
-        # Resolve needs any possible prefix removed
-        url = re.sub(r"^%s" % get_script_prefix().rstrip('/'), '', url)
-        view, args, kwargs = resolve(url)
+
         # Call the view. Let any error propagate.
         request = context["request"]
-        result = view(request, *args, **kwargs)
+        view_kwargs = dict(
+            project=obj.project.id,
+            aspect=obj.aspect.id,
+            pattern=obj.pattern.id,
+            element=obj.id
+        )
+        result = ElementIndexView.as_view()(request, **view_kwargs)
+
         if isinstance(result, TemplateResponse):
             # The result of a generic view
             result.render()
