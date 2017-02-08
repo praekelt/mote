@@ -1,3 +1,4 @@
+import types
 from copy import deepcopy
 
 
@@ -5,9 +6,27 @@ def _deepmerge(source, delta):
     """Recursive helper"""
 
     for key, value in delta.items():
+
         if isinstance(value, dict):
-            node = source.setdefault(key, {})
-            _deepmerge(node, value)
+            if isinstance(source[key], types.ListType):
+                # We expect a list but didn"t get one. Do conversion.
+                _deepmerge(source, {key: [value]})
+            else:
+                node = source.setdefault(key, {})
+                _deepmerge(node, value)
+
+        elif isinstance(value, types.ListType):
+            # Use the zero-th item as an archetype
+            el = deepcopy(source[key][0])
+            source[key] = []
+            for n in value:
+                source[key].append(deepcopy(el))
+            for n, v in enumerate(value):
+                if isinstance(v, types.DictType):
+                    _deepmerge(source[key][n], v)
+                else:
+                    source[key][n] = v
+
         else:
             source[key] = value
 
