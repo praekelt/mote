@@ -29,7 +29,7 @@ class UtilsTestCase(TestCase):
             ]
         }
         delta = {
-            "one": {"bbb": 777},
+            "one": {"bbb": 777, "ccc": 888},
             "two": [3, 4, 5],
             "three": {"actor": {"name": "Colin"}},
             "four": [
@@ -47,12 +47,14 @@ class UtilsTestCase(TestCase):
                         ]
                     }
                 }
-            ]
+            ],
+            "infinity": {"a": 0}
         }
         result = deepmerge(source, delta)
+        print result
         self.assertEqual(
             {
-            "one": {"aaa": 1, "bbb": 777},
+            "one": {"aaa": 1, "bbb": 777, "ccc": 888},
             "two": [3, 4, 5],
             "three":[
                 {"actor": {"name": "Colin", "surname": "Hanks"}}
@@ -72,7 +74,8 @@ class UtilsTestCase(TestCase):
                         ]
                     }
                 }
-            ]
+            ],
+            "infinity": {"a": 0}
             },
             result
         )

@@ -8,7 +8,7 @@ def _deepmerge(source, delta):
     for key, value in delta.items():
 
         if isinstance(value, dict):
-            if isinstance(source[key], types.ListType):
+            if (key in source) and isinstance(source[key], types.ListType):
                 # We expect a list but didn"t get one. Do conversion.
                 _deepmerge(source, {key: [value]})
             else:
