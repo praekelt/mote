@@ -10,7 +10,7 @@ As in regular Django templating, you can use whatever logic you deem necessary t
 
 For example, consider the following code:
 
-.. code-block:: json
+.. code-block:: js
 
     // button/json/data.json
     {
@@ -21,9 +21,9 @@ For example, consider the following code:
         }
     }
 
-.. code-block:: html
+.. code-block:: html+django
 
-    // button/element.html
+    <!-- button/element.html -->
     {% load mote_tags %}
 
     {% mask element.json.data.Button as "button" %}

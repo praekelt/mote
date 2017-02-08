@@ -26,8 +26,8 @@ Your directory tree should now look something like this:
 
     project-foo
     ├── mote
-    │   └── element
-    │       └── iframe.html
+    │   └── element
+    │       └── iframe.html
     └── website
 
 This ``mote`` directory is reserved for overriding Mote's templates on a per-project basis. ``iframe.html`` is the template used within the iframe, and which encapsulates every pattern. Think of it as a Mote-specific ``base.html`` as one would find in any other Django project, and you can have a unique one for each Mote project in your repo.
@@ -37,7 +37,7 @@ Iframe.html contents
 
 The contents of this file depend entirely on what your needs are for a project. A good baseline is something like the following:
 
-.. code-block:: html
+.. code-block:: html+django
 
     {% load mote_tags %}
     {% load static %}

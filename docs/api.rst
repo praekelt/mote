@@ -9,7 +9,9 @@ In-template
 -----------
 
 You may call any element from a Django template. For our example we have a button
-element::
+element:
+
+.. code-block:: html+django
 
     {% load mote_tags %}
 
@@ -17,7 +19,9 @@ element::
 
     <a class="{{ button.class }}">{{ button.text }}</a>
 
-This button element has default data described in JSON as::
+This button element has default data described in JSON as:
+
+.. code-block:: json
 
     {
         "Button": {
@@ -26,18 +30,24 @@ This button element has default data described in JSON as::
         }
     }
 
-You may render this button in your template::
+You may render this button in your template:
+
+.. code-block:: html+django
 
     {% load mote_tags %}
     {% render_element "myproject.website.atoms.button" %}
 
 However, you may partially or fully override the button data. Note how you do not have to redeclare
-the entire dictionary - Mote will deep merge your values with the default values::
+the entire dictionary - Mote will deep merge your values with the default values:
+
+.. code-block:: html+django
 
     {% load mote_tags %}
     {% render_element "myproject.website.atoms.button" button='{"text": "My label"}' %}
 
-You may even use template variables::
+You may even use template variables:
+
+.. code-block:: html+django
 
     {% load mote_tags %}
     {% render_element "myproject.website.atoms.button" button='{"text": "{{ foo }}"}' %}
@@ -45,13 +55,17 @@ You may even use template variables::
 Defining a dictionary in a template tag quickly becomes unwieldy. To combat this you may define an external
 template to assemble a data structure through XML.
 
-button.xml file::
+button.xml file:
+
+.. code-block:: html+django
 
     <button>
         <text>I have access to context variable {{ foo }}</text>
     </button>
 
-And here we use it. Note the outermost XML tag is not part of the `button` dictionary.::
+And here we use it. Note the outermost XML tag is not part of the `button` dictionary.:
+
+.. code-block:: html+django
 
     {% get_element_data "button.xml" as button %}
     {% render_element "myproject.website.atoms.button" button=button %}
@@ -69,7 +83,9 @@ the button data::
     /mote/api/myproject/website/atoms/button/?button=%2F%3Fbutton%3D%257B%2522text%2522%253A%2522Awesome%2522%257D%22
 
 That is way too ugly and inefficient! Imagine your page has to load 10 elements - that's 10 requests. To
-solve this Mote provides a Javascript class to multiplex requests and simplify the calling interface::
+solve this Mote provides a Javascript class to multiplex requests and simplify the calling interface:
+
+.. code-block:: html+django
 
     <div id="target"></div>
 
