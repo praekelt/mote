@@ -51,7 +51,6 @@ class UtilsTestCase(TestCase):
             "infinity": {"a": 0}
         }
         result = deepmerge(source, delta)
-        print result
         self.assertEqual(
             {
             "one": {"aaa": 1, "bbb": 777, "ccc": 888},

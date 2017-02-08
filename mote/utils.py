@@ -15,7 +15,7 @@ def _deepmerge(source, delta):
                 node = source.setdefault(key, {})
                 _deepmerge(node, value)
 
-        elif isinstance(value, types.ListType):
+        elif (key in source) and isinstance(value, types.ListType):
             # Use the zero-th item as an archetype
             el = deepcopy(source[key][0])
             source[key] = []
