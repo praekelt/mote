@@ -18,6 +18,7 @@ setup(
         "ujson",
         "six",
         "djangorestframework-jwt",
+        "djangorestframework",
         "xmltodict"
     ],
     tests_require=[
