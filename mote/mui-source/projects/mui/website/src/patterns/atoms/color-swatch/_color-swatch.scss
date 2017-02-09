@@ -1,0 +1,54 @@
+.sg-color-swatch {
+
+    border: 1px solid $color-grey-lighter;
+    border-radius: rem(6);
+    background-color: $color-white;
+    overflow: hidden;
+
+    .color-preview {
+        height: rem(150);
+    }
+
+    .values {
+
+        padding: rem(20);
+
+        & > div {
+            padding: rem(5) 0;
+
+            &:first-child {
+                padding-top: 0;
+            }
+
+            &:last-child {
+                padding-bottom: 0;
+            }
+        }
+    }
+}
+
+.sg-color-swatch-group {
+
+    @include container;
+
+    .sg-color-swatch {
+        @include span(12);
+        margin-bottom: $gutter;
+
+        @include breakpoint($bp-beta $bp-gamma) {
+            @include span(6);
+
+            &:nth-child(2n) {
+                @include last;
+            }
+        }
+
+        @include breakpoint($bp-gamma) {
+            @include span(4);
+
+            &:nth-child(3n) {
+                @include last;
+            }
+        }
+    }
+}

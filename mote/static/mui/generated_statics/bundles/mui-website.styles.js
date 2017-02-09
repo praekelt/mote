@@ -34,7 +34,7 @@
 /******/ 	__webpack_require__.c = installedModules;
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "/static/mote/generated_statics/bundles/";
+/******/ 	__webpack_require__.p = "/static/mui/generated_statics/bundles/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -58,4 +58,4 @@
 
 /***/ }
 /******/ ]);
-//# sourceMappingURL=mote-website.styles.js.map
+//# sourceMappingURL=mui-website.styles.js.map

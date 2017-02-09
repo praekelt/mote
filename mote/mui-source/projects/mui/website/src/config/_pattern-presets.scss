@@ -1,0 +1,25 @@
+
+
+// Molecules
+$menu-config: (
+    'colors': (
+        'default': $color-grey,
+        'interactive': $color-primary-1
+    ),
+    'structure': (
+        'horizontal-spacing': $vertical-rhythm-unit,
+        'vertical-spacing': $vertical-rhythm-unit
+    )
+);
+
+
+// Organisms
+$header-config: (
+    'colors': (
+        'background-color': $color-grey-dark,
+        'border-color': $color-grey
+    ),
+    'structure': (
+        'elements-height': $vertical-rhythm-unit * 2
+    )
+);
