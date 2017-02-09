@@ -1,4 +1,3 @@
-import types
 from copy import deepcopy
 
 
@@ -8,21 +7,21 @@ def _deepmerge(source, delta):
     for key, value in delta.items():
 
         if isinstance(value, dict):
-            if (key in source) and isinstance(source[key], types.ListType):
+            if (key in source) and isinstance(source[key], list):
                 # We expect a list but didn"t get one. Do conversion.
                 _deepmerge(source, {key: [value]})
             else:
                 node = source.setdefault(key, {})
                 _deepmerge(node, value)
 
-        elif (key in source) and isinstance(value, types.ListType):
+        elif (key in source) and isinstance(value, list):
             # Use the zero-th item as an archetype
             el = deepcopy(source[key][0])
             source[key] = []
             for n in value:
                 source[key].append(deepcopy(el))
             for n, v in enumerate(value):
-                if isinstance(v, types.DictType):
+                if isinstance(v, dict):
                     _deepmerge(source[key][n], v)
                 else:
                     source[key][n] = v

@@ -1,6 +1,5 @@
 import re
 import json
-import types
 from hashlib import md5
 
 from bs4 import BeautifulSoup
