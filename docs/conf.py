@@ -61,9 +61,21 @@ author = u'Praekelt Consulting'
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
-#
+
+
+def get_version(fname):
+    '''Extracts __version__ from {fname}'''
+    import re
+    verstrline = open(fname, "rt").read()
+    mob = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]", verstrline, re.M)
+    if mob:
+        return mob.group(1)
+    else:
+        raise RuntimeError("Unable to find version string in %s." % (fname,))
+
+
 # The short X.Y version.
-version = u'1.0'
+version = get_version('../mote/__init__.py')
 # The full version, including alpha/beta/rc tags.
 release = version
 
