@@ -78,7 +78,7 @@ class MetadataMixin(object):
                         try:
                             result[k] = json.loads(buf)
                         except ValueError:
-                            raise RuntimeError, "Invalid JSON at %s" % v
+                            raise RuntimeError("Invalid JSON at %s" % v)
             node = node._parent
         return result
 
@@ -175,8 +175,7 @@ class Element(MetadataMixin):
         if not os.path.exists(pth):
             return []
         li = [Variation(id, self) for id in os.listdir(pth) if not id.startswith(".") and not id in RESERVED_IDS]
-        li.sort(lambda a, b: cmp(a.metadata.get("position"), b.metadata.get("position")))
-        return li
+        return sorted(li, key=lambda item: item.metadata.get("position"))
 
     @property
     def modified(self):
@@ -210,8 +209,7 @@ class Pattern(MetadataMixin):
     @cached_property
     def elements(self):
         li = [Element(id, self) for id in os.listdir(self._root) if not id.startswith(".") and not id in RESERVED_IDS]
-        li.sort(lambda a, b: cmp(a.metadata.get("position"), b.metadata.get("position")))
-        return li
+        return sorted(li, key=lambda item: item.metadata.get("position"))
 
     def __getattr__(self, key):
         """Allow element lookup by name"""
@@ -242,8 +240,7 @@ class Aspect(MetadataMixin):
     @cached_property
     def patterns(self):
         li = [Pattern(id, self) for id in os.listdir(os.path.join(self._root, "src", "patterns")) if not id.startswith(".") and not id in RESERVED_IDS]
-        li.sort(lambda a, b: cmp(a.metadata.get("position"), b.metadata.get("position")))
-        return li
+        return sorted(li, key=lambda item: item.metadata.get("position"))
 
     def __getattr__(self, key):
         """Allow pattern lookup by name"""
@@ -261,8 +258,7 @@ class Project(MetadataMixin):
     @cached_property
     def aspects(self):
         li = [Aspect(id, self) for id in os.listdir(self._root) if not id.startswith(".") and not id in RESERVED_IDS]
-        li.sort(lambda a, b: cmp(a.metadata.get("position"), b.metadata.get("position")))
-        return li
+        return sorted(li, key=lambda item: item.metadata.get("position"))
 
     def __getattr__(self, key):
         """Allow aspect lookup by name"""
