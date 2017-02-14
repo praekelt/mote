@@ -113,7 +113,7 @@ class UtilsTestCase(TestCase):
         result = deepmerge(source, delta)
         self.assertEqual(result, source, "Result must be == source!")
         
-        # if source is None we want to retain delta
+        # if source is None we want to retain source
         source = None
         delta = {
             "one": {"aaa": 1, "bbb": 2},
@@ -138,4 +138,4 @@ class UtilsTestCase(TestCase):
             ]
         }
         result = deepmerge(source, delta)
-        self.assertEqual(result, delta, "Result must be == delta!")
+        self.assertEqual(result, source, "Result must be == None!")
