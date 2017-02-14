@@ -3,6 +3,9 @@ from copy import deepcopy
 
 def _deepmerge(source, delta):
     """Recursive helper"""
+    
+    if source is None: return delta
+    if delta is None: return source
 
     for key, value in delta.items():
 
