@@ -78,3 +78,64 @@ class UtilsTestCase(TestCase):
             },
             result
         )
+
+    def test_deepmerge_nones(self):
+        # if both source and delta are None the result must be None
+        source = None
+        delta = None
+        result = deepmerge(source, delta)
+        assert(result, None)
+        
+        # if delta is None, we want to retain source
+        source = {
+            "one": {"aaa": 1, "bbb": 2},
+            "two": [1, 2, 3],
+            "three":[
+                {"actor": {"name": "Tom", "surname": "Hanks"}},
+                {"actor": {"name": "Denzel", "surname": "Washington"}},
+            ],
+            "four": [
+                {"actor": {"name": "Alec", "surname": "Baldwin"}},
+                {"actor": {"name": "Brad", "surname": "Pitt"}},
+            ],
+            "five": [
+                {
+                    "movie": {
+                        "title": "Good Will Hunting",
+                        "actors": [
+                            {"actor": {"name": "Ben", "surname": "Affleck"}}
+                        ]
+                    }
+                }
+            ]
+        }
+        delta = None
+        result = deepmerge(source, delta)
+        self.assertEqual(result, source, "Result must be == source!")
+        
+        # if source is None we want to retain source
+        source = None
+        delta = {
+            "one": {"aaa": 1, "bbb": 2},
+            "two": [1, 2, 3],
+            "three":[
+                {"actor": {"name": "Tom", "surname": "Hanks"}},
+                {"actor": {"name": "Denzel", "surname": "Washington"}},
+            ],
+            "four": [
+                {"actor": {"name": "Alec", "surname": "Baldwin"}},
+                {"actor": {"name": "Brad", "surname": "Pitt"}},
+            ],
+            "five": [
+                {
+                    "movie": {
+                        "title": "Good Will Hunting",
+                        "actors": [
+                            {"actor": {"name": "Ben", "surname": "Affleck"}}
+                        ]
+                    }
+                }
+            ]
+        }
+        result = deepmerge(source, delta)
+        self.assertEqual(result, source, "Result must be == None!")
