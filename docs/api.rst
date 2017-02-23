@@ -52,6 +52,28 @@ You may even use template variables:
     {% load mote_tags %}
     {% render_element "myproject.website.atoms.button" button='{"text": "{{ foo }}"}' %}
 
+The variable called ``element`` is special. It allows you to relatively lookup
+other elements.  In this example ``button`` also renders one of its sibling
+elements ``anchor``. It's a very artificial example but illustrates the usage.
+
+Let's extend the button element to render a sibling.:
+
+.. code-block:: html+django
+
+    {% load mote_tags %}
+
+    {% mask element.json.data.Button as button %}
+
+    <a class="{{ button.class }}">{{ button.text }}</a>
+    {% render_element button.sibling %}
+
+Specify a sibling by a relative lookup.:
+
+    .. code-block:: html+django
+
+    {% load mote_tags %}
+    {% render_element "myproject.website.atoms.button" button='{"sibling": "{{ element.pattern.anchor.dotted_name }}"}' %}
+
 Defining a dictionary in a template tag quickly becomes unwieldy. To combat this you may define an external
 template to assemble a data structure through XML.
 
