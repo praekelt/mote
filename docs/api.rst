@@ -53,7 +53,7 @@ You may even use template variables:
     {% render_element "myproject.website.atoms.button" button='{"text": "{{ foo }}"}' %}
 
 The variable called ``element`` is special. It allows you to relatively lookup
-other elements.  In this example ``button`` also renders one of its sibling
+other elements.  In this example our button element also renders one of its sibling
 elements ``anchor``. It's a very artificial example but illustrates the usage.
 
 Let's extend the button element to render a sibling.:
