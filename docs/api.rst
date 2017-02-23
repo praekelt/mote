@@ -69,7 +69,7 @@ Let's extend the button element to render a sibling.:
 
 Specify a sibling by a relative lookup.:
 
-    .. code-block:: html+django
+.. code-block:: html+django
 
     {% load mote_tags %}
     {% render_element "myproject.website.atoms.button" button='{"sibling": "{{ element.pattern.anchor.dotted_name }}"}' %}
