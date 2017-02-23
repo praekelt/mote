@@ -4,5 +4,8 @@
         "Italic": {
             "text": "Lorem ipsum"
         }
+    },
+    "OtherElement": {
+        "element": ""
     }
 }

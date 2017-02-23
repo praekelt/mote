@@ -5,3 +5,6 @@
 <button class="Button {{ button.modifiers }}">
     <i>{{ button.Italic.text }}</i>
 </button>
+{% if button.OtherElement.element %}
+    {% render_element button.OtherElement.element %}
+{% endif %}

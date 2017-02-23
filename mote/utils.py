@@ -1,9 +1,11 @@
 from copy import deepcopy
 
+from mote.models import Project, Aspect, Pattern, Element, Variation
+
 
 def _deepmerge(source, delta):
     """Recursive helper"""
-    
+
     # 'source' is the normative structure, keep it.
     if source is None or delta is None:
         return source
@@ -55,3 +57,25 @@ def deephash(o):
         new_o[k] = deephash(v)
 
     return hash(tuple(frozenset(sorted(new_o.items()))))
+
+
+def get_object_by_dotted_name(name):
+    """Return object identified by eg. a.b.c.d"""
+    li = name.split(".")
+    length = len(li)
+    project = Project(li[0])
+    if length == 1:
+        return project
+    aspect = Aspect(li[1], project)
+    if length == 2:
+        return aspect
+    pattern = Pattern(li[2], aspect)
+    if length == 3:
+        return pattern
+    element = Element(li[3], pattern)
+    if length == 4:
+        return element
+    variation = Variation(li[4], element)
+    if length == 5:
+        return variation
+    return None

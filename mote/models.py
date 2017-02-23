@@ -124,6 +124,16 @@ class Variation(MetadataMixin):
         return "%s/element.html" % self.relative_path
 
     @property
+    def dotted_name(self):
+        return "%s.%s.%s.%s.%s" % (
+            self.project.id,
+            self.aspect.id,
+            self.pattern.id,
+            self.element.id,
+            self.id
+        )
+
+    @property
     def modified(self):
         try:
             return os.path.getmtime(self._root)
@@ -164,6 +174,15 @@ class Element(MetadataMixin):
     @property
     def template_name(self):
         return "%s/element.html" % self.relative_path
+
+    @property
+    def dotted_name(self):
+        return "%s.%s.%s.%s" % (
+            self.project.id,
+            self.aspect.id,
+            self.pattern.id,
+            self.id,
+        )
 
     @property
     def index_template_name(self):
