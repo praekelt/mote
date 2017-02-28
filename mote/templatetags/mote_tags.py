@@ -1,8 +1,9 @@
 import re
-import json
+import warnings
 from hashlib import md5
 
 from bs4 import BeautifulSoup
+import ujson as json
 import xmltodict
 
 from django.core.cache import cache
@@ -113,17 +114,29 @@ class RenderElementNode(template.Node):
                     element=obj.id
                 ))
 
-            # Compute a cache key
+			# Compute a cache key before we pop from resolved
             li = [obj.modified, deephash(resolved)]
             li.extend(frozenset(sorted(view_kwargs.items())))
             hashed = md5(
                 u":".join([text_type(l) for l in li]).encode("utf-8")
             ).hexdigest()
             cache_key = "render-element-%s" % hashed
-
             cached = cache.get(cache_key, None)
             if cached is not None:
                 return cached
+
+           # Automatically perform masking with the default data
+            request = context["request"]
+            #import pdb;pdb.set_trace()
+            masked = obj.data
+            # Omit top-level key
+            if masked:
+                masked = masked[list(masked.keys())[0]]
+            if "data" in request.GET:
+                masked = deepmerge(masked, json.loads(request.GET["data"]))
+            elif "data" in resolved:
+                masked = deepmerge(masked, resolved.pop("data"))
+            context["data"] = masked
 
             # Construct a final kwargs that includes the context
             final_kwargs = context.flatten()
@@ -132,7 +145,6 @@ class RenderElementNode(template.Node):
             final_kwargs.update(view_kwargs)
 
             # Call the view. Let any error propagate.
-            request = context["request"]
             result = view.as_view()(request, **final_kwargs)
 
             if isinstance(result, TemplateResponse):
@@ -206,6 +218,10 @@ class ResolveNode(template.Node):
     """Return first argument that resolves."""
 
     def __init__(self, *args):
+        warnings.warn(
+            "ResolveNode is being deprecated. Refactor your templates.",
+            DeprecationWarning
+        )
         self.args = []
         for arg in args:
             self.args.append(template.Variable(arg))
@@ -239,6 +255,10 @@ class MaskNode(template.Node):
     partially, making for cleaner templates and smaller JSON files."""
 
     def __init__(self, var, name):
+        warnings.warn(
+            "Masking is now implicit. Refactor your templates.",
+            DeprecationWarning
+        )
         self.var = template.Variable(var)
         # Clean up the name without resorting to resolving a variable
         self.name = name.strip("'").strip('"')

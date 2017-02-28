@@ -32,7 +32,7 @@ class TagsTestCase(TestCase):
         request = self.factory.get("/")
         button = {"Italic": {"text": "Foo"}}
         t = template.Template("""{% load mote_tags %}
-            {% render_element "myproject.website.atoms.button" button=button %}"""
+            {% render_element "myproject.website.atoms.button" data=button %}"""
         )
         result = t.render(template.Context({
             "request": request,
@@ -48,7 +48,7 @@ class TagsTestCase(TestCase):
     def test_render_element_with_kwargs_dict(self):
         request = self.factory.get("/")
         t = template.Template("""{% load mote_tags %}
-            {% render_element "myproject.website.atoms.button" button='{"Italic": {"text": "Foo"}}' %}"""
+            {% render_element "myproject.website.atoms.button" data='{"Italic": {"text": "Foo"}}' %}"""
         )
         result = t.render(template.Context({
             "request": request
@@ -63,7 +63,7 @@ class TagsTestCase(TestCase):
     def test_render_element_with_kwargs_variables(self):
         request = self.factory.get("/")
         t = template.Template("""{% load mote_tags %}
-            {% render_element "myproject.website.atoms.button" button='{"Italic": {"text": "{{ foo }}"}}' number=number %}"""
+            {% render_element "myproject.website.atoms.button" data='{"Italic": {"text": "{{ foo }}"}}' number=number %}"""
         )
         result = t.render(template.Context({
             "request": request,
@@ -94,7 +94,7 @@ class TagsTestCase(TestCase):
 
         # Specify an element by dotted name
         t = template.Template("""{% load mote_tags %}
-            {% render_element "myproject.website.atoms.button" button='{"OtherElement": {"element": "myproject.website.atoms.panel"}}' %}"""
+            {% render_element "myproject.website.atoms.button" data='{"OtherElement": {"element": "myproject.website.atoms.panel"}}' %}"""
         )
         result = t.render(template.Context({"request": request}))
         self.assertHTMLEqual(
@@ -107,7 +107,7 @@ class TagsTestCase(TestCase):
 
         # Specify an element by dotted name after relative traversal
         t = template.Template("""{% load mote_tags %}
-            {% render_element "myproject.website.atoms.button" button='{"OtherElement": {"element": "{{ element.pattern.panel.dotted_name }}" }}' %}"""
+            {% render_element "myproject.website.atoms.button" data='{"OtherElement": {"element": "{{ element.pattern.panel.dotted_name }}" }}' %}"""
         )
         result = t.render(template.Context({"request": request}))
         self.assertHTMLEqual(

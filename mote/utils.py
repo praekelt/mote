@@ -6,7 +6,7 @@ from mote.models import Project, Aspect, Pattern, Element, Variation
 def _deepmerge(source, delta):
     """Recursive helper"""
 
-    # 'source' is the normative structure, keep it.
+    # "source" is the normative structure. Keep it.
     if source is None or delta is None:
         return source
 
@@ -14,7 +14,7 @@ def _deepmerge(source, delta):
 
         if isinstance(value, dict):
             if (key in source) and isinstance(source[key], list):
-                # We expect a list but didn"t get one. Do conversion.
+                # We expect a list but didn't get one. Do conversion.
                 _deepmerge(source, {key: [value]})
             else:
                 node = source.setdefault(key, {})

@@ -82,6 +82,11 @@ class MetadataMixin(object):
             node = node._parent
         return result
 
+    @cached_property
+    def data(self):
+        """Return the data for this object"""
+        return self.json.get("data", {})
+
 
 class Variation(MetadataMixin):
     """A variation *is* an index but the subclassing breaks down"""

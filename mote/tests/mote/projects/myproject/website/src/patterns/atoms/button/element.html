@@ -1,10 +1,8 @@
 {% load mote_tags %}
 
-{% mask element.json.sample.Button as "button" %}
-
-<button class="Button {{ button.modifiers }}">
-    <i>{{ button.Italic.text }}</i>
+<button class="Button {{ data.modifiers }}">
+    <i>{{ data.Italic.text }}</i>
 </button>
-{% if button.OtherElement.element %}
-    {% render_element button.OtherElement.element %}
+{% if data.OtherElement.element %}
+    {% render_element data.OtherElement.element %}
 {% endif %}

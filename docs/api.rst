@@ -8,16 +8,15 @@ Mote provides both an in-template and full RESTful API.
 In-template
 -----------
 
-You may call any element from a Django template. For our example we have a button
-element:
+You may call any element from a Django template. For our example we have a
+button element. Note how the `data` variable is automatically created from the
+default JSON data:
 
 .. code-block:: html+django
 
     {% load mote_tags %}
 
-    {% mask element.json.data.Button as button %}
-
-    <a class="{{ button.class }}">{{ button.text }}</a>
+    <a class="{{ data.class }}">{{ data.text }}</a>
 
 This button element has default data described in JSON as:
 
@@ -43,14 +42,14 @@ the entire dictionary - Mote will deep merge your values with the default values
 .. code-block:: html+django
 
     {% load mote_tags %}
-    {% render_element "myproject.website.atoms.button" button='{"text": "My label"}' %}
+    {% render_element "myproject.website.atoms.button" data='{"text": "My label"}' %}
 
 You may even use template variables:
 
 .. code-block:: html+django
 
     {% load mote_tags %}
-    {% render_element "myproject.website.atoms.button" button='{"text": "{{ foo }}"}' %}
+    {% render_element "myproject.website.atoms.button" data='{"text": "{{ foo }}"}' %}
 
 The variable called ``element`` is special. It allows you to relatively lookup
 other elements.  In this example our button element also renders one of its sibling
@@ -62,17 +61,15 @@ Let's extend the button element to render a sibling.:
 
     {% load mote_tags %}
 
-    {% mask element.json.data.Button as button %}
-
-    <a class="{{ button.class }}">{{ button.text }}</a>
-    {% render_element button.sibling %}
+    <a class="{{ data.class }}">{{ data.text }}</a>
+    {% render_element data.sibling %}
 
 Specify a sibling by a relative lookup.:
 
 .. code-block:: html+django
 
     {% load mote_tags %}
-    {% render_element "myproject.website.atoms.button" button='{"sibling": "{{ element.pattern.anchor.dotted_name }}"}' %}
+    {% render_element "myproject.website.atoms.button" data='{"sibling": "{{ element.pattern.anchor.dotted_name }}"}' %}
 
 Defining a dictionary in a template tag quickly becomes unwieldy. To combat this you may define an external
 template to assemble a data structure through XML.
@@ -90,7 +87,7 @@ And here we use it. Note the outermost XML tag is not part of the `button` dicti
 .. code-block:: html+django
 
     {% get_element_data "button.xml" as button %}
-    {% render_element "myproject.website.atoms.button" button=button %}
+    {% render_element "myproject.website.atoms.button" data=button %}
 
 RESTful
 -------
@@ -119,7 +116,7 @@ solve this Mote provides a Javascript class to multiplex requests and simplify t
         var mote_api = new MoteAPI('/mote/api/');
         mote_api.push(
             'myproject/website/atoms/button/',
-            {'button': {'text': 'Awesome'}},
+            {'data': {'text': 'Awesome'}},
             '#target',
             function(result) { alert('Loaded!'); }
          );

@@ -62,7 +62,9 @@ class PatternView(TemplateView):
         # A pattern may have an intro view. First look in the pattern itself,
         # then fall back to normal template resolution.
         template_names = (
-            "%s/%s/src/patterns/%s/mote/intro.html" % (project.id, aspect.id, pattern.id),
+            "%s/%s/src/patterns/%s/mote/intro.html" % (
+                project.id, aspect.id, pattern.id
+            ),
             "mote/pattern/intros/%s.html" % pattern.id,
         )
         intro = None
@@ -91,7 +93,10 @@ class ElementBaseView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ElementBaseView, self).get_context_data(**kwargs)
         context["element"] = self.element
-        context["static_root"] = urljoin(PrefixNode.handle_simple("STATIC_URL"), self.element.aspect.relative_path)
+        context["static_root"] = urljoin(
+            PrefixNode.handle_simple("STATIC_URL"),
+            self.element.aspect.relative_path
+        )
         return context
 
 

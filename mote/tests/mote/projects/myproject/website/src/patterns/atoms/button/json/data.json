@@ -3,9 +3,9 @@
         "modifiers": "Button--solid Button--yellowButtercup",
         "Italic": {
             "text": "Lorem ipsum"
+        },
+        "OtherElement": {
+            "element": ""
         }
-    },
-    "OtherElement": {
-        "element": ""
     }
 }
