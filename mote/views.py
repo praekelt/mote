@@ -104,20 +104,21 @@ class ElementIndexView(ElementBaseView):
     """Index view for an element. Provides common UI around an element."""
 
     def get_template_names(self):
-        return [self.element.index_template_name]
+        return self.element.index_template_names
 
 
 class ElementPartialView(ElementBaseView):
     """Element view with no wrapping html and body tags"""
 
     def get_template_names(self):
-        return [self.element.template_name]
+        return self.element.template_names
 
 
 class ElementIframeView(ElementBaseView):
     """Element view suitable for rendering in an iframe"""
 
     def get_template_names(self):
+        # ugh
         return [
             "%s/mote/element/iframe.html" % self.element.project.id,
             "mote/element/iframe.html"
@@ -141,13 +142,14 @@ class VariationBaseView(ElementBaseView):
 class VariationPartialView(VariationBaseView):
 
     def get_template_names(self):
-        return [self.variation.template_name]
+        return self.variation.template_names
 
 
 class VariationIframeView(VariationBaseView):
     """Element view suitable for rendering in an iframe"""
 
     def get_template_names(self):
+        # ugh
         return [
             "%s/mote/element/iframe.html" % self.element.project.id,
             "mote/element/iframe.html"

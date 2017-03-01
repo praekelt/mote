@@ -1,7 +1,5 @@
 from copy import deepcopy
 
-from mote.models import Project, Aspect, Pattern, Element, Variation
-
 
 def _deepmerge(source, delta):
     """Recursive helper"""
@@ -61,6 +59,10 @@ def deephash(o):
 
 def get_object_by_dotted_name(name):
     """Return object identified by eg. a.b.c.d"""
+
+    # Avoid circular import
+    from mote.models import Project, Aspect, Pattern, Element, Variation
+
     li = name.split(".")
     length = len(li)
     project = Project(li[0])

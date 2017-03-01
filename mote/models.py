@@ -7,6 +7,7 @@ import ujson as json
 from django.utils.functional import cached_property
 
 from mote import PROJECT_PATHS
+from mote.utils import get_object_by_dotted_name
 
 
 RESERVED_IDS = (
@@ -89,7 +90,7 @@ class MetadataMixin(object):
 
 
 class Variation(MetadataMixin):
-    """A variation *is* an index but the subclassing breaks down"""
+    """A variation *is* an element but the subclassing breaks down"""
 
     def __init__(self, id, element):
         self._id = id
@@ -125,8 +126,11 @@ class Variation(MetadataMixin):
         )
 
     @property
-    def template_name(self):
-        return "%s/element.html" % self.relative_path
+    def template_names(self):
+        li = ["%s/element.html" % self.relative_path]
+        for parent_id in reversed(self.project.metadata.get("parents", [])):
+            li.append("%s/%s/src/patterns/%s/%s/%s/element.html" % (parent_id, self.aspect.id, self.pattern.id, self.element.id, self.id))
+        return li
 
     @property
     def dotted_name(self):
@@ -177,8 +181,11 @@ class Element(MetadataMixin):
         )
 
     @property
-    def template_name(self):
-        return "%s/element.html" % self.relative_path
+    def template_names(self):
+        li = ["%s/element.html" % self.relative_path]
+        for parent_id in reversed(self.project.metadata.get("parents", [])):
+            li.append("%s/%s/src/patterns/%s/%s/element.html" % (parent_id, self.aspect.id, self.pattern.id, self.id))
+        return li
 
     @property
     def dotted_name(self):
@@ -190,16 +197,29 @@ class Element(MetadataMixin):
         )
 
     @property
-    def index_template_name(self):
-        return "%s/index.html" % self.relative_path
+    def index_template_names(self):
+        li = ["%s/index.html" % self.relative_path]
+        for parent_id in reversed(self.project.metadata.get("parents", [])):
+            li.append("%s/%s/src/patterns/%s/%s/index.html" % (parent_id, self.aspect.id, self.pattern.id, self.id))
+        return li
 
     @cached_property
     def variations(self):
         pth = os.path.join(self._root, "variations")
-        if not os.path.exists(pth):
-            return []
-        li = [Variation(id, self) for id in os.listdir(pth) if not id.startswith(".") and not id in RESERVED_IDS]
-        return sorted(li, key=lambda item: item.metadata.get("position"))
+        if os.path.exists(pth):
+            li = [Variation(id, self) for id in os.listdir(pth) if not id.startswith(".") and not id in RESERVED_IDS]
+        else:
+            li = []
+        for parent_id in reversed(self.project.metadata.get("parents", [])):
+            obj = get_object_by_dotted_name("%s.%s.%s.%s" % (parent_id, self.aspect.id, self.pattern.id, self.id))
+            li.extend(obj.variations)
+        processed = []
+        result = []
+        for l in li:
+            if l.id not in processed:
+                result.append(l)
+                processed.append(l.id)
+        return sorted(result, key=lambda item: item.metadata.get("position"))
 
     @property
     def modified(self):
@@ -233,7 +253,16 @@ class Pattern(MetadataMixin):
     @cached_property
     def elements(self):
         li = [Element(id, self) for id in os.listdir(self._root) if not id.startswith(".") and not id in RESERVED_IDS]
-        return sorted(li, key=lambda item: item.metadata.get("position"))
+        for parent_id in reversed(self.project.metadata.get("parents", [])):
+            obj = get_object_by_dotted_name("%s.%s.%s" % (parent_id, self.aspect.id, self.id))
+            li.extend(obj.elements)
+        processed = []
+        result = []
+        for l in li:
+            if l.id not in processed:
+                result.append(l)
+                processed.append(l.id)
+        return sorted(result, key=lambda item: item.metadata.get("position"))
 
     def __getattr__(self, key):
         """Allow element lookup by name"""
@@ -263,8 +292,18 @@ class Aspect(MetadataMixin):
 
     @cached_property
     def patterns(self):
-        li = [Pattern(id, self) for id in os.listdir(os.path.join(self._root, "src", "patterns")) if not id.startswith(".") and not id in RESERVED_IDS]
-        return sorted(li, key=lambda item: item.metadata.get("position"))
+        pth = os.path.join(self._root, "src", "patterns")
+        li = [Pattern(id, self) for id in os.listdir(pth) if not id.startswith(".") and not id in RESERVED_IDS]
+        for parent_id in reversed(self.project.metadata.get("parents", [])):
+            obj = get_object_by_dotted_name("%s.%s" % (parent_id, self.id))
+            li.extend(obj.patterns)
+        processed = []
+        result = []
+        for l in li:
+            if l.id not in processed:
+                result.append(l)
+                processed.append(l.id)
+        return sorted(result, key=lambda item: item.metadata.get("position"))
 
     def __getattr__(self, key):
         """Allow pattern lookup by name"""
@@ -282,7 +321,16 @@ class Project(MetadataMixin):
     @cached_property
     def aspects(self):
         li = [Aspect(id, self) for id in os.listdir(self._root) if not id.startswith(".") and not id in RESERVED_IDS]
-        return sorted(li, key=lambda item: item.metadata.get("position"))
+        for parent_id in reversed(self.metadata.get("parents", [])):
+            obj = Project(parent_id)
+            li.extend(obj.aspects)
+        processed = []
+        result = []
+        for l in li:
+            if l.id not in processed:
+                result.append(l)
+                processed.append(l.id)
+        return sorted(result, key=lambda item: item.metadata.get("position"))
 
     def __getattr__(self, key):
         """Allow aspect lookup by name"""
