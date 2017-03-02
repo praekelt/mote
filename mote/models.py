@@ -4,6 +4,7 @@ import os
 from importlib import import_module
 
 import ujson as json
+import yaml
 
 from django.template import TemplateDoesNotExist
 from django.template.loader import select_template
@@ -74,18 +75,17 @@ class Base(object):
         return self.metadata.get("description", None)
 
     @cached_property
-    def json(self):
-        t = self._get_template("json/data.json")
-
-        if t is not None:
-            return {"data": json.loads(t.template.source)}
-
-        return {}
-
-    @cached_property
     def data(self):
         """Return the data for this object"""
-        return self.json.get("data", {})
+        # Handle all styles of data
+        for name in ("data.json", "data.yaml", "json/data.json"):
+            t = self._get_template(name)
+            if t is not None:
+                if name.endswith(".yaml"):
+                    return yaml.load(t.template.source)
+                else:
+                    return json.loads(t.template.source)
+        return {}
 
     def _get_children(self, klass, subdirectory=""):
         """Helper method to fetch children of a certain type"""
@@ -204,10 +204,6 @@ class Element(Base):
         )
 
     @property
-    def template_names(self):
-        return [pth + "element.html" for pth in self._relative_paths]
-
-    @property
     def dotted_name(self):
         return "%s.%s.%s.%s" % (
             self.project.id,
@@ -215,6 +211,10 @@ class Element(Base):
             self.pattern.id,
             self.id,
         )
+
+    @property
+    def template_names(self):
+        return [pth + "element.html" for pth in self._relative_paths]
 
     @property
     def index_template_names(self):
