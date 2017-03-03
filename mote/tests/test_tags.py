@@ -28,6 +28,21 @@ class TagsTestCase(TestCase):
             </button>"""
         )
 
+    def test_render_element_by_self(self):
+        request = self.factory.get("/")
+        t = template.Template("""{% load mote_tags %}
+            {% render_element "self.website.atoms.button" %}"""
+        )
+        result = t.render(template.Context({
+            "request": request
+        }))
+        self.assertHTMLEqual(
+            result,
+            """<button class="Button Button--solid Button--yellowButtercup">
+            <i>Lorem ipsum</i>
+            </button>"""
+        )
+
     def test_render_element_with_kwargs_variable(self):
         request = self.factory.get("/")
         button = {"Italic": {"text": "Foo"}}

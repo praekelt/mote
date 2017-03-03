@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import ujson as json
 import xmltodict
 
+from django.conf import settings
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
@@ -16,7 +17,6 @@ from django.template.response import TemplateResponse
 from django.utils.translation import ugettext as _
 from django.utils.functional import Promise
 from django.utils.six import string_types, text_type
-from django.conf import settings
 
 from mote.utils import deepmerge, deephash, get_object_by_dotted_name
 from mote.views import ElementPartialView, VariationPartialView,\
@@ -58,7 +58,23 @@ class RenderElementNode(template.Node):
 
         # If element_or_identifier is a string convert it
         if isinstance(element_or_identifier, string_types):
-            obj = get_object_by_dotted_name(element_or_identifier)
+            # The "self" project trigger a project lookup
+            if element_or_identifier.startswith("self."):
+                try:
+                    value = settings.MOTE["project"]
+                except (AttributeError, KeyError):
+                    raise RuntimeError(
+                        "Define MOTE[\"project\"] setting for project lookup"
+                   )
+                if callable(value):
+                    project_id = value(context["request"])
+                else:
+                    project_id = value
+                obj = get_object_by_dotted_name(
+                    element_or_identifier.replace("self.", project_id + ".")
+                )
+            else:
+                obj = get_object_by_dotted_name(element_or_identifier)
             if not isinstance(obj, (Element, Variation)):
                 raise template.TemplateSyntaxError(
                     "Invalid identifier %s" % element_or_identifier
