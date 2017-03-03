@@ -58,18 +58,22 @@ class RenderElementNode(template.Node):
 
         # If element_or_identifier is a string convert it
         if isinstance(element_or_identifier, string_types):
-            # The "self" project trigger a project lookup
+            # The "self" project triggers a project lookup. It first checks for
+            # a context variable (used internally by the Mote explorer) then
+            # for a setting (used when calling render_element over the API).
             if element_or_identifier.startswith("self."):
-                try:
-                    value = settings.MOTE["project"]
-                except (AttributeError, KeyError):
-                    raise RuntimeError(
-                        "Define MOTE[\"project\"] setting for project lookup"
-                   )
-                if callable(value):
-                    project_id = value(context["request"])
-                else:
-                    project_id = value
+                project_id = context.get("__mote_project_id__", None)
+                if project_id is None:
+                    try:
+                        value = settings.MOTE["project"]
+                    except (AttributeError, KeyError):
+                        raise RuntimeError(
+                            "Define MOTE[\"project\"] setting for project lookup"
+                       )
+                    if callable(value):
+                        project_id = value(context["request"])
+                    else:
+                        project_id = value
                 obj = get_object_by_dotted_name(
                     element_or_identifier.replace("self.", project_id + ".")
                 )

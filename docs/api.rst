@@ -36,7 +36,24 @@ You may render this button in your template:
     {% load mote_tags %}
     {% render_element "myproject.website.atoms.button" %}
 
-However, you may partially or fully override the button data. Note how you do not have to redeclare
+You may refer to the project in context using ``self``. This is recommended
+practice because it makes it easy to roll out new versions of a pattern
+library. For example, if you create the pattern library ``myprojectv2`` then
+you would have to change the name *everywhere*. Using ``self`` avoids this.:
+
+.. code-block:: html+django
+
+    {% load mote_tags %}
+    {% render_element "self.website.atoms.button" %}
+
+Using ``self``  requires you to declare ``MOTE = {"project": callable_or_string}`` to tell
+Mote what project is in context.:
+
+.. code-block:: python
+
+    MOTE = {"project": lambda request: "myproject"}
+
+You may partially or fully override the button data. Note how you do not have to redeclare
 the entire dictionary - Mote will deep merge your values with the default values:
 
 .. code-block:: html+django

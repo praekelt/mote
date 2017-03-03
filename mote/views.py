@@ -32,6 +32,7 @@ class ProjectView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ProjectView, self).get_context_data(**kwargs)
         context["project"] = Project(kwargs["project"])
+        context["__mote_project_id__"] = context["project"].id
         return context
 
 
@@ -43,6 +44,7 @@ class AspectView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(AspectView, self).get_context_data(**kwargs)
         project = Project(kwargs["project"])
+        context["__mote_project_id__"] = project.id
         context["aspect"] = Aspect(kwargs["aspect"], project)
         return context
 
@@ -57,6 +59,7 @@ class PatternView(TemplateView):
         project = Project(kwargs["project"])
         aspect = Aspect(kwargs["aspect"], project)
         pattern = Pattern(kwargs["pattern"], aspect)
+        context["__mote_project_id__"] = project.id
         context["pattern"] = pattern
 
         # A pattern may have an intro view. First look in the pattern itself,
@@ -92,6 +95,7 @@ class ElementBaseView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ElementBaseView, self).get_context_data(**kwargs)
+        context["__mote_project_id__"] = self.element.project.id
         context["element"] = self.element
         context["static_root"] = urljoin(
             PrefixNode.handle_simple("STATIC_URL"),
@@ -118,7 +122,6 @@ class ElementIframeView(ElementBaseView):
     """Element view suitable for rendering in an iframe"""
 
     def get_template_names(self):
-        # ugh
         return [
             "%s/mote/element/iframe.html" % self.element.project.id,
             "mote/element/iframe.html"
@@ -149,7 +152,6 @@ class VariationIframeView(VariationBaseView):
     """Element view suitable for rendering in an iframe"""
 
     def get_template_names(self):
-        # ugh
         return [
             "%s/mote/element/iframe.html" % self.element.project.id,
             "mote/element/iframe.html"
