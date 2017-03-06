@@ -21,6 +21,9 @@
                             {% for element in pattern.elements %}
                             <li role="menuitem" class="Navigation-item Navigation-item--tier2">
                                 <a class="Navigation-itemLink Navigation-itemLink--tier2" href="{% url "mote:pattern" project=pattern.project.id aspect=pattern.aspect.id pattern=pattern.id %}#element-{{ element.id }}">{{ element.title }}</a>
+                                <a class="Navigation-itemLinkOut" target="_blank" href="{% url "mote:element-iframe" project=element.project.id aspect=element.aspect.id pattern=element.pattern.id element=element.id %}">
+                                    <img class="Navigation-itemLinkOutImage" src="{% static "mote/img/rocket.png" %}" alt="">
+                                </a>
                             </li>
                             {% endfor %}
                         </ul>

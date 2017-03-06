@@ -1,7 +1,7 @@
 // #############
 // SETUP
 
-const BASE_PROJECT_NAME = 'mote';
+const BASE_PROJECT_NAME = 'mui';
 
 const
     Path = require('path'),
@@ -23,7 +23,7 @@ const Argv = require('yargs')
     .default('projectAspect', 'website')
     .argv;
 
-const MotePath = `/mote/projects/${Argv.projectName}/${Argv.projectAspect}`;
+const MotePath = `/mui-source/projects/${Argv.projectName}/${Argv.projectAspect}`;
 const PublicStaticPath = `/static/${BASE_PROJECT_NAME === Argv.projectName ? BASE_PROJECT_NAME : BASE_PROJECT_NAME + '/' + Argv.projectName}/generated_statics/bundles/`;
 
 const ProjectPaths = {

@@ -1,13 +1,12 @@
 import re
-import md5
 import json
-import types
+from hashlib import md5
 
 from bs4 import BeautifulSoup
 import xmltodict
 
 from django.core.cache import cache
-from django.core.urlresolvers import reverse, resolve, get_script_prefix
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django import template
 from django.template.base import VariableDoesNotExist
@@ -15,9 +14,12 @@ from django.template.loader import render_to_string
 from django.template.response import TemplateResponse
 from django.utils.translation import ugettext as _
 from django.utils.functional import Promise
+from django.utils.six import string_types, text_type
 from django.conf import settings
 
-from mote.utils import deepmerge
+from mote.utils import deepmerge, deephash
+from mote.views import ElementPartialView, VariationPartialView,\
+    ElementIndexView
 
 
 register = template.Library()
@@ -54,7 +56,7 @@ class RenderElementNode(template.Node):
         element_or_identifier = self.element_or_identifier.resolve(context)
 
         # If element_or_identifier is a string convert it
-        if isinstance(element_or_identifier, (unicode, str)):
+        if isinstance(element_or_identifier, string_types):
             parts = element_or_identifier.split(".")
             length = len(parts)
             if length not in (4, 5):
@@ -78,10 +80,10 @@ class RenderElementNode(template.Node):
             except VariableDoesNotExist:
                 continue
             if isinstance(r, Promise):
-                r = unicode(r)
+                r = text_type(r)
 
             # Strings may be interpreted further
-            if isinstance(r, (unicode, str)):
+            if isinstance(r, string_types):
 
                 # Attempt to resolve any variables by rendering
                 t = template.Template(r)
@@ -96,53 +98,44 @@ class RenderElementNode(template.Node):
             else:
                 resolved[k] = r
 
+        # Find the correct view and construct view kwargs
+        view_kwargs = dict(
+            project=obj.project.id,
+            aspect=obj.aspect.id,
+            pattern=obj.pattern.id,
+        )
         if isinstance(obj, Variation):
-            url = reverse(
-                "mote:variation-partial",
-                kwargs=dict(
-                    project=obj.project.id,
-                    aspect=obj.aspect.id,
-                    pattern=obj.pattern.id,
-                    element=obj.element.id,
-                    variation=obj.id
-                )
-            )
+            view = VariationPartialView
+            view_kwargs.update(dict(
+                element=obj.element.id,
+                variation=obj.id
+            ))
         else:
-            url = reverse(
-                "mote:element-partial",
-                kwargs=dict(
-                    project=obj.project.id,
-                    aspect=obj.aspect.id,
-                    pattern=obj.pattern.id,
-                    element=obj.id
-                )
-            )
-        # Resolve needs any possible prefix removed
-        url = re.sub(r"^%s" % get_script_prefix().rstrip('/'), '', url)
-        view, args, kwargs = resolve(url)
-
-        # Construct a final kwargs that includes the context
-        final_kwargs = context.flatten()
-        del final_kwargs["request"]
-        final_kwargs.update(kwargs)
-        final_kwargs.update(resolved)
+            view = ElementPartialView
+            view_kwargs.update(dict(
+                element=obj.id
+            ))
 
         # Compute a cache key
-        li = [url, obj.modified]
-        keys = resolved.keys()
-        keys.sort()
-        for key in keys:
-            li.append('%s,%s' % (key, str(resolved[key])))
-        hashed = md5.new(':'.join([str(l) for l in li])).hexdigest()
+        li = [obj.modified, deephash(resolved)]
+        li.extend(frozenset(sorted(view_kwargs.items())))
+        hashed = md5(u':'.join([text_type(l) for l in li]).encode('utf-8')).hexdigest()
         cache_key = 'render-element-%s' % hashed
 
         cached = cache.get(cache_key, None)
         if cached is not None:
             return cached
 
+        # Construct a final kwargs that includes the context
+        final_kwargs = context.flatten()
+        del final_kwargs["request"]
+        final_kwargs.update(resolved)
+        final_kwargs.update(view_kwargs)
+
         # Call the view. Let any error propagate.
         request = context["request"]
-        result = view(request, *args, **final_kwargs)
+        result = view.as_view()(request, **final_kwargs)
+
         if isinstance(result, TemplateResponse):
             # The result of a generic view
             result.render()
@@ -178,21 +171,17 @@ class RenderElementIndexNode(template.Node):
 
     def render(self, context):
         obj = self.obj.resolve(context)
-        url = reverse(
-            "mote:element-index",
-            kwargs=dict(
-                project=obj.project.id,
-                aspect=obj.aspect.id,
-                pattern=obj.pattern.id,
-                element=obj.id
-            )
-        )
-        # Resolve needs any possible prefix removed
-        url = re.sub(r"^%s" % get_script_prefix().rstrip('/'), '', url)
-        view, args, kwargs = resolve(url)
+
         # Call the view. Let any error propagate.
         request = context["request"]
-        result = view(request, *args, **kwargs)
+        view_kwargs = dict(
+            project=obj.project.id,
+            aspect=obj.aspect.id,
+            pattern=obj.pattern.id,
+            element=obj.id
+        )
+        result = ElementIndexView.as_view()(request, **view_kwargs)
+
         if isinstance(result, TemplateResponse):
             # The result of a generic view
             result.render()
@@ -229,7 +218,7 @@ class ResolveNode(template.Node):
             except VariableDoesNotExist:
                 continue
             if isinstance(r, Promise):
-                r = unicode(r)
+                r = text_type(r)
             return r
         return ""
 
@@ -293,7 +282,7 @@ class GetElementDataNode(template.Node):
         )
 
         # Discard the root node
-        di = di[di.keys()[0]]
+        di = di[list(di.keys())[0]]
 
         # In debug mode use expensive conversion for easy debugging
         if settings.DEBUG:

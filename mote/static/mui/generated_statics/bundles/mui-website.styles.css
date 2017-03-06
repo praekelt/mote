@@ -246,16 +246,29 @@ html {
     margin-bottom: 35.154px;
     margin-bottom: 2.51107rem; }
   .Navigation-item--tier2 {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: start;
+        -ms-flex-pack: start;
+            justify-content: flex-start;
     padding-left: 14.705px;
     padding-left: 1.05041rem;
     border-left: 5px solid #037171; }
 
 .Navigation-itemLink {
-  display: block;
+  display: inline-block;
   -webkit-transition: .15s ease-in-out;
   transition: .15s ease-in-out;
   color: #037171;
-  text-decoration: none; }
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  vertical-align: middle; }
   .Navigation-itemLink:active, .Navigation-itemLink:hover, .Navigation-itemLink.is-active {
     color: #00b9ae; }
   .Navigation-itemLink--tier1 {
@@ -267,6 +280,24 @@ html {
   .Navigation-itemLink--tier2 {
     padding: 5.617px;
     padding: 0.40122rem; }
+  .Navigation-itemLinkOut {
+    display: inline-block;
+    width: 17.5px;
+    width: 1.25rem;
+    height: 17.5px;
+    height: 1.25rem;
+    margin-left: 4.375px;
+    margin-left: 0.3125rem;
+    -webkit-transition: opacity 0.25s ease-in-out;
+    transition: opacity 0.25s ease-in-out;
+    border-radius: 1.625rem;
+    background-color: #b8bdc1;
+    opacity: 0;
+    vertical-align: middle; }
+    .Navigation-itemLinkOut img {
+      width: 100%; }
+    .Navigation-item--tier2:hover .Navigation-itemLinkOut {
+      opacity: .75; }
 
 .NavGrid {
   display: -webkit-box;
@@ -602,4 +633,4 @@ html {
     .Pattern-linkOut:hover {
       opacity: .75; }
 
-/*# sourceMappingURL=mote-website.styles.css.map*/
+/*# sourceMappingURL=mui-website.styles.css.map*/

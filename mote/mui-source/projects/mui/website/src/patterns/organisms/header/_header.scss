@@ -1,0 +1,12 @@
+.SiteHead {
+    $block: &;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+    background-color: $color-white;
+
+    &-brand {
+        padding: 1.5rem;
+    }
+}

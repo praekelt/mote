@@ -19,9 +19,8 @@ class HomeView(TemplateView):
         context = super(HomeView, self).get_context_data(**kwargs)
         li = []
         for id, pth in PROJECT_PATHS.items():
-			li.append(Project(id))
-        li.sort(lambda a, b: cmp(a.metadata.get("position"), a.metadata.get("position")))
-        context["projects"] = li
+            li.append(Project(id))
+        context["projects"] = sorted(li, key=lambda item: item.metadata.get("position"))
         return context
 
 

@@ -18,7 +18,7 @@ Mote expects the following directory and file structure per pattern:
     ├── element.html
     ├── index.html
     ├── json
-    │   └── data.json
+    │   └── data.json
     └── metadata.json
 
 Have a look at this Gist_ for an example of a minimally functional set of content to get a pattern working in Mote.
@@ -32,7 +32,7 @@ Metadata
 
 This file should contain bits of information about the particular pattern, such as its title and description.
 
-.. code-block:: json
+.. code-block:: js
 
     // button/metadata.json
     {
@@ -41,11 +41,11 @@ This file should contain bits of information about the particular pattern, such 
     }
 
 Pattern Markup
-------------
+--------------
 
 This is where the markup of the component resides.
 
-.. code-block:: html
+.. code-block:: html+django
 
     <!-- button/element.html -->
     {% load mote_tags %}
@@ -59,7 +59,7 @@ Dummy Data
 
 When composing complex interfaces out of various patterns, it becomes necessary to inject "dummy data". This can be used to emulate content, or to apply states and additional styles to components.
 
-.. code-block:: json
+.. code-block:: js
 
     // button/json/data.json
     {
@@ -74,7 +74,7 @@ Using Dummy Data
 
 Once the dummy data has been created, it is can be consumed in ``element.html`` like so:
 
-.. code-block:: html
+.. code-block:: html+django
 
     <!-- button/element.html -->
     {% load mote_tags %}
@@ -87,7 +87,7 @@ Obviously, this is a rather verbose syntax, and can get a bit overwhelming as th
 
 Therefore, it is strongly recommended to use the ``{% mask %}`` tag as it carries benefits beyond terse code. See the following example:
 
-.. code-block:: html
+.. code-block:: html+django
 
     <!-- button/element.html -->
     {% load mote_tags %}
@@ -109,14 +109,14 @@ In the ``button`` pattern's directory, create a new directory called ``variation
     ├── element.html
     ├── index.html
     ├── json
-    │   └── data.json
+    │   └── data.json
     │── variations
     │   └── secondary
     └── metadata.json
 
 Next, copy the json directory from the parent button into the variation, like so:
 
-.. code-block:: json
+.. code-block:: js
 
     // button/variations/secondary/json/data.json
     {
@@ -127,7 +127,7 @@ Next, copy the json directory from the parent button into the variation, like so
 
 Once done, create an ``element.html`` for the variation, the contents of which should look something like this:
 
-.. code-block:: html
+.. code-block:: html+django
 
     <!-- button/variations/secondary/element.html -->
     {% load mote_tags %}
@@ -149,7 +149,7 @@ Ideally, each component should come with some usage examples. Simple components,
 
 As of the current version of Mote, this requires a bit of copying and pasting.
 
-.. code-block:: html
+.. code-block:: html+django
 
     <!-- button/index.html -->
     {% extends "mote/element/index.html" %}
@@ -190,7 +190,7 @@ We have our Button component, and it's consuming dummy data. This is great, beca
 
 Let's assume you have a ButtonGroup component which needs to use the Button component. It would look something like this:
 
-.. code-block:: json
+.. code-block:: js
 
     // button-group/json/data.json
     {
@@ -208,7 +208,7 @@ Let's assume you have a ButtonGroup component which needs to use the Button comp
         }
     }
 
-.. code-block:: html
+.. code-block:: html+django
 
     <!-- button-group/element.html -->
     {% load mote_tags %}
@@ -227,7 +227,7 @@ You should now have two buttons with different classes and text.
 
 But again, we have a similar situation with verbose code when we're calling ``element.aspect.atoms.button``. Fortunately, there is a simple workaround to this, in the ``{% with %}`` tag:
 
-.. code-block:: html
+.. code-block:: html+django
 
     <!-- button-group/element.html -->
     {% load mote_tags %}
