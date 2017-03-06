@@ -3,5 +3,6 @@
         "busy": "Still needs testing."
     },
     "title": "Button",
-    "description": "Primary, Secondary and Text buttons."
+    "description": "Primary, Secondary and Text buttons.",
+    "position": 1
 }

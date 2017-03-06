@@ -1,10 +1,12 @@
 import re
-import json
+import warnings
 from hashlib import md5
 
 from bs4 import BeautifulSoup
+import ujson as json
 import xmltodict
 
+from django.conf import settings
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
@@ -15,9 +17,8 @@ from django.template.response import TemplateResponse
 from django.utils.translation import ugettext as _
 from django.utils.functional import Promise
 from django.utils.six import string_types, text_type
-from django.conf import settings
 
-from mote.utils import deepmerge, deephash
+from mote.utils import deepmerge, deephash, get_object_by_dotted_name
 from mote.views import ElementPartialView, VariationPartialView,\
     ElementIndexView
 
@@ -57,100 +58,130 @@ class RenderElementNode(template.Node):
 
         # If element_or_identifier is a string convert it
         if isinstance(element_or_identifier, string_types):
-            parts = element_or_identifier.split(".")
-            length = len(parts)
-            if length not in (4, 5):
+            # The "self" project triggers a project lookup. It first checks for
+            # a context variable (used internally by the Mote explorer) then
+            # for a setting (used when calling render_element over the API).
+            if element_or_identifier.startswith("self."):
+                project_id = context.get("__mote_project_id__", None)
+                if project_id is None:
+                    try:
+                        value = settings.MOTE["project"]
+                    except (AttributeError, KeyError):
+                        raise RuntimeError(
+                            "Define MOTE[\"project\"] setting for project lookup"
+                       )
+                    if callable(value):
+                        project_id = value(context["request"])
+                    else:
+                        project_id = value
+                obj = get_object_by_dotted_name(
+                    element_or_identifier.replace("self.", project_id + ".")
+                )
+            else:
+                obj = get_object_by_dotted_name(element_or_identifier)
+            if not isinstance(obj, (Element, Variation)):
                 raise template.TemplateSyntaxError(
                     "Invalid identifier %s" % element_or_identifier
                 )
-            project = Project(parts[0])
-            aspect = Aspect(parts[1], project)
-            pattern = Pattern(parts[2], aspect)
-            obj = Element(parts[3], pattern)
-            if length == 5:
-                obj = Variation(parts[4], obj)
         else:
             obj = element_or_identifier
 
-        # Resolve the kwargs
-        resolved = {}
-        for k, v in self.kwargs.items():
-            try:
-                r = v.resolve(context)
-            except VariableDoesNotExist:
-                continue
-            if isinstance(r, Promise):
-                r = text_type(r)
+        # Set the object in the context as "element"
+        with context.push():
+            context["element"] = obj
 
-            # Strings may be interpreted further
-            if isinstance(r, string_types):
-
-                # Attempt to resolve any variables by rendering
-                t = template.Template(r)
-                raw_struct = t.render(context)
-
-                # Attempt to convert to JSON
+            # Resolve the kwargs
+            resolved = {}
+            for k, v in self.kwargs.items():
                 try:
-                    resolved[k] = json.loads(raw_struct)
-                except ValueError:
+                    r = v.resolve(context)
+                except VariableDoesNotExist:
+                    continue
+                if isinstance(r, Promise):
+                    r = text_type(r)
+
+                # Strings may be interpreted further
+                if isinstance(r, string_types):
+
+                    # Attempt to resolve any variables by rendering
+                    t = template.Template(r)
+                    raw_struct = t.render(context)
+
+                    # Attempt to convert to JSON
+                    try:
+                        resolved[k] = json.loads(raw_struct)
+                    except ValueError:
+                        resolved[k] = r
+
+                else:
                     resolved[k] = r
 
+            # Find the correct view and construct view kwargs
+            view_kwargs = dict(
+                project=obj.project.id,
+                aspect=obj.aspect.id,
+                pattern=obj.pattern.id,
+            )
+            if isinstance(obj, Variation):
+                view = VariationPartialView
+                view_kwargs.update(dict(
+                    element=obj.element.id,
+                    variation=obj.id
+                ))
             else:
-                resolved[k] = r
+                view = ElementPartialView
+                view_kwargs.update(dict(
+                    element=obj.id
+                ))
 
-        # Find the correct view and construct view kwargs
-        view_kwargs = dict(
-            project=obj.project.id,
-            aspect=obj.aspect.id,
-            pattern=obj.pattern.id,
-        )
-        if isinstance(obj, Variation):
-            view = VariationPartialView
-            view_kwargs.update(dict(
-                element=obj.element.id,
-                variation=obj.id
-            ))
-        else:
-            view = ElementPartialView
-            view_kwargs.update(dict(
-                element=obj.id
-            ))
+			# Compute a cache key before we pop from resolved
+            li = [obj.modified, deephash(resolved)]
+            li.extend(frozenset(sorted(view_kwargs.items())))
+            hashed = md5(
+                u":".join([text_type(l) for l in li]).encode("utf-8")
+            ).hexdigest()
+            cache_key = "render-element-%s" % hashed
+            cached = cache.get(cache_key, None)
+            if cached is not None:
+                return cached
 
-        # Compute a cache key
-        li = [obj.modified, deephash(resolved)]
-        li.extend(frozenset(sorted(view_kwargs.items())))
-        hashed = md5(u':'.join([text_type(l) for l in li]).encode('utf-8')).hexdigest()
-        cache_key = 'render-element-%s' % hashed
+           # Automatically perform masking with the default data
+            request = context["request"]
+            #import pdb;pdb.set_trace()
+            masked = obj.data
+            # Omit top-level key
+            if masked:
+                masked = masked[list(masked.keys())[0]]
+            if "data" in request.GET:
+                masked = deepmerge(masked, json.loads(request.GET["data"]))
+            elif "data" in resolved:
+                masked = deepmerge(masked, resolved.pop("data"))
+            context["data"] = masked
 
-        cached = cache.get(cache_key, None)
-        if cached is not None:
-            return cached
+            # Construct a final kwargs that includes the context
+            final_kwargs = context.flatten()
+            del final_kwargs["request"]
+            final_kwargs.update(resolved)
+            final_kwargs.update(view_kwargs)
 
-        # Construct a final kwargs that includes the context
-        final_kwargs = context.flatten()
-        del final_kwargs["request"]
-        final_kwargs.update(resolved)
-        final_kwargs.update(view_kwargs)
+            # Call the view. Let any error propagate.
+            result = view.as_view()(request, **final_kwargs)
 
-        # Call the view. Let any error propagate.
-        request = context["request"]
-        result = view.as_view()(request, **final_kwargs)
+            if isinstance(result, TemplateResponse):
+                # The result of a generic view
+                result.render()
+                html = result.rendered_content
+            elif isinstance(result, HttpResponse):
+                # Old-school view
+                html = result.content
 
-        if isinstance(result, TemplateResponse):
-            # The result of a generic view
-            result.render()
-            html = result.rendered_content
-        elif isinstance(result, HttpResponse):
-            # Old-school view
-            html = result.content
+            # Make output beautiful for Chris
+            if not settings.DEBUG:
+                beauty = BeautifulSoup(html, "html.parser")
+                html = beauty.prettify()
 
-        # Make output beautiful for Chris
-        if not settings.DEBUG:
-            beauty = BeautifulSoup(html, "html.parser")
-            html = beauty.prettify()
-
-        cache.set(cache_key, html, 300)
-        return html
+            cache.set(cache_key, html, 300)
+            return html
 
 
 @register.tag
@@ -207,6 +238,10 @@ class ResolveNode(template.Node):
     """Return first argument that resolves."""
 
     def __init__(self, *args):
+        warnings.warn(
+            "ResolveNode is being deprecated. Refactor your templates.",
+            DeprecationWarning
+        )
         self.args = []
         for arg in args:
             self.args.append(template.Variable(arg))
@@ -240,6 +275,10 @@ class MaskNode(template.Node):
     partially, making for cleaner templates and smaller JSON files."""
 
     def __init__(self, var, name):
+        warnings.warn(
+            "Masking is now implicit. Refactor your templates.",
+            DeprecationWarning
+        )
         self.var = template.Variable(var)
         # Clean up the name without resorting to resolving a variable
         self.name = name.strip("'").strip('"')

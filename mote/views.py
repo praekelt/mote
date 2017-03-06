@@ -32,6 +32,7 @@ class ProjectView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(ProjectView, self).get_context_data(**kwargs)
         context["project"] = Project(kwargs["project"])
+        context["__mote_project_id__"] = context["project"].id
         return context
 
 
@@ -43,6 +44,7 @@ class AspectView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(AspectView, self).get_context_data(**kwargs)
         project = Project(kwargs["project"])
+        context["__mote_project_id__"] = project.id
         context["aspect"] = Aspect(kwargs["aspect"], project)
         return context
 
@@ -57,12 +59,15 @@ class PatternView(TemplateView):
         project = Project(kwargs["project"])
         aspect = Aspect(kwargs["aspect"], project)
         pattern = Pattern(kwargs["pattern"], aspect)
+        context["__mote_project_id__"] = project.id
         context["pattern"] = pattern
 
         # A pattern may have an intro view. First look in the pattern itself,
         # then fall back to normal template resolution.
         template_names = (
-            "%s/%s/src/patterns/%s/mote/intro.html" % (project.id, aspect.id, pattern.id),
+            "%s/%s/src/patterns/%s/mote/intro.html" % (
+                project.id, aspect.id, pattern.id
+            ),
             "mote/pattern/intros/%s.html" % pattern.id,
         )
         intro = None
@@ -90,8 +95,12 @@ class ElementBaseView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(ElementBaseView, self).get_context_data(**kwargs)
+        context["__mote_project_id__"] = self.element.project.id
         context["element"] = self.element
-        context["static_root"] = urljoin(PrefixNode.handle_simple("STATIC_URL"), self.element.aspect.relative_path)
+        context["static_root"] = urljoin(
+            PrefixNode.handle_simple("STATIC_URL"),
+            self.element.aspect.relative_path
+        )
         return context
 
 
@@ -99,14 +108,14 @@ class ElementIndexView(ElementBaseView):
     """Index view for an element. Provides common UI around an element."""
 
     def get_template_names(self):
-        return [self.element.index_template_name]
+        return self.element.index_template_names
 
 
 class ElementPartialView(ElementBaseView):
     """Element view with no wrapping html and body tags"""
 
     def get_template_names(self):
-        return [self.element.template_name]
+        return self.element.template_names
 
 
 class ElementIframeView(ElementBaseView):
@@ -136,7 +145,7 @@ class VariationBaseView(ElementBaseView):
 class VariationPartialView(VariationBaseView):
 
     def get_template_names(self):
-        return [self.variation.template_name]
+        return self.variation.template_names
 
 
 class VariationIframeView(VariationBaseView):

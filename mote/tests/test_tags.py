@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 
 from mote import models
+from mote.utils import get_object_by_dotted_name
 
 
 class TagsTestCase(TestCase):
@@ -27,11 +28,26 @@ class TagsTestCase(TestCase):
             </button>"""
         )
 
+    def test_render_element_by_self(self):
+        request = self.factory.get("/")
+        t = template.Template("""{% load mote_tags %}
+            {% render_element "self.website.atoms.button" %}"""
+        )
+        result = t.render(template.Context({
+            "request": request
+        }))
+        self.assertHTMLEqual(
+            result,
+            """<button class="Button Button--solid Button--yellowButtercup">
+            <i>Lorem ipsum</i>
+            </button>"""
+        )
+
     def test_render_element_with_kwargs_variable(self):
         request = self.factory.get("/")
         button = {"Italic": {"text": "Foo"}}
         t = template.Template("""{% load mote_tags %}
-            {% render_element "myproject.website.atoms.button" button=button %}"""
+            {% render_element "myproject.website.atoms.button" data=button %}"""
         )
         result = t.render(template.Context({
             "request": request,
@@ -47,7 +63,7 @@ class TagsTestCase(TestCase):
     def test_render_element_with_kwargs_dict(self):
         request = self.factory.get("/")
         t = template.Template("""{% load mote_tags %}
-            {% render_element "myproject.website.atoms.button" button='{"Italic": {"text": "Foo"}}' %}"""
+            {% render_element "myproject.website.atoms.button" data='{"Italic": {"text": "Foo"}}' %}"""
         )
         result = t.render(template.Context({
             "request": request
@@ -62,7 +78,7 @@ class TagsTestCase(TestCase):
     def test_render_element_with_kwargs_variables(self):
         request = self.factory.get("/")
         t = template.Template("""{% load mote_tags %}
-            {% render_element "myproject.website.atoms.button" button='{"Italic": {"text": "{{ foo }}"}}' number=number %}"""
+            {% render_element "myproject.website.atoms.button" data='{"Italic": {"text": "{{ foo }}"}}' number=number %}"""
         )
         result = t.render(template.Context({
             "request": request,
@@ -74,6 +90,47 @@ class TagsTestCase(TestCase):
             """<button class="Button Button--solid Button--yellowButtercup">
             <i>Foo</i>
             </button>"""
+        )
+
+    def test_render_other_element(self):
+        request = self.factory.get("/")
+
+        # Default
+        t = template.Template("""{% load mote_tags %}
+            {% render_element "myproject.website.atoms.button" %}"""
+        )
+        result = t.render(template.Context({"request": request}))
+        self.assertHTMLEqual(
+            result,
+            """<button class="Button Button--solid Button--yellowButtercup">
+            <i>Lorem ipsum</i>
+            </button>"""
+        )
+
+        # Specify an element by dotted name
+        t = template.Template("""{% load mote_tags %}
+            {% render_element "myproject.website.atoms.button" data='{"OtherElement": {"element": "myproject.website.atoms.panel"}}' %}"""
+        )
+        result = t.render(template.Context({"request": request}))
+        self.assertHTMLEqual(
+            result,
+            """<button class="Button Button--solid Button--yellowButtercup">
+            <i>Lorem ipsum</i>
+            </button>
+            Panel"""
+        )
+
+        # Specify an element by dotted name after relative traversal
+        t = template.Template("""{% load mote_tags %}
+            {% render_element "myproject.website.atoms.button" data='{"OtherElement": {"element": "{{ element.pattern.panel.dotted_name }}" }}' %}"""
+        )
+        result = t.render(template.Context({"request": request}))
+        self.assertHTMLEqual(
+            result,
+            """<button class="Button Button--solid Button--yellowButtercup">
+            <i>Lorem ipsum</i>
+            </button>
+            Panel"""
         )
 
     def test_get_element_data(self):
