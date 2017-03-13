@@ -116,7 +116,7 @@ You may call an element by URL::
 This URL accepts a URL encoded JSON parameter which partially or fully overrides
 the button data::
 
-    /mote/api/myproject/website/atoms/button/?button=%2F%3Fbutton%3D%257B%2522text%2522%253A%2522Awesome%2522%257D%22
+    /mote/api/myproject/website/atoms/button/?data=%7B%22text%22%3A+%22Awesome%22%7D
 
 That is way too ugly and inefficient! Imagine your page has to load 10 elements - that's 10 requests. To
 solve this Mote provides a Javascript class to multiplex requests and simplify the calling interface:
@@ -132,8 +132,8 @@ solve this Mote provides a Javascript class to multiplex requests and simplify t
     $(document).ready(function() {
         var mote_api = new MoteAPI('/mote/api/');
         mote_api.push(
-            'myproject/website/atoms/button/',
-            {'data': {'text': 'Awesome'}},
+            'myproject.website.atoms.button',
+            {'text': 'Awesome'},
             '#target',
             function(result) { alert('Loaded!'); }
          );

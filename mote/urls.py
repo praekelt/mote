@@ -65,21 +65,6 @@ api_urlpatterns = [
         name="api-element-detail",
     ),
     url(
-        r"^api/project/(?P<project>[\w-]+)/(?P<aspect>[\w-]+)/(?P<pattern>[\w-]+)/$",
-        api.PatternDetail.as_view(),
-        name="api-pattern-detail"
-    ),
-    url(
-        r"^api/project/(?P<project>[\w-]+)/(?P<aspect>[\w-]+)/$",
-        api.AspectDetail.as_view(),
-        name="api-aspect-detail"
-    ),
-    url(
-        r"^api/project/(?P<project>[\w-]+)/$",
-        api.ProjectDetail.as_view(),
-        name="api-project-detail"
-    ),
-    url(
         r"^api/multiplex/$",
         api.Multiplex.as_view(),
         name="api-multiplex"

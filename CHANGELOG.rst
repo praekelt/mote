@@ -1,6 +1,11 @@
 Changelog
 =========
 
+next
+----
+#. Simplify layout and models. This introduces some backward incompatibility with 0.2.1. You may need to update your templates.
+#. Vastly simplify the RESTful API.
+
 0.2.1
 -----
 #. Consider the entire nested structure when computing a cache key.

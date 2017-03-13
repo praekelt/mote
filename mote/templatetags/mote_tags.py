@@ -147,7 +147,6 @@ class RenderElementNode(template.Node):
 
            # Automatically perform masking with the default data
             request = context["request"]
-            #import pdb;pdb.set_trace()
             masked = obj.data
             # Omit top-level key
             if masked:
