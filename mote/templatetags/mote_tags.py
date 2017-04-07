@@ -316,7 +316,8 @@ class GetElementDataNode(template.Node):
     def render(self, context):
         template_name = self.template_name.resolve(context)
         di = xmltodict.parse(
-            render_to_string(template_name, context=context, request=context["request"])
+            render_to_string(template_name, context=context, request=context["request"]),
+            force_list={"hex": True}
         )
 
         # Discard the root node

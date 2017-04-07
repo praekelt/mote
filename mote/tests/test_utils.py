@@ -80,13 +80,13 @@ class UtilsTestCase(TestCase):
         )
 
     def test_deepmerge_nones(self):
-        # if both source and delta are None the result must be None
+        # If both source and delta are None the result must be None
         source = None
         delta = None
         result = deepmerge(source, delta)
         assert(result, None)
-        
-        # if delta is None, we want to retain source
+
+        # If delta is None, we want to retain source
         source = {
             "one": {"aaa": 1, "bbb": 2},
             "two": [1, 2, 3],
@@ -112,8 +112,8 @@ class UtilsTestCase(TestCase):
         delta = None
         result = deepmerge(source, delta)
         self.assertEqual(result, source, "Result must be == source!")
-        
-        # if source is None we want to retain source
+
+        # If source is None we want to retain source
         source = None
         delta = {
             "one": {"aaa": 1, "bbb": 2},
@@ -139,3 +139,25 @@ class UtilsTestCase(TestCase):
         }
         result = deepmerge(source, delta)
         self.assertEqual(result, source, "Result must be == None!")
+
+    def test_list_with_nones(self):
+        """`None` values are discarded from lists.
+        """
+        source = {
+            "three": [
+                {"actor": {"name": "Tom", "surname": "Hanks"}},
+                {"actor": {"name": "Denzel", "surname": "Washington"}},
+            ],
+        }
+
+        delta = {
+            "three": [
+                {"actor": {"name": "Tom", "surname": "Hanks"}},
+                None,
+            ],
+        }
+        result = deepmerge(source, delta)
+        self.assertEqual(
+            result,
+            {"three": [{"actor": {"name": "Tom", "surname": "Hanks"}}]}
+        )

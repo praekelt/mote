@@ -23,11 +23,13 @@ def _deepmerge(source, delta):
             el = deepcopy(source[key][0])
             source[key] = []
             for n in value:
-                source[key].append(deepcopy(el))
+                # Remove `None` entries from lists.
+                if n is not None:
+                    source[key].append(deepcopy(el))
             for n, v in enumerate(value):
                 if isinstance(v, dict):
                     _deepmerge(source[key][n], v)
-                else:
+                elif v is not None:
                     source[key][n] = v
 
         else:
