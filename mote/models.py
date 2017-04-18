@@ -1,9 +1,9 @@
 """Model the elements picked up from the filesystem"""
 
+import json
 import os
 from importlib import import_module
 
-import ujson as json
 import yaml
 
 from django.template import TemplateDoesNotExist

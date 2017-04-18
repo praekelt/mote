@@ -26,7 +26,6 @@ setup(
     install_requires=[
         "django",
         "beautifulsoup4",
-        "ujson",
         "six",
         "djangorestframework-jwt",
         "djangorestframework",

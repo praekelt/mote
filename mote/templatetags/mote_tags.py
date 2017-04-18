@@ -1,9 +1,9 @@
+import json
 import re
 import warnings
 from hashlib import md5
 
 from bs4 import BeautifulSoup
-import ujson as json
 import xmltodict
 
 from django.conf import settings
