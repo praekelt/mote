@@ -1,12 +1,13 @@
 language: python
 python:
-  - "3.5"
+- '3.5'
 env:
-  - TOXENV=django19-py27
-  - TOXENV=django110-py27
-  - TOXENV=django110-py35
-
+- TOXENV=django19-py27
+- TOXENV=django110-py27
+- TOXENV=django110-py35
 install:
-  - pip install tox
-
+- pip install tox
 script: tox
+notifications:
+  slack:
+    secure: LphJGWZjgR4gn7scpAR2E/myUiphNn+8FzD/UPxaYjU5vZGoywITaVTvVRPu6lDgwE3kUCjXckt3z2XG2hj5ZjyqguwDDe5DjdiKRAjyQyVoyBH4ULPXGz4IoN1l91BvdbuFumd/FCRwamwhI6S1Hsc+cuNIuUkFf2uUddv7oCiSdEolU+okiZIEV4xhsFoyMEXUARrsTapgZQl5JtCyvbtVR4lCv6qOpHN8VsvLzZ7ZGp/Q4kpq6g7zG7UkJm9Vl6laO9oA/AansteoZoUgSokQVM3SxZkpi/7wQiMz99qB8Mcoc+V+846WJu09BYwEjJI70472pSMivekvwjmYS8m99t2Zg/PtZyixMTxTEyJMRsyhCKgwRCEQcmfsXtzP9M+t6elWWplcMoq4rPSQOeDQ8xdLI4MAQhMsIXl+d/T4sybomLUEsJB8/bIdRyG4Lr9zzJSzxEv5qrzoqC8CH/i2+B4YeD7aoetq3junt4OnrfYFEUIBFdTISj33p+943CFAZRd+VaMLiJdlOrZoUaRFQyPNjx/BOLuUeZNWqYf3PUeNvZLt/A1MtoX24ZxzqgdS2AjHrMcO1fbckuXjy0286qVECi3yJfgvsiw42YLHJpgOZ4gCx1cxcjSyi/YK+CpDoN+ROkSDON3Z7PLOZWyjwozXhslzKo6FChwqwLI=
