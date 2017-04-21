@@ -24,14 +24,10 @@ class ViewsTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_element_partial_post_request(self):
-        request = self.factory.post(
+        response = self.client.post(
             reverse(
                 "mote:element-partial",
                 args=("myproject", "website", "atoms", "button")
             )
-        )
-        response = views.ElementPartialView.as_view()(
-            request, project="myproject", aspect="website",
-            pattern="atoms", element="button"
         )
         self.assertEqual(response.status_code, 200)
