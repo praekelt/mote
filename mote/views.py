@@ -117,6 +117,9 @@ class ElementPartialView(ElementBaseView):
     def get_template_names(self):
         return self.element.template_names
 
+    def post(self, request, *args, **kwargs):
+        return self.get(request, *args, **kwargs)
+
 
 class ElementIframeView(ElementBaseView):
     """Element view suitable for rendering in an iframe"""
@@ -146,6 +149,9 @@ class VariationPartialView(VariationBaseView):
 
     def get_template_names(self):
         return self.variation.template_names
+
+    def post(self, request, *args, **kwargs):
+        return self.get(request, *args, **kwargs)
 
 
 class VariationIframeView(VariationBaseView):
