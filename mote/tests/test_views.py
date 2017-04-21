@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
-from django.test import TestCase, RequestFactory
+from django.test import TestCase
 
-from mote import models, views
+from mote import models
 
 
 class ViewsTestCase(TestCase):
@@ -13,7 +13,6 @@ class ViewsTestCase(TestCase):
         cls.aspect = models.Aspect("website", cls.project)
         cls.pattern = models.Pattern("atoms", cls.aspect)
         cls.element = models.Element("button", cls.pattern)
-        cls.factory = RequestFactory()
 
     def test_element_partial(self):
         url = reverse(
