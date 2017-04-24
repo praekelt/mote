@@ -3,12 +3,9 @@ function MoteAPI(api_root) {
     this.api_root = api_root;
     this._stack = new Array();
 
-    this.push = function(url, data, selector, callback) {
-        // Dictionary values must be stringified else encoding fails
-        for (k in data)
-            data[k] = JSON.stringify(data[k]);
+    this.push = function(dotted_name, data, selector, callback) {
         this._stack.push({
-            'url': url,
+            'dotted_name': dotted_name,
             'data': data,
             'selector': selector,
             'callback': callback
@@ -19,13 +16,13 @@ function MoteAPI(api_root) {
         var calls = new Array();
         for (var i=0; i<this._stack.length; i++) {
             var el = this._stack[i];
-            var url = el['url'];
+            var dotted_name = el['dotted_name'];
             var data = el['data'] || {};
-            calls.push(url + '?' + $.param(data));
+            calls.push({'id': dotted_name, 'data': data});
         }
         $.getJSON(
             this.api_root + 'multiplex/',
-            {'api_root': this.api_root, 'calls': JSON.stringify(calls)},
+            {'calls': JSON.stringify(calls)},
             this.callback(this)
         );
     };

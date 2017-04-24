@@ -15,6 +15,18 @@ class ViewsTestCase(TestCase):
         cls.element = models.Element("button", cls.pattern)
 
     def test_element_partial(self):
-        url = reverse("mote:element-partial", args=("myproject", "website", "atoms", "button"))
+        url = reverse(
+            "mote:element-partial",
+            args=("myproject", "website", "atoms", "button")
+        )
         response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_element_partial_post_request(self):
+        response = self.client.post(
+            reverse(
+                "mote:element-partial",
+                args=("myproject", "website", "atoms", "button")
+            )
+        )
         self.assertEqual(response.status_code, 200)

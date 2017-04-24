@@ -26,11 +26,11 @@ setup(
     install_requires=[
         "django",
         "beautifulsoup4",
-        "ujson",
         "six",
         "djangorestframework-jwt",
         "djangorestframework",
-        "xmltodict"
+        "xmltodict",
+        "PyYAML"
     ],
     tests_require=[
         "tox",

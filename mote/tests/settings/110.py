@@ -64,3 +64,5 @@ DATABASES = {
 USE_TZ = True
 
 STATIC_URL = "/static/"
+
+MOTE = {"project": lambda request: "myproject"}
