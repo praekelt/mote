@@ -1,10 +1,11 @@
 Changelog
 =========
 
-next
-----
+0.3
+---
 #. Simplify layout and models. This introduces some backward incompatibility with 0.2.1. You may need to update your templates.
 #. Vastly simplify the RESTful API.
+#. PyPy and Python 3.5 compatibility.
 
 0.2.1
 -----
