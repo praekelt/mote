@@ -149,7 +149,6 @@ class UtilsTestCase(TestCase):
                 {"actor": {"name": "Denzel", "surname": "Washington"}},
             ],
         }
-
         delta = {
             "three": [
                 {"actor": {"name": "Tom", "surname": "Hanks"}},
@@ -160,4 +159,27 @@ class UtilsTestCase(TestCase):
         self.assertEqual(
             result,
             {"three": [{"actor": {"name": "Tom", "surname": "Hanks"}}]}
+        )
+
+    def test_arbitrary_keys(self):
+        """Introduce keys that are not in source.
+        """
+        source = {
+            "three": [
+                {"actor": {"name": "Tom", "surname": "Hanks"}},
+            ],
+        }
+        delta = {
+            "three": [
+                {"actor": {"name": "Tom", "surname": "Hanks", "age": 50}},
+            ],
+            "four": 1
+        }
+        result = deepmerge(source, delta)
+        self.assertEqual(
+            result,
+            {
+                "three": [{"actor": {"name": "Tom", "surname": "Hanks", "age": 50}}],
+                "four": 1
+            }
         )
