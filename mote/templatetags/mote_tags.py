@@ -315,9 +315,12 @@ class GetElementDataNode(template.Node):
 
     def render(self, context):
         template_name = self.template_name.resolve(context)
+        try:
+            request = context.request
+        except AttributeError:
+            request = context["request"]
         di = xmltodict.parse(
-            render_to_string(template_name, context=context, request=context["request"]),
-            force_list={"hex": True}
+            render_to_string(template_name, context=context.flatten(), request=request)
         )
 
         # Discard the root node
