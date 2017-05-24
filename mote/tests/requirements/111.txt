@@ -1,0 +1,7 @@
+django>=1.11,<2.0
+beautifulsoup4==4.4.1
+djangorestframework==3.5.3
+six==1.9.0
+djangorestframework-jwt==1.8.0
+xmltodict==0.10.2
+PyYAML==3.12

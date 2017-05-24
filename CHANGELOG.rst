@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.3.1
+-----
+#. Django 1.11 compatibility.
+
 0.3
 ---
 #. Simplify layout and models. This introduces some backward incompatibility with 0.2.1. You may need to update your templates.
