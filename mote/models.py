@@ -225,7 +225,8 @@ class Element(Base):
 
     @property
     def index_template_names(self):
-        return [pth + "index.html" for pth in self._relative_paths]
+        return [pth + "index.html" for pth in self._relative_paths] \
+            + ["mote/element/index.html"]
 
     @cached_property
     def variations(self):
