@@ -149,6 +149,13 @@ class Variation(Base):
         )
 
     @property
+    def _relative_paths(self):
+        """A variation *is* an element and can inherit from the element. Adjust
+        _relative_paths to allow it."""
+        return super(Variation, self)._relative_paths \
+            + self.element._relative_paths
+
+    @property
     def template_names(self):
         return [pth + "element.html" for pth in self._relative_paths]
 
