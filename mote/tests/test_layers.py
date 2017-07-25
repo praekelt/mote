@@ -13,17 +13,17 @@ class LayersTestCase(TestCase):
         super(LayersTestCase, cls).setUpTestData()
         cls.factory = RequestFactory()
 
-    def test_render_button(self):
-        """We override button element and data"""
+    def test_render_label(self):
+        """We override label element and data"""
         request = self.factory.get("/")
         t = template.Template("""{% load mote_tags %}
-            {% render "myprojectchild.website.atoms.button" %}"""
+            {% render "myprojectchild.website.atoms.label" %}"""
         )
         result = t.render(template.Context({
             "request": request
         }))
         self.assertHTMLEqual(
-            result, "Button child"
+            result, "<child>Label child</child>"
         )
 
     def test_render_anchor(self):
@@ -36,7 +36,7 @@ class LayersTestCase(TestCase):
             "request": request
         }))
         self.assertHTMLEqual(
-            result, "Anchor child"
+            result, "<child>Anchor child</child>"
         )
 
     def test_render_panel(self):
@@ -52,10 +52,10 @@ class LayersTestCase(TestCase):
             result, "Panel"
         )
 
-    def test_metadata_button(self):
-        """We override button element and data"""
-        obj = get_object_by_dotted_name("myprojectchild.website.atoms.button")
-        self.assertEqual(obj.metadata["title"], "MyProjectChild Button")
+    def test_metadata_label(self):
+        """We override label element and data"""
+        obj = get_object_by_dotted_name("myprojectchild.website.atoms.label")
+        self.assertEqual(obj.metadata["title"], "MyProjectChild label")
 
     def test_metadata_anchor(self):
         """We override anchor element but not data"""
@@ -66,5 +66,3 @@ class LayersTestCase(TestCase):
         """We inherit panel fully"""
         obj = get_object_by_dotted_name("myprojectchild.website.atoms.panel")
         self.assertEqual(obj.metadata["title"], "Panel")
-
-
