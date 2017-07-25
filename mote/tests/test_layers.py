@@ -17,7 +17,7 @@ class LayersTestCase(TestCase):
         """We override button element and data"""
         request = self.factory.get("/")
         t = template.Template("""{% load mote_tags %}
-            {% render_element "myprojectchild.website.atoms.button" %}"""
+            {% render "myprojectchild.website.atoms.button" %}"""
         )
         result = t.render(template.Context({
             "request": request
@@ -30,7 +30,7 @@ class LayersTestCase(TestCase):
         """We override anchor element but not data"""
         request = self.factory.get("/")
         t = template.Template("""{% load mote_tags %}
-            {% render_element "myprojectchild.website.atoms.anchor" %}"""
+            {% render "myprojectchild.website.atoms.anchor" %}"""
         )
         result = t.render(template.Context({
             "request": request
@@ -43,7 +43,7 @@ class LayersTestCase(TestCase):
         """We inherit panel fully"""
         request = self.factory.get("/")
         t = template.Template("""{% load mote_tags %}
-            {% render_element "myprojectchild.website.atoms.panel" %}"""
+            {% render "myprojectchild.website.atoms.panel" %}"""
         )
         result = t.render(template.Context({
             "request": request

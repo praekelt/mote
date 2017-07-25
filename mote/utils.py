@@ -47,7 +47,7 @@ def deepmerge(source, delta):
 # From http://stackoverflow.com/questions/5884066/hashing-a-python-dictionary
 def deephash(o):
     if isinstance(o, (set, tuple, list)):
-	    return tuple([deephash(e) for e in o])
+         return tuple([deephash(e) for e in o])
 
     elif not isinstance(o, dict):
         return hash(o)
