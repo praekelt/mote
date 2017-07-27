@@ -1,0 +1,9 @@
+options:
+    - value: 1
+      label:
+        id: self.website.atoms.label
+        text: Option label 1
+    - value: 2
+      label:
+        id: self.website.atoms.label
+        text: Option label 2

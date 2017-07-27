@@ -50,22 +50,26 @@ class RenderNode(template.Node):
         # We must import late
         from mote.models import Project, Aspect, Pattern, Element, Variation
 
-        element_or_identifier = self.element_or_identifier.resolve(context)
+        # To keep templates as simple as possible we don't require quotes to
+        # denote a string. That requires special handling.
+        try:
+            element_or_identifier = self.element_or_identifier.resolve(context)
+        except template.VariableDoesNotExist:
+            element_or_identifier = \
+                context["element"].data[self.element_or_identifier.var]
+
         data = {}
         if self.data:
             data = self.data.resolve(context)
 
+        # Shortcut notation allows an element to be looked up from data
+        if isinstance(element_or_identifier, dict):
+            copied = deepcopy(element_or_identifier)
+            element_or_identifier = copied.pop("id")
+            data = copied
+
         # If element_or_identifier is a string convert it
         if isinstance(element_or_identifier, string_types):
-
-            # Shortcut notation allows an element to be looked up from data
-            if ("element" in context) \
-                and (element_or_identifier in context["element"].data):
-                data = deepmerge(
-                    context["element"].data[element_or_identifier],
-                    context.get("data", {}).get(element_or_identifier, {})
-                )
-                element_or_identifier = data.pop("id")
 
             # The "self" project triggers a project lookup. It first checks for
             # a context variable (used internally by the Mote explorer) then

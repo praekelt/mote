@@ -122,6 +122,93 @@ class TagsTestCase(TestCase):
             """<button><fancy>Foo</fancy></button>"""
         )
 
+    def test_render_select_by_identifier(self):
+        request = self.factory.get("/")
+        t = template.Template("""{% load mote_tags %}
+            {% render "myproject.website.atoms.select" %}"""
+        )
+        result = t.render(template.Context({
+            "request": request
+        }))
+        self.assertHTMLEqual(
+            result,
+            """<select>
+                <option value="1">
+                    <span>
+                        Option label 1
+                    </span>
+                </option>
+                <option value="2">
+                    <span>
+                        Option label 2
+                    </span>
+                </option>
+            </select>"""
+        )
+
+    def test_render_select_with_variable_arg(self):
+        request = self.factory.get("/")
+        arg = {"options": [
+                {"value": 1, "label": {"text": "Foo option label 1"}},
+                {"value": 2, "label": {"text": "Foo option label 2"}}
+        ]}
+        t = template.Template("""{% load mote_tags %}
+            {% render "myproject.website.atoms.select" arg %}"""
+        )
+        result = t.render(template.Context({
+            "request": request,
+            "arg": arg
+        }))
+        self.assertHTMLEqual(
+            result,
+            """<select>
+                <option value="1">
+                    <span>
+                        Foo option label 1
+                    </span>
+                </option>
+                <option value="2">
+                    <span>
+                        Foo option label 2
+                    </span>
+                </option>
+            </select>"""
+        )
+
+    def test_render_select_with_button(self):
+        """Do something crazy and replace label with a button"""
+        request = self.factory.get("/")
+        arg = {"options": [
+                {"value": 1, "label": {"id": "self.website.atoms.button", "label": {"text": "Foo option label 1"}}},
+                {"value": 2, "label": {"id": "self.website.atoms.button", "label": {"text": "Foo option label 2"}}}
+        ]}
+        t = template.Template("""{% load mote_tags %}
+            {% render "myproject.website.atoms.select" arg %}"""
+        )
+        result = t.render(template.Context({
+            "request": request,
+            "arg": arg
+        }))
+        self.assertHTMLEqual(
+            result,
+            """<select>
+                <option value="1">
+                    <button>
+                    <span>
+                        Foo option label 1
+                    </span>
+                    </button>
+                </option>
+                <option value="2">
+                    <button>
+                    <span>
+                        Foo option label 2
+                    </span>
+                    </button>
+                </option>
+            </select>"""
+        )
+
     def test_get_element_data(self):
         request = self.factory.get("/")
         t = template.Template("""{% load mote_tags %}
