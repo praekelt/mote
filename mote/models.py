@@ -54,16 +54,18 @@ class Base(object):
     @cached_property
     def metadata(self):
         t = None
-        try:
-            t = select_template([self.relative_path + "metadata.json"])
-        except TemplateDoesNotExist:
-            pass
-        if t is None:
-            t = self._get_template("metadata.json")
-
-        if t is not None:
-            return json.loads(t.template.source)
-
+        for name in ("metadata.json", "metadata.yaml"):
+            try:
+                t = select_template([self.relative_path + name])
+            except TemplateDoesNotExist:
+                pass
+            if t is None:
+                t = self._get_template(name)
+            if t is not None:
+                if name.endswith(".yaml"):
+                    return yaml.load(t.template.source)
+                else:
+                    return json.loads(t.template.source)
         return {}
 
     @property
