@@ -15,8 +15,8 @@ from mote.utils import get_object_by_dotted_name
 
 
 RESERVED_IDS = (
-    "mote", "json", "metadata.json", "projects", "aspects", "patterns",
-    "elements", "variations"
+    "mote", "json", "metadata.json", "metadata.yaml", "projects", "aspects",
+    "patterns", "elements", "variations"
 )
 
 
