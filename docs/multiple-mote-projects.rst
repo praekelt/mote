@@ -57,7 +57,7 @@ The contents of this file depend entirely on what your needs are for a project. 
     </head>
 
     <body>
-        {% render_element element %}
+        {% render element %}
 
         <script type="text/javascript" src="{% static "scripts.js" %}"></script>
     </body>

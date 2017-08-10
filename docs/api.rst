@@ -34,7 +34,7 @@ You may render this button in your template:
 .. code-block:: html+django
 
     {% load mote_tags %}
-    {% render_element "myproject.website.atoms.button" %}
+    {% render "myproject.website.atoms.button" %}
 
 You may refer to the project in context using ``self``. This is recommended
 practice because it makes it easy to roll out new versions of a pattern
@@ -44,7 +44,7 @@ you would have to change the name *everywhere*. Using ``self`` avoids this.:
 .. code-block:: html+django
 
     {% load mote_tags %}
-    {% render_element "self.website.atoms.button" %}
+    {% render "self.website.atoms.button" %}
 
 Using ``self``  requires you to declare ``MOTE = {"project": callable_or_string}`` to tell
 Mote what project is in context.:
@@ -59,14 +59,14 @@ the entire dictionary - Mote will deep merge your values with the default values
 .. code-block:: html+django
 
     {% load mote_tags %}
-    {% render_element "myproject.website.atoms.button" data='{"text": "My label"}' %}
+    {% render "myproject.website.atoms.button" '{"text": "My label"}' %}
 
 You may even use template variables:
 
 .. code-block:: html+django
 
     {% load mote_tags %}
-    {% render_element "myproject.website.atoms.button" data='{"text": "{{ foo }}"}' %}
+    {% render "myproject.website.atoms.button" '{"text": "{{ foo }}"}' %}
 
 The variable called ``element`` is special. It allows you to relatively lookup
 other elements.  In this example our button element also renders one of its sibling
@@ -79,14 +79,14 @@ Let's extend the button element to render a sibling.:
     {% load mote_tags %}
 
     <a class="{{ data.class }}">{{ data.text }}</a>
-    {% render_element data.sibling %}
+    {% render data.sibling %}
 
 Specify a sibling by a relative lookup.:
 
 .. code-block:: html+django
 
     {% load mote_tags %}
-    {% render_element "myproject.website.atoms.button" data='{"sibling": "{{ element.pattern.anchor.dotted_name }}"}' %}
+    {% render "myproject.website.atoms.button" '{"sibling": "{{ element.pattern.anchor.dotted_name }}"}' %}
 
 Defining a dictionary in a template tag quickly becomes unwieldy. To combat this you may define an external
 template to assemble a data structure through XML.
@@ -104,7 +104,7 @@ And here we use it. Note the outermost XML tag is not part of the `button` dicti
 .. code-block:: html+django
 
     {% get_element_data "button.xml" as button %}
-    {% render_element "myproject.website.atoms.button" data=button %}
+    {% render "myproject.website.atoms.button" button %}
 
 RESTful
 -------
