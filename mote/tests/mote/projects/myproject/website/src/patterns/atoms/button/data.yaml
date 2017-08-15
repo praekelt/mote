@@ -1,0 +1,3 @@
+ label:
+    id: self.website.atoms.label
+    text: Button label default text

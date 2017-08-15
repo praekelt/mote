@@ -1,0 +1,9 @@
+{% load mote_tags %}
+
+<select>
+    {% for option in options %}
+        <option value="{{ option.value }}">
+            {% render option.label %}
+        </option>
+    {% endfor %}
+</select>

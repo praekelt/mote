@@ -1,8 +1,5 @@
 {% load mote_tags %}
 
-<button class="Button {{ data.modifiers }}">
-    <i>{{ data.Italic.text }}</i>
+<button>
+    {% render label %}
 </button>
-{% if data.OtherElement.element %}
-    {% render_element data.OtherElement.element %}
-{% endif %}

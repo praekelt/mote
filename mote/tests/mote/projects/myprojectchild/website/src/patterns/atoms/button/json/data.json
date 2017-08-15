@@ -1,8 +1,0 @@
-{
-    "Button": {
-        "modifiers": "Button--solid Button--yellowButtercup",
-        "Italic": {
-            "text": "Button child"
-        }
-    }
-}

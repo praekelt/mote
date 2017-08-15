@@ -13,124 +13,200 @@ class TagsTestCase(TestCase):
         super(TagsTestCase, cls).setUpTestData()
         cls.factory = RequestFactory()
 
-    def test_render_element_by_identifier(self):
+    def test_render_label_by_identifier(self):
         request = self.factory.get("/")
         t = template.Template("""{% load mote_tags %}
-            {% render_element "myproject.website.atoms.button" %}"""
+            {% render "myproject.website.atoms.label" %}"""
         )
         result = t.render(template.Context({
             "request": request
         }))
         self.assertHTMLEqual(
             result,
-            """<button class="Button Button--solid Button--yellowButtercup">
-            <i>Lorem ipsum</i>
-            </button>"""
+            """<span>Label default text</span>"""
         )
 
-    def test_render_element_by_self(self):
+    def test_render_label_by_self(self):
         request = self.factory.get("/")
         t = template.Template("""{% load mote_tags %}
-            {% render_element "self.website.atoms.button" %}"""
+            {% render "self.website.atoms.label" %}"""
         )
         result = t.render(template.Context({
             "request": request
         }))
         self.assertHTMLEqual(
             result,
-            """<button class="Button Button--solid Button--yellowButtercup">
-            <i>Lorem ipsum</i>
-            </button>"""
+            """<span>Label default text</span>"""
         )
 
-    def test_render_element_with_kwargs_variable(self):
+    def test_render_label_with_variable_arg(self):
         request = self.factory.get("/")
-        button = {"Italic": {"text": "Foo"}}
+        arg = {"text": "Foo"}
         t = template.Template("""{% load mote_tags %}
-            {% render_element "myproject.website.atoms.button" data=button %}"""
+            {% render "myproject.website.atoms.label" arg %}"""
         )
         result = t.render(template.Context({
             "request": request,
-            "button": button
+            "arg": arg
         }))
         self.assertHTMLEqual(
             result,
-            """<button class="Button Button--solid Button--yellowButtercup">
-            <i>Foo</i>
-            </button>"""
+            """<span>Foo</span>"""
         )
 
-    def test_render_element_with_kwargs_dict(self):
+    def test_render_label_with_string_arg(self):
         request = self.factory.get("/")
         t = template.Template("""{% load mote_tags %}
-            {% render_element "myproject.website.atoms.button" data='{"Italic": {"text": "Foo"}}' %}"""
+            {% render "myproject.website.atoms.label" '{"text": "Foo"}' %}"""
         )
         result = t.render(template.Context({
             "request": request
         }))
         self.assertHTMLEqual(
             result,
-            """<button class="Button Button--solid Button--yellowButtercup">
-            <i>Foo</i>
-            </button>"""
+            """<span>Foo</span>"""
         )
 
-    def test_render_element_with_kwargs_variables(self):
-        request = self.factory.get("/")
-        t = template.Template("""{% load mote_tags %}
-            {% render_element "myproject.website.atoms.button" data='{"Italic": {"text": "{{ foo }}"}}' number=number %}"""
-        )
-        result = t.render(template.Context({
-            "request": request,
-            "foo": "Foo",
-            "number": 1
-        }))
-        self.assertHTMLEqual(
-            result,
-            """<button class="Button Button--solid Button--yellowButtercup">
-            <i>Foo</i>
-            </button>"""
-        )
-
-    def test_render_other_element(self):
+    def test_render_button_by_identifier(self):
         request = self.factory.get("/")
 
         # Default
         t = template.Template("""{% load mote_tags %}
-            {% render_element "myproject.website.atoms.button" %}"""
+            {% render "myproject.website.atoms.button" %}"""
         )
         result = t.render(template.Context({"request": request}))
+
         self.assertHTMLEqual(
             result,
-            """<button class="Button Button--solid Button--yellowButtercup">
-            <i>Lorem ipsum</i>
-            </button>"""
+            """<button><span>Button label default text</span></button>"""
         )
 
-        # Specify an element by dotted name
+    def test_render_button_with_variable_arg(self):
+        request = self.factory.get("/")
+        arg = {"label": {"text": "Foo"}}
         t = template.Template("""{% load mote_tags %}
-            {% render_element "myproject.website.atoms.button" data='{"OtherElement": {"element": "myproject.website.atoms.panel"}}' %}"""
+            {% render "myproject.website.atoms.button" arg %}"""
         )
-        result = t.render(template.Context({"request": request}))
+        result = t.render(template.Context({
+            "request": request,
+            "arg": arg
+        }))
         self.assertHTMLEqual(
             result,
-            """<button class="Button Button--solid Button--yellowButtercup">
-            <i>Lorem ipsum</i>
-            </button>
-            Panel"""
+            """<button><span>Foo</span></button>"""
         )
 
-        # Specify an element by dotted name after relative traversal
+    def test_render_button_with_string_arg(self):
+        request = self.factory.get("/")
         t = template.Template("""{% load mote_tags %}
-            {% render_element "myproject.website.atoms.button" data='{"OtherElement": {"element": "{{ element.pattern.panel.dotted_name }}" }}' %}"""
+            {% render "myproject.website.atoms.button" '{"label": {"text": "Foo"}}' %}"""
         )
-        result = t.render(template.Context({"request": request}))
+        result = t.render(template.Context({
+            "request": request
+        }))
         self.assertHTMLEqual(
             result,
-            """<button class="Button Button--solid Button--yellowButtercup">
-            <i>Lorem ipsum</i>
-            </button>
-            Panel"""
+            """<button><span>Foo</span></button>"""
+        )
+
+    def test_render_button_with_replacement_label(self):
+        request = self.factory.get("/")
+        t = template.Template("""{% load mote_tags %}
+            {% render "myproject.website.atoms.button" '{"label": {"id": "myproject.website.atoms.label.fancy", "text": "Foo"}}' %}"""
+        )
+        result = t.render(template.Context({
+            "request": request
+        }))
+        self.assertHTMLEqual(
+            result,
+            """<button><fancy>Foo</fancy></button>"""
+        )
+
+    def test_render_select_by_identifier(self):
+        request = self.factory.get("/")
+        t = template.Template("""{% load mote_tags %}
+            {% render "myproject.website.atoms.select" %}"""
+        )
+        result = t.render(template.Context({
+            "request": request
+        }))
+        self.assertHTMLEqual(
+            result,
+            """<select>
+                <option value="1">
+                    <span>
+                        Option label 1
+                    </span>
+                </option>
+                <option value="2">
+                    <span>
+                        Option label 2
+                    </span>
+                </option>
+            </select>"""
+        )
+
+    def test_render_select_with_variable_arg(self):
+        request = self.factory.get("/")
+        arg = {"options": [
+                {"value": 1, "label": {"text": "Foo option label 1"}},
+                {"value": 2, "label": {"text": "Foo option label 2"}}
+        ]}
+        t = template.Template("""{% load mote_tags %}
+            {% render "myproject.website.atoms.select" arg %}"""
+        )
+        result = t.render(template.Context({
+            "request": request,
+            "arg": arg
+        }))
+        self.assertHTMLEqual(
+            result,
+            """<select>
+                <option value="1">
+                    <span>
+                        Foo option label 1
+                    </span>
+                </option>
+                <option value="2">
+                    <span>
+                        Foo option label 2
+                    </span>
+                </option>
+            </select>"""
+        )
+
+    def test_render_select_with_button(self):
+        """Do something crazy and replace label with a button"""
+        request = self.factory.get("/")
+        arg = {"options": [
+                {"value": 1, "label": {"id": "self.website.atoms.button", "label": {"text": "Foo option label 1"}}},
+                {"value": 2, "label": {"id": "self.website.atoms.button", "label": {"text": "Foo option label 2"}}}
+        ]}
+        t = template.Template("""{% load mote_tags %}
+            {% render "myproject.website.atoms.select" arg %}"""
+        )
+        result = t.render(template.Context({
+            "request": request,
+            "arg": arg
+        }))
+        self.assertHTMLEqual(
+            result,
+            """<select>
+                <option value="1">
+                    <button>
+                    <span>
+                        Foo option label 1
+                    </span>
+                    </button>
+                </option>
+                <option value="2">
+                    <button>
+                    <span>
+                        Foo option label 2
+                    </span>
+                    </button>
+                </option>
+            </select>"""
         )
 
     def test_get_element_data(self):

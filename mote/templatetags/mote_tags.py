@@ -1,6 +1,7 @@
 import json
 import re
 import warnings
+from copy import deepcopy
 from hashlib import md5
 
 from bs4 import BeautifulSoup
@@ -26,41 +27,53 @@ from mote.views import ElementPartialView, VariationPartialView,\
 register = template.Library()
 
 
-# todo: consolidate render_element and render_element_index
 @register.tag
-def render_element(parser, token):
-    """{% render_element element_or_identifier [k=v] [k=v] ... %}"""
+def render(parser, token):
+    """{% render element_or_identifier [data] %}"""
     tokens = token.split_contents()
     if len(tokens) < 2:
         raise template.TemplateSyntaxError(
-            "render_element element_or_identifier [k=v] [k=v] ... %}"
+            "render element_or_identifier [data] %}"
         )
-    di = {}
-    for t in tokens[2:]:
-        k, v = t.split("=")
-        di[k] = v
-    return RenderElementNode(tokens[1], **di)
+    return RenderNode(*tokens[1:])
 
 
-class RenderElementNode(template.Node):
+class RenderNode(template.Node):
 
-    def __init__(self, element_or_identifier, **kwargs):
+    def __init__(self, element_or_identifier, data=None):
         self.element_or_identifier = template.Variable(element_or_identifier)
-        self.kwargs = {}
-        for k, v in kwargs.items():
-            self.kwargs[k] = template.Variable(v)
+        self.data = None
+        if data:
+            self.data = template.Variable(data)
 
     def render(self, context):
         # We must import late
         from mote.models import Project, Aspect, Pattern, Element, Variation
 
-        element_or_identifier = self.element_or_identifier.resolve(context)
+        # To keep templates as simple as possible we don't require quotes to
+        # denote a string. That requires special handling.
+        try:
+            element_or_identifier = self.element_or_identifier.resolve(context)
+        except template.VariableDoesNotExist:
+            element_or_identifier = \
+                context["element"].data[self.element_or_identifier.var]
+
+        data = {}
+        if self.data:
+            data = self.data.resolve(context)
+
+        # Shortcut notation allows an element to be looked up from data
+        if isinstance(element_or_identifier, dict):
+            copied = deepcopy(element_or_identifier)
+            element_or_identifier = copied.pop("id")
+            data = copied
 
         # If element_or_identifier is a string convert it
         if isinstance(element_or_identifier, string_types):
+
             # The "self" project triggers a project lookup. It first checks for
             # a context variable (used internally by the Mote explorer) then
-            # for a setting (used when calling render_element over the API).
+            # for a setting (used when calling render over the API).
             if element_or_identifier.startswith("self."):
                 project_id = context.get("__mote_project_id__", None)
                 if project_id is None:
@@ -77,44 +90,44 @@ class RenderElementNode(template.Node):
                 obj = get_object_by_dotted_name(
                     element_or_identifier.replace("self.", project_id + ".")
                 )
+
+            # Non-self lookup
             else:
                 obj = get_object_by_dotted_name(element_or_identifier)
+
+            # Type check
             if not isinstance(obj, (Element, Variation)):
                 raise template.TemplateSyntaxError(
                     "Invalid identifier %s" % element_or_identifier
                 )
-        else:
+
+        elif isinstance(element_or_identifier, (Element, Variation)):
             obj = element_or_identifier
 
-        # Set the object in the context as "element"
+        else:
+            raise RuntimeError("Cannot identify %r" % element_or_identifier)
+
         with context.push():
+
+            # Set the object in the context as "element"
             context["element"] = obj
 
-            # Resolve the kwargs
-            resolved = {}
-            for k, v in self.kwargs.items():
+            # Convert self.data if possible
+            if isinstance(data, Promise):
+                data = text_type(data)
+
+            # Strings may be interpreted further
+            if isinstance(data, string_types):
+
+                # Attempt to resolve any variables by rendering
+                t = template.Template(data)
+                raw_struct = t.render(context)
+
+                # Attempt to convert to JSON
                 try:
-                    r = v.resolve(context)
-                except VariableDoesNotExist:
-                    continue
-                if isinstance(r, Promise):
-                    r = text_type(r)
-
-                # Strings may be interpreted further
-                if isinstance(r, string_types):
-
-                    # Attempt to resolve any variables by rendering
-                    t = template.Template(r)
-                    raw_struct = t.render(context)
-
-                    # Attempt to convert to JSON
-                    try:
-                        resolved[k] = json.loads(raw_struct)
-                    except ValueError:
-                        resolved[k] = r
-
-                else:
-                    resolved[k] = r
+                    data = json.loads(raw_struct)
+                except ValueError:
+                    pass
 
             # Find the correct view and construct view kwargs
             view_kwargs = dict(
@@ -134,11 +147,11 @@ class RenderElementNode(template.Node):
                     element=obj.id
                 ))
 
-			# Compute a cache key before we pop from resolved
-            li = [obj.modified, deephash(resolved)]
+            # Compute a cache key
+            li = [obj.modified, deephash(data)]
             li.extend(frozenset(sorted(view_kwargs.items())))
             hashed = md5(
-                u":".join([text_type(l) for l in li]).encode("utf-8")
+                ":".join([text_type(l) for l in li]).encode("utf-8")
             ).hexdigest()
             cache_key = "render-element-%s" % hashed
             cached = cache.get(cache_key, None)
@@ -148,19 +161,22 @@ class RenderElementNode(template.Node):
            # Automatically perform masking with the default data
             request = context["request"]
             masked = obj.data
-            # Omit top-level key
-            if masked:
-                masked = masked[list(masked.keys())[0]]
             if "data" in request.GET:
                 masked = deepmerge(masked, json.loads(request.GET["data"]))
-            elif "data" in resolved:
-                masked = deepmerge(masked, resolved.pop("data"))
+            elif data:
+                masked = deepmerge(masked, data)
+
+            # Set data on context. Also set the keys in data directly on context
+            # to make for cleaner templates.
             context["data"] = masked
+            for k, v in masked.items():
+                if k in ("data", "element", "original_element"):
+                    raise RuntimeError("%s is a reserved key" % k)
+                context[k] = v
 
             # Construct a final kwargs that includes the context
             final_kwargs = context.flatten()
             del final_kwargs["request"]
-            final_kwargs.update(resolved)
             final_kwargs.update(view_kwargs)
 
             # Call the view. Let any error propagate.
@@ -184,17 +200,17 @@ class RenderElementNode(template.Node):
 
 
 @register.tag
-def render_element_index(parser, token):
-    """{% render_element_index object %}"""
+def render_index(parser, token):
+    """{% render_index object %}"""
     tokens = token.split_contents()
     if len(tokens) != 2:
         raise template.TemplateSyntaxError(
-            "render_element_index object %}"
+            "render_index object %}"
         )
-    return RenderElementIndexNode(tokens[1])
+    return RenderIndexNode(tokens[1])
 
 
-class RenderElementIndexNode(template.Node):
+class RenderIndexNode(template.Node):
 
     def __init__(self, obj):
         self.obj = template.Variable(obj)
@@ -220,77 +236,6 @@ class RenderElementIndexNode(template.Node):
             # Old-school view
             html = result.content
         return html
-
-
-@register.tag(name="resolve")
-def do_resolve(parser, token):
-    """{% resolve var [var] [var] ... %}"""
-    tokens = token.split_contents()
-    if len(tokens) < 2:
-        raise template.TemplateSyntaxError(
-            "{% resolve var [var] [var] ... }"
-        )
-    return ResolveNode(*tokens[1:])
-
-
-class ResolveNode(template.Node):
-    """Return first argument that resolves."""
-
-    def __init__(self, *args):
-        warnings.warn(
-            "ResolveNode is being deprecated. Refactor your templates.",
-            DeprecationWarning
-        )
-        self.args = []
-        for arg in args:
-            self.args.append(template.Variable(arg))
-
-    def render(self, context):
-        for arg in self.args:
-            try:
-                r = arg.resolve(context)
-            except VariableDoesNotExist:
-                continue
-            if isinstance(r, Promise):
-                r = text_type(r)
-            return r
-        return ""
-
-
-@register.tag(name="mask")
-def do_mask(parser, token):
-    """{% mask var as name %}"""
-    tokens = token.split_contents()
-    if len(tokens) != 4:
-        raise template.TemplateSyntaxError(
-            "{% mask var as name }"
-        )
-    return MaskNode(tokens[1], tokens[3])
-
-
-class MaskNode(template.Node):
-    """Resolve a dictionary and update keys if a similarly named dictionary
-    exists in the template context. This allows dictionaries to be updated
-    partially, making for cleaner templates and smaller JSON files."""
-
-    def __init__(self, var, name):
-        warnings.warn(
-            "Masking is now implicit. Refactor your templates.",
-            DeprecationWarning
-        )
-        self.var = template.Variable(var)
-        # Clean up the name without resorting to resolving a variable
-        self.name = name.strip("'").strip('"')
-
-    def render(self, context):
-        var = self.var.resolve(context)
-        request = context["request"]
-        if self.name in request.GET:
-            var = deepmerge(var, json.loads(request.GET[self.name]))
-        elif self.name in context:
-            var = deepmerge(var, context[self.name])
-        context[self.name] = var
-        return ""
 
 
 @register.tag(name="get_element_data")
