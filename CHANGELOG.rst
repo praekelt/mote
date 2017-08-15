@@ -1,6 +1,10 @@
 Changelog
 =========
 
+next
+----
+#. Vastly simplify the templating. This introduces major backward incompatibility.
+
 0.3.1
 -----
 #. Django 1.11 compatibility.
