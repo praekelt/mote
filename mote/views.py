@@ -126,6 +126,7 @@ class ElementIframeView(ElementBaseView):
 
     def get_template_names(self):
         return [
+            "%s/library/%s/mote/element/iframe.html" % (self.element.project.id, self.element.aspect.id),
             "%s/mote/element/iframe.html" % self.element.project.id,
             "mote/element/iframe.html"
         ]
@@ -159,6 +160,7 @@ class VariationIframeView(VariationBaseView):
 
     def get_template_names(self):
         return [
+            "%s/library/%s/mote/element/iframe.html" % (self.element.project.id, self.element.aspect.id),
             "%s/mote/element/iframe.html" % self.element.project.id,
             "mote/element/iframe.html"
         ]
