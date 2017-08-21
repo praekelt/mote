@@ -16,7 +16,7 @@ from mote.utils import get_object_by_dotted_name
 
 RESERVED_IDS = (
     "mote", "json", "metadata.json", "metadata.yaml", "projects", "aspects",
-    "patterns", "elements", "variations"
+    "patterns", "elements", "variations", "tokens", "app"
 )
 
 
@@ -33,7 +33,7 @@ class Base(object):
     @property
     def relative_path(self):
         """The relative path to the object, eg.
-        myproject/website/src/patterns/atoms/button/."""
+        myproject/website/patterns/atoms/button/."""
         raise NotImplementedError
 
     @property
@@ -142,7 +142,7 @@ class Variation(Base):
 
     @property
     def relative_path(self):
-        return "%s/%s/src/patterns/%s/%s/variations/%s/" % (
+        return "%s/library/%s/patterns/%s/%s/variations/%s/" % (
             self.project.id,
             self.aspect.id,
             self.pattern.id,
@@ -205,7 +205,7 @@ class Element(Base):
 
     @property
     def relative_path(self):
-        return "%s/%s/src/patterns/%s/%s/" % (
+        return "%s/library/%s/patterns/%s/%s/" % (
             self.project.id,
             self.aspect.id,
             self.pattern.id,
@@ -268,7 +268,7 @@ class Pattern(Base):
 
     @property
     def relative_path(self):
-        return "%s/%s/src/patterns/%s/" % (
+        return "%s/library/%s/patterns/%s/" % (
             self.project.id,
             self.aspect.id,
             self.id
@@ -305,7 +305,7 @@ class Aspect(Base):
 
     @property
     def relative_path(self):
-        return "%s/%s/" % (
+        return "%s/library/%s/" % (
             self.project.id,
             self.id,
         )
@@ -319,7 +319,7 @@ class Aspect(Base):
 
     @cached_property
     def patterns(self):
-        return self._get_children(Pattern, "src/patterns")
+        return self._get_children(Pattern, "patterns")
 
     def __getattr__(self, key):
         """Allow pattern lookup by name"""
@@ -358,7 +358,7 @@ class Project(Base):
 
     @cached_property
     def aspects(self):
-        return self._get_children(Aspect)
+        return self._get_children(Aspect, "library")
 
     def __getattr__(self, key):
         """Allow aspect lookup by name"""
