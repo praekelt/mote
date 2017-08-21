@@ -12,6 +12,7 @@ class MoteConfig(AppConfig):
     verbose_name = "Mote"
 
     def ready(self):
+        # Iterate over apps
         for name in settings.INSTALLED_APPS:
             mod = import_module(name)
             # The test environment unfortunately requires special handling
@@ -23,3 +24,14 @@ class MoteConfig(AppConfig):
                 for id in os.listdir(pth):
                     if not id.startswith("."):
                         PROJECT_PATHS[id] = pth
+
+        # Iterate over explicitly defined directories
+        try:
+            directories = settings.MOTE["directories"]
+        except (AttributeError, KeyError):
+            directories = []
+        for directory in directories:
+            pth = os.path.join(directory, "mote", "projects")
+            for id in os.listdir(pth):
+                if not id.startswith("."):
+                    PROJECT_PATHS[id] = pth
