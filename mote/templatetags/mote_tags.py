@@ -103,6 +103,7 @@ class RenderNode(template.Node):
 
         elif isinstance(element_or_identifier, (Element, Variation)):
             obj = element_or_identifier
+            data = context.get("data")
 
         else:
             raise RuntimeError("Cannot identify %r" % element_or_identifier)
