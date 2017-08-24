@@ -110,8 +110,11 @@ class RenderNode(template.Node):
 
         with context.push():
 
-            # Set the object in the context as "element"
-            context["element"] = obj
+            # We use a completely clean context to avoid leakage
+            newcontext = {}
+
+            # Set the object in the new context as "element"
+            newcontext["element"] = obj
 
             # Convert self.data if possible
             if isinstance(data, Promise):
@@ -167,21 +170,19 @@ class RenderNode(template.Node):
             elif data:
                 masked = deepmerge(masked, data)
 
-            # Set data on context. Also set the keys in data directly on context
-            # to make for cleaner templates.
-            context["data"] = masked
+            # Set data on new context. Also set the keys in data directly on
+            # new context to make for cleaner templates.
+            newcontext["data"] = masked
             for k, v in masked.items():
                 if k in ("data", "element", "original_element"):
                     raise RuntimeError("%s is a reserved key" % k)
-                context[k] = v
+                newcontext[k] = v
 
-            # Construct a final kwargs that includes the context
-            final_kwargs = context.flatten()
-            del final_kwargs["request"]
-            final_kwargs.update(view_kwargs)
+            # Update new context with the view kwargs
+            newcontext.update(view_kwargs)
 
             # Call the view. Let any error propagate.
-            result = view.as_view()(request, **final_kwargs)
+            result = view.as_view()(request, **newcontext)
 
             if isinstance(result, TemplateResponse):
                 # The result of a generic view
