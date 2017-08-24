@@ -46,10 +46,21 @@ class Base(object):
         return li
 
     def _get_template(self, name):
+        """Return first matching template"""
         try:
             return select_template([pth + name for pth in self._relative_paths])
         except TemplateDoesNotExist:
             return None
+
+    def _get_templates(self, name):
+        """Return all matching templates"""
+        li = []
+        for pth in self._relative_paths:
+            try:
+                li.append(select_template([pth + name]))
+            except TemplateDoesNotExist:
+                pass
+        return li
 
     @cached_property
     def metadata(self):
@@ -78,16 +89,14 @@ class Base(object):
 
     @cached_property
     def data(self):
-        """Return the data for this object"""
-        # Handle all styles of data
-        for name in ("data.json", "data.yaml", "json/data.json"):
-            t = self._get_template(name)
+        """Return the data for this object. We start with top level data.X
+        files and traverse down to our own data.X, doing dictionary updates
+        along the way."""
+        result = {}
+        for t in reversed(self._get_templates("data.yaml")):
             if t is not None:
-                if name.endswith(".yaml"):
-                    return yaml.load(t.template.source)
-                else:
-                    return json.loads(t.template.source)
-        return {}
+                result.update(yaml.load(t.template.source))
+        return result
 
     def _get_children(self, klass, subdirectory=""):
         """Helper method to fetch children of a certain type"""
