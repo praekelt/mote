@@ -181,6 +181,31 @@ $(document).ready(function() {
         });
     });
 
+    // On Preview click. Use JS API to re-render the iframe.
+    $("form.Preview button").on("click", function(evt){
+        evt.preventDefault();
+        // todo: fetch api url from DOM in case of versioning
+        var mote_api = new MoteAPI('/mote/api/');
+        var button = $(evt.target);
+        try {
+            var data = JSON.parse(button.prev().val());
+        }
+        catch(err) {
+            alert('We are unable to parse the value you have entered.');
+        }
+        mote_api.push(
+            button.data('dotted-name'),
+            data,
+            null,
+            function(result) {
+                var pattern = button.closest('.Pattern');
+                var iframe = $('iframe', pattern);
+                iframe.contents().find('body').html(result.rendered);
+            }
+        );
+        mote_api.run();
+    });
+
     /* --- END Event Bindings --- */
 
 

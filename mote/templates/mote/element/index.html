@@ -73,6 +73,12 @@
             <div id="element-{{ element.id }}-examples" class="Documentation-panel">
               {% block codeblock %}
               {% endblock %}
+              Try it live
+
+              <form class="Preview" id="element-{{ element.id }}-yaml">
+                  <textarea>{{ element.data_json_string|safe }}</textarea>
+                  <button data-dotted-name="{{ element.dotted_name }}">Preview</button>
+              </form>
             </div> <!-- sg-hidden-area -->
         </div>
     </div>

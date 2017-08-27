@@ -18,7 +18,7 @@ class BaseSerializer(serializers.Serializer):
 
     def get_rendered(self, obj):
         # Let the template tag do the rendering for us
-        src = "{% load mote_tags %}{% render_element object data=data %}"
+        src = "{% load mote_tags %}{% render object %}"
         context = template.Context({
             "object": obj,
             "request": self.context["request"]

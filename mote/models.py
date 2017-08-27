@@ -98,6 +98,10 @@ class Base(object):
                 result.update(yaml.load(t.template.source))
         return result
 
+    @cached_property
+    def data_json_string(self):
+        return json.dumps(self.data, indent=4)
+
     def _get_children(self, klass, subdirectory=""):
         """Helper method to fetch children of a certain type"""
         li = []
