@@ -64,13 +64,16 @@ class Base(object):
 
     @cached_property
     def metadata(self):
-        """Retrieve metadata for this object. Does *not* traverse upward."""
+        """Retrieve metadata for this object. Traverses upward else we can't
+        infer metadata when layering."""
         t = None
         for name in ("metadata.json", "metadata.yaml"):
             try:
                 t = select_template([self.relative_path + name])
             except TemplateDoesNotExist:
                 pass
+            if t is None:
+                t = self._get_template(name)
             if t is not None:
                 if name.endswith(".yaml"):
                     return yaml.load(t.template.source)
