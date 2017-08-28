@@ -64,14 +64,13 @@ class Base(object):
 
     @cached_property
     def metadata(self):
+        """Retrieve metadata for this object. Does *not* traverse upward."""
         t = None
         for name in ("metadata.json", "metadata.yaml"):
             try:
                 t = select_template([self.relative_path + name])
             except TemplateDoesNotExist:
                 pass
-            if t is None:
-                t = self._get_template(name)
             if t is not None:
                 if name.endswith(".yaml"):
                     return yaml.load(t.template.source)
@@ -81,7 +80,7 @@ class Base(object):
 
     @property
     def title(self):
-        return self.metadata.get("title", self.id)
+        return self.metadata.get("title", self.id.replace("_", " ").capitalize())
 
     @property
     def description(self):
@@ -349,13 +348,12 @@ class Project(Base):
     @cached_property
     def metadata(self):
         """A project must have a metadata file"""
-        try:
-            select_template([self.relative_path + "metadata.json"])
-        except TemplateDoesNotExist:
+        result = super(Project, self).metadata
+        if not result:
             raise RuntimeError(
-                "Project %s needs a metadata.json file" % self.id
+                "Project %s needs a metadata.yaml file" % self.id
             )
-        return super(Project, self).metadata
+        return result
 
     @property
     def project(self):
