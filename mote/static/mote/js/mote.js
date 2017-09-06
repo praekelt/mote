@@ -148,39 +148,6 @@ $(document).ready(function() {
         }
     });
 
-    // Create new Pattern
-
-    $("#create-pattern").on("click", function(evt){
-        $('.creator').toggleClass('active');
-    });
-
-    $("#submit-pattern").on("click", function(evt){
-
-        var library = $('body').data('library');
-
-        if ($('#pattern-name').val() == "" || $('#pattern-desc').val() == ""){
-            alert('Empty Fields Not Allowed');
-            return;
-        }
-
-        var pattern_type = $('#pattern-type').val();
-        var pattern_name = $('#pattern-name').val().replace(' ', '-');
-        var pattern_desc = $('#pattern-desc').val();
-
-        $.ajax({
-         type: "GET",
-         url: "/create_pattern/" + library + "/",
-         data: {
-             type: pattern_type,
-             name: pattern_name,
-             desc: pattern_desc
-         }
-        })
-         .done(function(msg) {
-           document.location.reload(true);
-        });
-    });
-
     // On Preview click. Use JS API to re-render the iframe.
     $("form.Preview button").on("click", function(evt){
         evt.preventDefault();

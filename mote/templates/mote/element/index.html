@@ -24,11 +24,19 @@
             <div class="Pattern-toolsItem">
                 <ul class="ButtonGroup">
                     <li class="ButtonGroup-item">
-                        <a href="{% url "mote:element-iframe" project=element.project.id aspect=element.aspect.id pattern=element.pattern.id element=element.id %}" class="Button is-active" data-variation-toggle="iframe-{{ element.id }}">{{ element.id }}</a>
+                        <a href="{% url "mote:element-iframe" project=element.project.id aspect=element.aspect.id pattern=element.pattern.id element=element.id %}"
+                           class="Button is-active"
+                           data-element-id="{{ element.id }}"
+                           data-element-dotted-name="{{ element.dotted_name }}"
+                           data-variation-toggle="iframe-{{ element.id }}">{{ element.title }}</a>
                     </li>
                     {% for variation in element.variations %}
                         <li class="ButtonGroup-item">
-                            <a href="{% url "mote:variation-iframe" project=element.project.id aspect=element.aspect.id pattern=element.pattern.id element=element.id variation=variation.id %}" class="Button" data-variation-toggle="iframe-{{ element.id }}">{{ variation.title }}</a>
+                            <a href="{% url "mote:variation-iframe" project=element.project.id aspect=element.aspect.id pattern=element.pattern.id element=element.id variation=variation.id %}"
+                               class="Button"
+                               data-element-dotted-name="{{ variation.dotted_name }}"
+                               data-element-id="{{ variation.id }}"
+                               data-variation-toggle="iframe-{{ element.id }}">{{ variation.title }}</a>
                         </li>
                     {% endfor %}
                 </ul>
@@ -51,13 +59,13 @@
                 <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
                 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
                 <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                	  viewBox="0 0 408 408" style="enable-background:new 0 0 408 408;" xml:space="preserve">
+                     viewBox="0 0 408 408" style="enable-background:new 0 0 408 408;" xml:space="preserve">
                     <g>
-                    	<g id="more-vert">
-                    		<path d="M204,102c28.05,0,51-22.95,51-51S232.05,0,204,0s-51,22.95-51,51S175.95,102,204,102z M204,153c-28.05,0-51,22.95-51,51
-                    			s22.95,51,51,51s51-22.95,51-51S232.05,153,204,153z M204,306c-28.05,0-51,22.95-51,51s22.95,51,51,51s51-22.95,51-51
-                    			S232.05,306,204,306z"/>
-                    	</g>
+                    <g id="more-vert">
+                    <path d="M204,102c28.05,0,51-22.95,51-51S232.05,0,204,0s-51,22.95-51,51S175.95,102,204,102z M204,153c-28.05,0-51,22.95-51,51
+                    s22.95,51,51,51s51-22.95,51-51S232.05,153,204,153z M204,306c-28.05,0-51,22.95-51,51s22.95,51,51,51s51-22.95,51-51
+                    S232.05,306,204,306z"/>
+                    </g>
                     </g>
                 </svg>
             </div>
@@ -70,16 +78,33 @@
                 Documentation
             </a>
 
+            <!-- We should use element.dotted_name everywhere, not element.id -->
             <div id="element-{{ element.id }}-examples" class="Documentation-panel">
-              {% block codeblock %}
-              {% endblock %}
-              Try it live
 
-              <form class="Preview" id="element-{{ element.id }}-yaml">
-                  <textarea>{{ element.data_json_string|safe }}</textarea>
-                  <button data-dotted-name="{{ element.dotted_name }}">Preview</button>
-              </form>
+                <div class="element-usage" data-usage-dotted-name="{{ element.dotted_name }}">
+                    <div>{{ element.usage|safe }}</div>
+
+                    Try it live
+                    <form class="Preview" id="yaml-{{ element.dotted_name }}">
+                        <textarea>{{ element.data_json_string|safe }}</textarea>
+                        <button data-dotted-name="{{ element.dotted_name }}">Preview</button>
+                    </form>
+                </div>
+
+                {% for variation in element.variations %}
+                    <div class="element-usage" data-usage-dotted-name="{{ variation.dotted_name }}" style="display: none;">
+                        <div>{{ variation.usage|safe }}</div>
+
+                        Try it live
+                        <form class="Preview" id="yaml-{{ variation.dotted_name }}">
+                            <textarea>{{ variation.data_json_string|safe }}</textarea>
+                            <button data-dotted-name="{{ variation.dotted_name }}">Preview</button>
+                        </form>
+                    </div>
+                {% endfor %}
+
             </div> <!-- sg-hidden-area -->
+
         </div>
     </div>
 </div>

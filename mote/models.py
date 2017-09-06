@@ -130,6 +130,13 @@ class Base(object):
 
         return sorted(result, key=lambda item: item.metadata.get("position"))
 
+    @cached_property
+    def usage(self):
+        t = self._get_template("usage.html")
+        if t is None:
+            return ""
+        return t.render()
+
 
 class Variation(Base):
     """A variation *is* an element but the subclassing breaks down"""
