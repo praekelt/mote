@@ -87,7 +87,7 @@
 	            // No clue why querySelector causes issues. Use jQuery.
 	            //document.querySelector('.element-usage').setAttribute('style': 'display: none');
 	            $('.element-usage').hide();
-	            document.querySelector('[data-usage-dotted-name="' + dotteName + '"]').setAttribute('style', 'display: auto');
+	            document.querySelector('[data-usage-dotted-name="' + dottedName + '"]').setAttribute('style', 'display: auto');
 	        });
 	    }
 	
