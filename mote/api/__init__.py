@@ -1,7 +1,8 @@
 import json
 
 from django import template
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponseBadRequest,\
+    HttpResponseServerError
 from django.views.generic.base import View
 
 from rest_framework import serializers, generics
@@ -97,6 +98,8 @@ class Multiplex(View):
                 data=call["data"],
                 format="json"
             )
+            if view.status_code == 500:
+                return HttpResponseServerError(view.content)
             rendered = view.render().content
             results.append(json.loads(rendered))
 
