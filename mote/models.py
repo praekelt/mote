@@ -195,15 +195,17 @@ class Variation(Base):
 
     @property
     def modified(self):
-        t = self._get_template("element.html")
+        result = False
 
-        if t is not None:
-            try:
-                return os.path.getmtime(t.template.origin.name)
-            except OSError:
-                return 0
+        for name in ("element.html", "metadata.json", "metadata.yaml"):
+            t = self._get_template(name)
+            if t is not None:
+                try:
+                    result = result or os.path.getmtime(t.template.origin.name)
+                except OSError:
+                    pass
 
-        return 0
+        return result
 
 
 class Element(Base):
