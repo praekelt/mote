@@ -83,7 +83,7 @@ class Base(object):
 
     @property
     def title(self):
-        return self.metadata.get("title", self.id.replace("_", " ").capitalize())
+        return self.metadata.get("title", self.id.replace("_", " ").replace("-", " ").capitalize())
 
     @property
     def description(self):
