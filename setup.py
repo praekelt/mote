@@ -30,7 +30,8 @@ setup(
         "djangorestframework-jwt",
         "djangorestframework",
         "xmltodict",
-        "PyYAML"
+        "PyYAML",
+        "yamlordereddictloader"
     ],
     tests_require=[
         "tox",

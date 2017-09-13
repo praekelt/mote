@@ -1,6 +1,7 @@
 import json
 import re
 import warnings
+from collections import OrderedDict
 from copy import deepcopy
 from hashlib import md5
 
@@ -58,7 +59,7 @@ class RenderNode(template.Node):
             element_or_identifier = \
                 context["element"].data[self.element_or_identifier.var]
 
-        data = {}
+        data = OrderedDict()
         if self.data:
             data = self.data.resolve(context)
 

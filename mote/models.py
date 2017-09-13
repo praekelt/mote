@@ -2,9 +2,11 @@
 
 import json
 import os
+from collections import OrderedDict
 from importlib import import_module
 
 import yaml
+import yamlordereddictloader
 
 from django.template import TemplateDoesNotExist
 from django.template.loader import select_template
@@ -76,7 +78,7 @@ class Base(object):
                 t = self._get_template(name)
             if t is not None:
                 if name.endswith(".yaml"):
-                    return yaml.load(t.template.source)
+                    return yaml.load(t.template.source, Loader=yamlordereddictloader.Loader)
                 else:
                     return json.loads(t.template.source)
         return {}
@@ -94,10 +96,10 @@ class Base(object):
         """Return the data for this object. We start with top level data.X
         files and traverse down to our own data.X, doing dictionary updates
         along the way."""
-        result = {}
+        result = OrderedDict()
         for t in reversed(self._get_templates("data.yaml")):
             if t is not None:
-                result.update(yaml.load(t.template.source))
+                result.update(yaml.load(t.template.source, Loader=yamlordereddictloader.Loader))
         return result
 
     @cached_property

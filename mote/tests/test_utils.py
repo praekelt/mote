@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from django.test import TestCase
 
 from mote.utils import deepmerge
@@ -183,3 +185,32 @@ class UtilsTestCase(TestCase):
                 "four": 1
             }
         )
+
+    def test_key_order(self):
+        # Delta key range does not span source key range. Source order wins.
+        source = OrderedDict([
+            ("one", "One"),
+            ("two", "Two"),
+            ("three", "Three"),
+        ])
+        delta = OrderedDict([
+            ("three", "Three X"),
+            ("two", "Two X")
+        ])
+        result = deepmerge(source, delta)
+        self.assertEqual(["one", "two", "three"], list(result.keys()))
+
+        # Delta key range spans source key range. Delta order wins.
+        source = OrderedDict([
+            ("one", "One"),
+            ("two", "Two"),
+            ("three", "Three"),
+        ])
+        delta = OrderedDict([
+            ("three", "Three X"),
+            ("two", "Two X"),
+            ("one", "One X"),
+            ("four", "Four X")
+        ])
+        result = deepmerge(source, delta)
+        self.assertEqual(["three", "two", "one", "four"], list(result.keys()))
