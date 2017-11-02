@@ -3,24 +3,16 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to mote's documentation!
-================================
-
-Contents:
+Table of Contents
+====
 
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 2
 
-   gettingstarted
-   pattern
-   metadata
-   multiple-mote-projects
-   advanced-mote
-   api
+    introduction
+    installation
+    filesystem
+    api
+    useful-patterns
+    tutorial
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

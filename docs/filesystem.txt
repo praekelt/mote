@@ -1,0 +1,17 @@
+mote
+└── projects
+    └── project
+        ├── library
+        │   └── aspect
+        │       ├── metadata.json
+        │       └── patterns
+        │           └── category
+        │               ├── metadata.yaml
+        │               └── pattern
+        │                   ├── data.yaml
+        │                   ├── element.html
+        │                   └── metadata.yaml
+        ├── metadata.json
+        └── mote
+            └── element
+                └── iframe.html
