@@ -67,8 +67,9 @@ This allows you to override the name which Mote infers from the filesystem with 
         "position": 3
     }
 
+
 Overriding the pattern base template
-====
+====================================
 
 If you look at the file tree above again, you'll notice that the ``project`` directory has a child directory ``mote/element/iframe.html``.
 
@@ -109,6 +110,18 @@ The directory name of an aspect is arbitrary and only one is required to exist f
 
 This directory is also the highest level at which you may store source files for statics, such as CSS and JS.
 
+metadata.json
+====
+
+Aspects can be customised with a ``metadata.json`` file, where you can override the name and specify ordering in the interface.
+
+.. code-block:: json
+
+    {
+        "title": "Look ma, no hands!",
+        "position": 2
+    }
+
 ====
 Patterns
 ====
@@ -116,6 +129,13 @@ Patterns
 .. literalinclude:: ./filesystem.txt
     :language: sh
     :emphasize-lines: 7
+
+This is the directory which contains all of the pattern categories. In `Atomic Design`_ methodology, these would be atoms, molecules,
+organisms, templates and pages.
+
+However, Mote is not prescriptive about how many categories you have, or what they are called.
+
+This directory is required, and the name may not be changed.
 
 ====
 Category
@@ -125,10 +145,40 @@ Category
     :language: sh
     :emphasize-lines: 8-9
 
+Use categories to group your patterns in a logical way. You can have as many categories, and as many patterns in each category as makes sense for you.
+
+The only requirement is that you have at minimum one category. The name of the category is up to you, and may be customised by creating a ``metadata.json`` file.
+
+metadata.json
+====
+
+.. code-block:: json
+
+    {
+        "title": "Look ma, no hands!",
+        "position": 2
+    }
+
 ====
 Pattern
 ====
 
 .. literalinclude:: ./filesystem.txt
     :language: sh
-    :emphasize-lines: 10-13
+    :emphasize-lines: 10,13
+
+Each distinct piece of your pattern library must exist in its own directory, within a category.
+
+metadata.json
+====
+As before, you may use ``metadata.json`` to configure title and ordering.
+
+.. code-block:: json
+
+    {
+        "title": "Look ma, no hands!",
+        "position": 1
+    }
+
+.. _Atomic Design: http://bradfrost.com/blog/post/atomic-web-design/
+.. _design tokens: https://github.com/salesforce-ux/theo

@@ -12,6 +12,7 @@ Table of Contents
     introduction
     installation
     filesystem
+    pattern-anatomy
     api
     useful-patterns
     tutorial
