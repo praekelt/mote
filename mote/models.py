@@ -80,7 +80,7 @@ class Base(object):
                 if name.endswith(".yaml"):
                     return yaml.load(t.template.source, Loader=yamlordereddictloader.Loader)
                 else:
-                    return json.loads(t.template.source)
+                    return json.loads(t.template.source) or {}
         return {}
 
     @property
