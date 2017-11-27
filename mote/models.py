@@ -78,7 +78,7 @@ class Base(object):
                 t = self._get_template(name)
             if t is not None:
                 if name.endswith(".yaml"):
-                    return yaml.load(t.template.source, Loader=yamlordereddictloader.Loader)
+                    return yaml.load(t.template.source, Loader=yamlordereddictloader.Loader) or {}
                 else:
                     return json.loads(t.template.source) or {}
         return {}
