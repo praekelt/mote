@@ -99,7 +99,7 @@ class Base(object):
         result = OrderedDict()
         for t in reversed(self._get_templates("data.yaml")):
             if t is not None:
-                result.update(yaml.load(t.template.source, Loader=yamlordereddictloader.Loader))
+                result.update(yaml.load(t.template.source, Loader=yamlordereddictloader.Loader) or {})
         return result
 
     @cached_property
