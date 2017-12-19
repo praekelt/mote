@@ -31,7 +31,8 @@ setup(
         "djangorestframework",
         "xmltodict",
         "PyYAML",
-        "yamlordereddictloader"
+        "yamlordereddictloader",
+        "pypandoc"
     ],
     tests_require=[
         "tox",

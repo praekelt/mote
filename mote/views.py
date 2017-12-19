@@ -108,7 +108,7 @@ class ElementIndexView(ElementBaseView):
     """Index view for an element. Provides common UI around an element."""
 
     def get_template_names(self):
-        return self.element.index_template_names
+        return ["mote/element/index.html"]
 
 
 class ElementPartialView(ElementBaseView):

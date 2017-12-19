@@ -5,6 +5,7 @@ import os
 from collections import OrderedDict
 from importlib import import_module
 
+import pypandoc
 import yaml
 import yamlordereddictloader
 
@@ -135,9 +136,15 @@ class Base(object):
     @cached_property
     def usage(self):
         t = self._get_template("usage.html")
-        if t is None:
-            return ""
-        return t.render()
+        if t is not None:
+            return t.render()
+        t = self._get_template("usage.md")
+        if t is not None:
+            return pypandoc.convert_text(t.render(), "html", format="md")
+        t = self._get_template("usage.rst")
+        if t is not None:
+            return pypandoc.convert_text(t.render(), "html", format="rst")
+        return ""
 
 
 class Variation(Base):
@@ -250,11 +257,6 @@ class Element(Base):
     @property
     def template_names(self):
         return [pth + "element.html" for pth in self._relative_paths]
-
-    @property
-    def index_template_names(self):
-        return [pth + "index.html" for pth in self._relative_paths] \
-            + ["mote/element/index.html"]
 
     @cached_property
     def variations(self):
