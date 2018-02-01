@@ -112,7 +112,12 @@ class Base(object):
         li = []
 
         # Our own
-        t = select_template([self.project.relative_path + "metadata.json"])
+        try:
+            t = select_template([self.project.relative_path + "metadata.json"])
+        except TemplateDoesNotExist:
+            # Either metadata.json or metadata.yaml must exist. Let it raise if
+            # it is not the case.
+            t = select_template([self.project.relative_path + "metadata.yaml"])
         pth = os.path.join(os.path.dirname(t.template.origin.name), "..", self.relative_path, subdirectory)
         if os.path.exists(pth):
             li = [klass(id, self) for id in os.listdir(pth) if not id.startswith(".") and not id in RESERVED_IDS]
