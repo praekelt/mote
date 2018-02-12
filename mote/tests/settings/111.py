@@ -65,4 +65,6 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
+ALLOWED_HOSTS = ["*"]
+
 MOTE = {"project": lambda request: "myproject"}
