@@ -20,6 +20,15 @@ located at `mote/tests/mote/projects/` are loaded.
 
 Browse to `http://localhost:8000/mote/` to view the pattern libraries.
 
+Building the docs
+=================
+
+virtualenv ve
+source ve/bin/activate
+pip sphinx install sphinx_rtd_theme
+cd docs
+make html
+
 Documentation
 =============
 
