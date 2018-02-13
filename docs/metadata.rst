@@ -1,6 +1,8 @@
 Metadata
 ########
 
+.. contents::
+
 Each item (project, aspect, pattern or variation) displayed in the Mote
 Explorer has its name inferred from its directory name, and its position within
 the navigation bar sorted alphabetically. Whilst this is a sane default, it is

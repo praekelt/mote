@@ -1,6 +1,8 @@
 Architecture
 ############
 
+.. contents::
+
 Mote itself never stores any data - rather, everything is inferred from a directory
 structure and metadata files where applicable. This makes it possible to store pattern
 libraries across a wide range of external systems like Github and even a plain file

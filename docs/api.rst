@@ -3,7 +3,7 @@ API
 
 .. contents::
 
-Mote provides both an in-template and full RESTful API.
+Mote provides an in-template, full RESTful and Javascript API.
 
 In-template
 -----------

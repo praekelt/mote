@@ -20,5 +20,4 @@ serve these patterns over an API directly to a web or mobile site.
    patterns
    metadata
    api
-   inheritance
-   advanced
+   layering

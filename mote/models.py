@@ -97,6 +97,7 @@ class Base(object):
         """Return the data for this object. We start with top level data.X
         files and traverse down to our own data.X, doing dictionary updates
         along the way."""
+        # todo: this must deepmerge
         result = OrderedDict()
         for t in reversed(self._get_templates("data.yaml")):
             if t is not None:

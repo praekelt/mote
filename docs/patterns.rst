@@ -1,6 +1,8 @@
 Patterns
 ########
 
+.. contents::
+
 A pattern in Mote is a representation of a self-contained unit of reusable interface.
 
 Each pattern is displayed in the Mote Explorer as a resizable iframe, and can be viewed on its own page in isolation.
@@ -9,7 +11,7 @@ A pattern contains a minimal set of files.
 
 ::
 
-    category
+    root
     └── example-pattern
         ├── element.html
         ├── data.yaml (optional)
@@ -249,4 +251,4 @@ pattern resides in the directory
 
 The name of the project may be replaced by `self`. This reserved word resolves
 to the project currently in scope and is useful when basing entire pattern libraries
-on other pattern libraries. This is discussed in the ``Inheritance`` section.
+on other pattern libraries. This is discussed in the ``Layering`` section.
