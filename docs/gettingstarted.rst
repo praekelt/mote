@@ -22,6 +22,9 @@ by using the test configuration:
     - ./ve/bin/python manage.py migrate --run-syncdb --settings=mote.tests.settings.111
     - ./ve/bin/python manage.py runserver 0.0.0.0:8000 --settings=mote.tests.settings.111
 
+You may now browse to ``http://localhost:8000/mote``. The only available
+pattern libraries at this point are the unit test libraries.
+
 As part of a Django project
 ***************************
 
@@ -42,15 +45,15 @@ A sample ``TEMPLATES`` for a simple Django app typically has this form:
 
     TEMPLATES = [
         {
-            'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'DIRS': [],
-            'APP_DIRS': False,
-            'OPTIONS': {
-                'context_processors': [
-                    'django.template.context_processors.debug',
-                    'django.template.context_processors.request',
-                    'django.contrib.auth.context_processors.auth',
-                    'django.contrib.messages.context_processors.messages',
+            "BACKEND": "django.template.backends.django.DjangoTemplates",
+            "DIRS": [],
+            "APP_DIRS": False,
+            "OPTIONS": {
+                "context_processors": [
+                    "django.template.context_processors.debug",
+                    "django.template.context_processors.request",
+                    "django.contrib.auth.context_processors.auth",
+                    "django.contrib.messages.context_processors.messages",
                 ],
                 "loaders": [
                     "django.template.loaders.filesystem.Loader",

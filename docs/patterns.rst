@@ -237,7 +237,7 @@ A variation has exactly the same structure and rules as a pattern. Place
 pattern in the variations directory of an existing pattern and it is made
 available as a variation, not a pattern.
 
-Referencing a pattern of variation
+Referencing a pattern or variation
 ----------------------------------
 
 Mote uses a dotted name notation to resolve patterns and variations by name. A
