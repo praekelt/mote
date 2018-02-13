@@ -8,50 +8,45 @@ Mote provides both an in-template and full RESTful API.
 In-template
 -----------
 
-You may call any element from a Django template. For our example we have a
-button element. Note how the `data` variable is automatically created from the
-default JSON data:
+You may call any pattern from a Django template. For our example we have a
+button pattern:
 
 .. code-block:: html+django
 
     {% load mote_tags %}
 
-    <a class="{{ data.class }}">{{ data.text }}</a>
+    <a class="{{ class }}">{{ text }}</a>
 
-This button element has default data described in JSON as:
+This button pattern has default data:
 
-.. code-block:: json
+.. code-block:: yaml
 
-    {
-        "Button": {
-            "text": "Lorem ipsum dolor"
-            "class": "plain"
-        }
-    }
+    text: Lorem ipsum dolor
+    class: plain
 
 You may render this button in your template:
 
 .. code-block:: html+django
 
     {% load mote_tags %}
-    {% render "myproject.website.atoms.button" %}
+    {% render "project.browser.atoms.button" %}
 
 You may refer to the project in context using ``self``. This is recommended
 practice because it makes it easy to roll out new versions of a pattern
-library. For example, if you create the pattern library ``myprojectv2`` then
+library. For example, if you create the pattern library ``projectv2`` then
 you would have to change the name *everywhere*. Using ``self`` avoids this.:
 
 .. code-block:: html+django
 
     {% load mote_tags %}
-    {% render "self.website.atoms.button" %}
+    {% render "self.browser.atoms.button" %}
 
 Using ``self``  requires you to declare ``MOTE = {"project": callable_or_string}`` to tell
 Mote what project is in context.:
 
 .. code-block:: python
 
-    MOTE = {"project": lambda request: "myproject"}
+    MOTE = {"project": lambda request: "project"}
 
 You may partially or fully override the button data. Note how you do not have to redeclare
 the entire dictionary - Mote will deep merge your values with the default values:
@@ -59,34 +54,34 @@ the entire dictionary - Mote will deep merge your values with the default values
 .. code-block:: html+django
 
     {% load mote_tags %}
-    {% render "myproject.website.atoms.button" '{"text": "My label"}' %}
+    {% render "project.browser.atoms.button" '{"text": "My label"}' %}
 
 You may even use template variables:
 
 .. code-block:: html+django
 
     {% load mote_tags %}
-    {% render "myproject.website.atoms.button" '{"text": "{{ foo }}"}' %}
+    {% render "project.browser.atoms.button" '{"text": "{{ foo }}"}' %}
 
 The variable called ``element`` is special. It allows you to relatively lookup
-other elements.  In this example our button element also renders one of its sibling
-elements ``anchor``. It's a very artificial example but illustrates the usage.
+other patterns.  In this example our button pattern also renders one of its sibling
+patterns ``anchor``. It's a very artificial example but illustrates the usage.
 
-Let's extend the button element to render a sibling.:
+Let's extend the button pattern to render a sibling.:
 
 .. code-block:: html+django
 
     {% load mote_tags %}
 
-    <a class="{{ data.class }}">{{ data.text }}</a>
-    {% render data.sibling %}
+    <a class="{{ class }}">{{ text }}</a>
+    {% render sibling %}
 
 Specify a sibling by a relative lookup.:
 
 .. code-block:: html+django
 
     {% load mote_tags %}
-    {% render "myproject.website.atoms.button" '{"sibling": "{{ element.pattern.anchor.dotted_name }}"}' %}
+    {% render "project.browser.atoms.button" '{"sibling": "{{ element.pattern.anchor.dotted_name }}"}' %}
 
 Defining a dictionary in a template tag quickly becomes unwieldy. To combat this you may define an external
 template to assemble a data structure through XML.
@@ -99,29 +94,33 @@ button.xml file:
         <text>I have access to context variable {{ foo }}</text>
     </button>
 
-And here we use it. Note the outermost XML tag is not part of the `button` dictionary.:
+And here we use it. Note the outermost XML tag is not part of the ``button`` dictionary.:
 
 .. code-block:: html+django
 
     {% get_element_data "button.xml" as button %}
-    {% render "myproject.website.atoms.button" button %}
+    {% render "project.browser.atoms.button" button %}
 
 RESTful
 -------
 
-You may call an element by URL::
+You may call a pattern by URL::
 
-    /mote/api/myproject/website/atoms/button/
+    /mote/api/project/browser/atoms/button/
 
 This URL accepts a URL encoded JSON parameter which partially or fully overrides
 the button data::
 
-    /mote/api/myproject/website/atoms/button/?data=%7B%22text%22%3A+%22Awesome%22%7D
+    /mote/api/project/browser/atoms/button/?data=%7B%22text%22%3A+%22Awesome%22%7D
 
-That is way too ugly and inefficient! Imagine your page has to load 10 elements - that's 10 requests. To
-solve this Mote provides a Javascript class to multiplex requests and simplify the calling interface:
+Javascript
+----------
 
-.. code-block:: html+django
+That is way too ugly and inefficient! Imagine your page has to load 10 patterns
+- that's 10 requests. To solve this Mote provides a Javascript class to
+multiplex requests and simplify the calling interface:
+
+.. code-block:: html
 
     <div id="target"></div>
 
@@ -132,7 +131,7 @@ solve this Mote provides a Javascript class to multiplex requests and simplify t
     $(document).ready(function() {
         var mote_api = new MoteAPI('/mote/api/');
         mote_api.push(
-            'myproject.website.atoms.button',
+            'project.browser.atoms.button',
             {'text': 'Awesome'},
             '#target',
             function(result) { alert('Loaded!'); }
@@ -141,11 +140,11 @@ solve this Mote provides a Javascript class to multiplex requests and simplify t
     });
     </script>
 
-The MoteAPI contructor takes a single parameter, `api_root`.
+The MoteAPI contructor takes a single parameter, ``api_root``.
 
-`push` parameters:
+``push`` parameters:
     #. url - the API endpoint.
-    #. data - optional dictionary to override element data.
-    #. selector - optional CSS selector to fill with the rendered element.
-    #. callback - optional callback. `result` is a JSON object. `json` and `rendered` are the most used keys in `result`.
+    #. data - optional dictionary to override pattern data.
+    #. selector - optional CSS selector to fill with the rendered pattern.
+    #. callback - optional callback. ``result`` is a JSON object. ``json`` and ``rendered`` are the most used keys in ``result``.
 

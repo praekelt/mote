@@ -19,7 +19,6 @@ serve these patterns over an API directly to a web or mobile site.
    directories
    patterns
    metadata
-   multiple-mote-projects
-   advanced-mote
    api
-
+   inheritance
+   advanced
