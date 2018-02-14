@@ -1,6 +1,8 @@
 from copy import deepcopy
 from collections import OrderedDict
 
+from django.conf import settings
+
 
 def _deepmerge(source, delta):
     """Recursive helper"""
@@ -84,15 +86,27 @@ def deephash(o):
     return hash(tuple(frozenset(sorted(new_o.items()))))
 
 
-def get_object_by_dotted_name(name):
-    """Return object identified by eg. a.b.c.d"""
+def get_object_by_dotted_name(name, project_id=None):
+    """Return object identified by eg. a.b.c.d. If "a" is "self" then use
+    project_id."""
 
     # Avoid circular import
     from mote.models import Project, Aspect, Pattern, Element, Variation
 
     li = name.split(".")
     length = len(li)
-    project = Project(li[0])
+    if li[0] == "self":
+        if project_id is None:
+            try:
+                value = settings.MOTE["project"]
+            except (AttributeError, KeyError):
+                raise RuntimeError(
+                    """Pass a valid project_id or define MOTE["project"]"""
+                    + " setting for project lookup"
+               )
+        project = Project(project_id)
+    else:
+        project = Project(li[0])
     if length == 1:
         return project
     aspect = Aspect(li[1], project)

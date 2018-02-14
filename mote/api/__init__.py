@@ -3,6 +3,7 @@ import json
 from django import template
 from django.http import JsonResponse, HttpResponseBadRequest,\
     HttpResponseServerError
+from django.utils.datastructures import MultiValueDictKeyError
 from django.views.generic.base import View
 
 from rest_framework import serializers, generics
@@ -84,13 +85,18 @@ class Multiplex(View):
 
     def get(self, request, *args, **kwargs):
         try:
+            project_id = request.GET["project_id"]
+        except (KeyError, MultiValueDictKeyError):
+            project_id = None
+
+        try:
             calls = json.loads(request.GET["calls"])
         except ValueError:
             return HttpResponseBadRequest()
 
         results = []
         for call in calls:
-            obj = get_object_by_dotted_name(call["id"])
+            obj = get_object_by_dotted_name(call["id"], project_id=project_id)
             view_klass = globals()[obj.__class__.__name__ + "Detail"]
             view = view_klass().as_view()(
                 request=request,

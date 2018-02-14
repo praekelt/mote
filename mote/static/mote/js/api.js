@@ -1,5 +1,5 @@
 /* Class that performs multiple API calls in one request */
-function MoteAPI(api_root) {
+function MoteAPI(api_root, project_id) {
     this.api_root = api_root;
     this._stack = new Array();
 
@@ -22,7 +22,7 @@ function MoteAPI(api_root) {
         }
         $.getJSON(
             this.api_root + 'multiplex/',
-            {'calls': JSON.stringify(calls)},
+            {'project_id': project_id, 'calls': JSON.stringify(calls)},
             this.callback(this)
         );
     };
