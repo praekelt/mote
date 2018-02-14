@@ -12,25 +12,22 @@ over a wide range of operating systems.
 Standalone
 **********
 
-Mote is intended to be a standalone library, not a project, but it can indeed be run
-by using the test configuration:
+Run Mote using ``mote.lib.base`` as the only pattern library:
 
 ::
-
     - virtualenv ve
-    - ./ve/bin/pip install -r mote/tests/requirements/111.txt
-    - ./ve/bin/python manage.py migrate --run-syncdb --settings=mote.tests.settings.111
-    - ./ve/bin/python manage.py runserver 0.0.0.0:8000 --settings=mote.tests.settings.111
+    - ./ve/bin/pip install -r example/requirements.txt
+    - ./ve/bin/python manage.py migrate --run-syncdb --settings=example.settings
+    - ./ve/bin/python manage.py runserver 0.0.0.0:8000 --settings=example.settings
 
-You may now browse to ``http://localhost:8000/mote``. The only available
-pattern libraries at this point are the unit test libraries.
+Browse to `http://localhost:8000/mote/` to view the pattern libraries.
 
 As part of a Django project
 ***************************
 
 If you are using Django you may want to include Mote as part of your project.
 
-#. Install or add ``mote-prk`` and ``mote-lib-base`` to your Python path.
+#. Install or add ``mote-prk`` and ``mote.lib.base`` to your Python path.
 
 #. Add ``mote`` to your ``INSTALLED_APPS`` setting.
 
@@ -68,3 +65,24 @@ A sample ``TEMPLATES`` for a simple Django app typically has this form:
 You may now start the Django instance and browse to
 ``http://localhost:8000/mote``. The only available pattern library at this
 point is the base library.
+
+Settings
+--------
+
+The ``MOTE`` setting controls Mote' operation. It is a dictionary:
+
+::
+
+.. code-block:: py
+
+    MOTE = {
+        "project": "myproject",
+        "directories": ["/path/to/pattern-lib-one", "/path/to/pattern-lib-two"]
+    }
+
+``project`` is only required when using the Django API. See the API section for
+more information.
+
+``directories`` tells Mote where to find the pattern libraries. Pattern libraries
+that are packaged as Django Apps are automatically included.
+

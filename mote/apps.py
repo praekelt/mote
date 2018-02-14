@@ -31,7 +31,15 @@ class MoteConfig(AppConfig):
         except (AttributeError, KeyError):
             directories = []
         for directory in directories:
+            tokens = os.path.split(directory)
+            if tokens[-1] == "mote":
+                raise RuntimeError(
+                    "Redundant trailing \"mote\" component in %s" % directory
+                )
             pth = os.path.join(directory, "mote", "projects")
+            if not os.path.exists(pth):
+                raise RuntimeError("Can't find a pattern library in %s" % pth)
             for id in os.listdir(pth):
                 if not id.startswith("."):
                     PROJECT_PATHS[id] = pth
+        print PROJECT_PATHS

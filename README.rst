@@ -8,15 +8,12 @@ Mote - the pattern library framework
 Quick start
 ===========
 
-Mote is intended to be a standalone library, not a project, but it can indeed be run with::
+Run Mote using ``mote.lib.base`` as the only pattern library::
 
     - virtualenv ve
-    - ./ve/bin/pip install -r mote/tests/requirements/111.txt
-    - ./ve/bin/python manage.py migrate --run-syncdb --settings=mote.tests.settings.111
-    - ./ve/bin/python manage.py runserver 0.0.0.0:8000 --settings=mote.tests.settings.111
-
-Running Mote by reusing the test settings and requirements means the test pattern libraries
-located at `mote/tests/mote/projects/` are loaded.
+    - ./ve/bin/pip install -r example/requirements.txt
+    - ./ve/bin/python manage.py migrate --run-syncdb --settings=example.settings
+    - ./ve/bin/python manage.py runserver 0.0.0.0:8000 --settings=example.settings
 
 Browse to `http://localhost:8000/mote/` to view the pattern libraries.
 

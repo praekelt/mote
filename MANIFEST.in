@@ -3,4 +3,9 @@ include CHANGELOG.rst
 include LICENSE
 include README.rst
 include MANIFEST.in
+include tox.ini
+include .travis
+inslude setup.py
 recursive-include mote *
+recursive-include docs *
+recursive-include example *
