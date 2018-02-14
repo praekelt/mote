@@ -42,7 +42,7 @@ you would have to change the name *everywhere*. Using ``self`` avoids this.:
     {% render "self.browser.atoms.button" %}
 
 Using ``self``  requires you to declare ``MOTE = {"project": callable_or_string}`` to tell
-Mote what project is in context.:
+Mote what project is in context. ``callable_or_string`` takes ``request`` as parameter:
 
 .. code-block:: python
 
@@ -84,7 +84,8 @@ Specify a sibling by a relative lookup.:
     {% render "project.browser.atoms.button" '{"sibling": "{{ element.pattern.anchor.dotted_name }}"}' %}
 
 Defining a dictionary in a template tag quickly becomes unwieldy. To combat this you may define an external
-template to assemble a data structure through XML.
+template to assemble a data structure through XML. See https://github.com/martinblech/xmltodict
+for tips on how to construct the XML.
 
 button.xml file:
 
@@ -98,6 +99,7 @@ And here we use it. Note the outermost XML tag is not part of the ``button`` dic
 
 .. code-block:: html+django
 
+    {% load mote_tags %}
     {% get_element_data "button.xml" as button %}
     {% render "project.browser.atoms.button" button %}
 
@@ -129,22 +131,30 @@ multiplex requests and simplify the calling interface:
 
     <script type="text/javascript">
     $(document).ready(function() {
-        var mote_api = new MoteAPI('/mote/api/');
+        var mote_api = new MoteAPI('/mote/api/', 'project');
         mote_api.push(
-            'project.browser.atoms.button',
+            'self.browser.atoms.button',
             {'text': 'Awesome'},
             '#target',
             function(result) { alert('Loaded!'); }
+         );
+         mote_api.push(
+            'explicit-patternlib.browser.atoms.button',
+            {'text': 'Awesome again'},
+            '#target'
          );
          mote_api.run();
     });
     </script>
 
-The MoteAPI contructor takes a single parameter, ``api_root``.
+The MoteAPI contructor takes two parameters, ``api_root`` (required) and
+``project_id`` (optional). ``project_id`` is used to resolve ``self`` to the
+correct project but it may be ommited, in which case Mote, depending on the ``MOTE``
+setting, attempts to resolve to the correct project. It is recommended to
+always pass a ``project_id``.
 
 ``push`` parameters:
     #. url - the API endpoint.
     #. data - optional dictionary to override pattern data.
     #. selector - optional CSS selector to fill with the rendered pattern.
     #. callback - optional callback. ``result`` is a JSON object. ``json`` and ``rendered`` are the most used keys in ``result``.
-

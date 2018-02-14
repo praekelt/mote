@@ -26,6 +26,10 @@ the inheritance hierarchy until it finds a match::
     project.browser.atoms.anchor
     self.browser.atoms.anchor
 
+Note that using ``self`` is nearly always the correct way to reference a pattern.
+If an explicit version of a pattern is required then only refer to it by its actual
+name.
+
 If we are not entirely happy with the base anchor pattern we can override it
 in our project by creating the directory
 ``mote/projects/project/library/browser/atoms/anchor``. You may recall that a

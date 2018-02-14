@@ -249,6 +249,6 @@ pattern resides in the directory
 `mote/projects/project/library/browser/atoms/anchor/variations/alert` is named
 `project.browser.atoms.anchor.alert`.
 
-The name of the project may be replaced by `self`. This reserved word resolves
-to the project currently in scope and is useful when basing entire pattern libraries
-on other pattern libraries. This is discussed in the ``Layering`` section.
+The name of the project should nearly always be replaced by ``self``. This
+reserved word resolves to the project currently in scope and is useful when
+basing entire pattern libraries on other pattern libraries.
