@@ -54,8 +54,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'mote'
-copyright = u'2016, Praekelt Consulting'
+project = u'Mote'
+copyright = u'2018, Praekelt Consulting'
 author = u'Praekelt Consulting'
 
 # The version info for the project you're documenting, acts as replacement for

@@ -71,8 +71,6 @@ Settings
 
 The ``MOTE`` setting controls Mote' operation. It is a dictionary:
 
-::
-
 .. code-block:: py
 
     MOTE = {

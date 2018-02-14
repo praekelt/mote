@@ -42,4 +42,3 @@ class MoteConfig(AppConfig):
             for id in os.listdir(pth):
                 if not id.startswith("."):
                     PROJECT_PATHS[id] = pth
-        print PROJECT_PATHS
