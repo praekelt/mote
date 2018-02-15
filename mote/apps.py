@@ -43,6 +43,7 @@ class MoteConfig(AppConfig):
             pth = os.path.join(directory, "mote", "projects")
             if not os.path.exists(pth):
                 logger.warn("Can't find a pattern library in %s" % pth)
-            for id in os.listdir(pth):
-                if not id.startswith("."):
-                    PROJECT_PATHS[id] = pth
+            else:
+                for id in os.listdir(pth):
+                    if not id.startswith("."):
+                        PROJECT_PATHS[id] = pth
