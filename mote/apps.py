@@ -1,3 +1,4 @@
+import logging
 import os
 from importlib import import_module
 
@@ -5,6 +6,9 @@ from django.apps import AppConfig
 from django.conf import settings
 
 from mote import PROJECT_PATHS
+
+
+logger = logging.getLogger("django")
 
 
 class MoteConfig(AppConfig):
@@ -38,7 +42,7 @@ class MoteConfig(AppConfig):
                 )
             pth = os.path.join(directory, "mote", "projects")
             if not os.path.exists(pth):
-                raise RuntimeError("Can't find a pattern library in %s" % pth)
+                logger.warn("Can't find a pattern library in %s" % pth)
             for id in os.listdir(pth):
                 if not id.startswith("."):
                     PROJECT_PATHS[id] = pth
