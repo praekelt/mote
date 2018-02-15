@@ -2,7 +2,7 @@ Layering
 ########
 
 Mote makes it possible to base a pattern library on one or more existing pattern
-libraries. For example, mote.lib.base already implements most of the common
+libraries. For example, ``mote-lib-base`` already implements most of the common
 browser patterns like buttons, images and select boxes. Re-implementing these
 every time would be wasteful so it makes sense to inherit from it.
 

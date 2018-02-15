@@ -12,7 +12,7 @@ over a wide range of operating systems.
 Standalone
 **********
 
-Run Mote using ``mote.lib.base`` as the only pattern library:
+Run Mote using ``mote-lib-base`` as the only pattern library:
 
 ::
     - virtualenv ve
@@ -27,7 +27,7 @@ As part of a Django project
 
 If you are using Django you may want to include Mote as part of your project.
 
-#. Install or add ``mote-prk`` and ``mote.lib.base`` to your Python path.
+#. Install or add ``mote-prk`` and ``mote-lib-base`` to your Python path.
 
 #. Add ``mote`` to your ``INSTALLED_APPS`` setting.
 
