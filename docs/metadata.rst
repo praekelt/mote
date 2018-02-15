@@ -34,7 +34,7 @@ later in the list override preceding pattern libraries, so if both ``praekelt`` 
 
 .. code-block:: yaml
 
-    patterns:
+    parents:
         - praekelt
         - praekeltblue
 

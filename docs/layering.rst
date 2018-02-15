@@ -12,7 +12,7 @@ pattern libraries.
 
 .. code-block:: yaml
 
-    patterns:
+    parents:
         - base
         - praekelt
 
