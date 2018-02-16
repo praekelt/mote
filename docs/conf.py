@@ -19,7 +19,7 @@
 # import os
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
-import sphinx_rtd_theme
+import alabaster
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -35,6 +35,7 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
     'sphinx.ext.viewcode',
+    'alabaster'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -137,16 +138,35 @@ todo_include_todos = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'alabaster'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-html_theme_options = {'navigation_depth': 4}
+html_theme_options = {
+    'navigation_depth': 4,
+    'logo': 'praekelt_logo.png',
+    'logo_name': True,
+    'show_powered_by': False,
+    'fixed_sidebar': True,
+    'font_family': '"Helvetica Neue", Helvetica, Arial, sans-serif',
+    'head_font_family': '"Helvetica Neue", Helvetica, Arial, sans-serif',
+    'logo_text_align': 'left',
+}
 
 # Add any paths that contain custom themes here, relative to this directory.
-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+html_theme_path = [alabaster.get_path()]
+
+html_sidebars = {
+    '**': [
+        'about.html',
+        'navigation.html',
+        'relations.html',
+        'searchbox.html',
+        'donate.html',
+    ]
+}
 
 # The name for this set of Sphinx documents.
 # "<project> v<release> documentation" by default.

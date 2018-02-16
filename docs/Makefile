@@ -50,7 +50,7 @@ clean:
 
 .PHONY: html
 html:
-	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html && cp ./images/praekelt_logo.png ./$(BUILDDIR)/html/_static
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
