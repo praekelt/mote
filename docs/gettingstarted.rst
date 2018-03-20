@@ -82,5 +82,8 @@ The ``MOTE`` setting controls Mote' operation. It is a dictionary:
 more information.
 
 ``directories`` tells Mote where to find the pattern libraries. Pattern libraries
-that are packaged as Django Apps are automatically included.
+that are packaged as Django Apps are automatically included. Note the directory
+declaration must not include the ``mote`` subdirectory, but the actual directory
+on the filesystem must. In our example there must therefore exist a directory
+``/path/to/pattern-lib-one/mote/``.
 
