@@ -8,3 +8,4 @@ Terminology
 #. *Variation* - a pattern that is so similar to an existing pattern that it does not warrant to be a pattern itself.
 #. *Explorer* - a web browsable interface of all the projects visible to Mote.
 #. *Mote Templating Language* - simple Jinja based markup language for writing patterns.
+#. *Deep merging* - the algorithm used to merge dynamic data into a pattern's source data.

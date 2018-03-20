@@ -28,7 +28,11 @@ class UtilsTestCase(TestCase):
                         ]
                     }
                 }
-            ]
+            ],
+            "six":[
+                {"actor": {"name": "Tom", "surname": "Hanks"}},
+                {"actor": {"name": "Denzel", "surname": "Washington"}},
+            ],
         }
         delta = {
             "one": {"bbb": 777, "ccc": 888},
@@ -49,6 +53,10 @@ class UtilsTestCase(TestCase):
                         ]
                     }
                 }
+            ],
+            "six": [
+                {"archetype": False, "director": {"name": "Guillermo"}},
+                {"score": {"name": "Hans"}}
             ],
             "infinity": {"a": 0}
         }
@@ -75,6 +83,10 @@ class UtilsTestCase(TestCase):
                         ]
                     }
                 }
+            ],
+            "six": [
+                {"director": {"name": "Guillermo"}},
+                {"score": {"name": "Hans"}}
             ],
             "infinity": {"a": 0}
             },

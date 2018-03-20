@@ -33,4 +33,5 @@ It allows non-engineers to collaborate on creating pattern libraries, and to ser
    patterns
    metadata
    api
+   merging
    layering

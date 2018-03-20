@@ -13,7 +13,7 @@ def _deepmerge(source, delta):
 
     # If delta is an OrderedDict and the key space of delta spans the key space
     # of source then the key order of source must change to that of delta. Note
-    # key id, if present,  must always be first.
+    # key id, if present, must always be first.
     if source and (source is not delta) and isinstance(delta, OrderedDict) \
         and not len(set(source.keys()) - set(delta.keys())):
 
@@ -30,7 +30,7 @@ def _deepmerge(source, delta):
 
     for key, value in delta.items():
 
-        if isinstance(value, dict):
+        if isinstance(value, (dict)):
             if (key in source) and isinstance(source[key], list):
                 # We expect a list but didn't get one. Do conversion.
                 di = OrderedDict()
@@ -42,17 +42,26 @@ def _deepmerge(source, delta):
 
         elif (key in source) and isinstance(value, list):
 
-            # Use the zero-th item as an archetype
+            # By default we use the zero-th item as an archetype, unless
+            # archetype is set to False in the first item in value.
             archetype = None
-            if source[key]:
+            if isinstance(value[0], dict) \
+                and not value[0].pop("archetype", True):
+                pass
+            elif source[key]:
                 archetype = source[key][0]
 
+            # Ensure source[key] can accommodate all items in value
             source[key] = []
-            if archetype and value:
-                for n in value:
-                    # Remove `None` entries from lists.
-                    if n is not None:
+            for n in value:
+                # Remove `None` entries from lists.
+                if n is not None:
+                    if archetype:
                         source[key].append(deepcopy(archetype))
+                    else:
+                        source[key].append({})
+
+            # Perform the deep merges
             for n, v in enumerate(value):
                 if isinstance(v, dict):
                     _deepmerge(source[key][n], v)
