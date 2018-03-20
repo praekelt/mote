@@ -149,8 +149,8 @@ class TagsTestCase(TestCase):
     def test_render_select_with_variable_arg(self):
         request = self.factory.get("/")
         arg = {"options": [
-                {"value": 1, "label": {"text": "Foo option label 1"}},
-                {"value": 2, "label": {"text": "Foo option label 2"}}
+                {"value": 1, "label": {"id": "self.website.atoms.label", "text": "Foo option label 1"}},
+                {"value": 2, "label": {"id": "self.website.atoms.label", "text": "Foo option label 2"}}
         ]}
         t = template.Template("""{% load mote_tags %}
             {% render "myproject.website.atoms.select" arg %}"""

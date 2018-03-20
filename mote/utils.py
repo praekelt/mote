@@ -41,23 +41,7 @@ def _deepmerge(source, delta):
                 _deepmerge(node, value)
 
         elif (key in source) and isinstance(value, list):
-
-            # Use the zero-th item as an archetype
-            archetype = None
-            if source[key]:
-                archetype = source[key][0]
-
-            source[key] = []
-            if archetype and value:
-                for n in value:
-                    # Remove `None` entries from lists.
-                    if n is not None:
-                        source[key].append(deepcopy(archetype))
-            for n, v in enumerate(value):
-                if isinstance(v, dict):
-                    _deepmerge(source[key][n], v)
-                elif v is not None:
-                    source[key][n] = v
+            source[key] = [v for v in value if v is not None]
 
         else:
             source[key] = value

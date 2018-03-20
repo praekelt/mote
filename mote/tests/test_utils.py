@@ -57,13 +57,11 @@ class UtilsTestCase(TestCase):
             {
             "one": {"aaa": 1, "bbb": 777, "ccc": 888},
             "two": [3, 4, 5],
-            "three":[
-                {"actor": {"name": "Colin", "surname": "Hanks"}}
-            ],
+            "three": [{"actor": {"name": "Colin"}}],
             "four": [
-                {"actor": {"name": "Stephen", "surname": "Baldwin"}},
+                {"actor": {"name": "Stephen"}},
                 {"actor": {"name": "Harrison", "surname": "Ford"}},
-                {"actor": {"name": "William", "surname": "Baldwin"}}
+                {"actor": {"name": "William"}}
             ],
             "five": [
                 {
@@ -71,7 +69,7 @@ class UtilsTestCase(TestCase):
                         "title": "Good Will Hunting",
                         "actors": [
                             {"actor": {"name": "Matt", "surname": "Damon"}},
-                            {"actor": {"name": "Casey", "surname": "Affleck"}}
+                            {"actor": {"name": "Casey"}}
                         ]
                     }
                 }
@@ -143,7 +141,7 @@ class UtilsTestCase(TestCase):
         self.assertEqual(result, source, "Result must be == None!")
 
     def test_list_with_nones(self):
-        """`None` values are discarded from lists.
+        """`None values are discarded from lists.
         """
         source = {
             "three": [
@@ -158,6 +156,7 @@ class UtilsTestCase(TestCase):
             ],
         }
         result = deepmerge(source, delta)
+        print result
         self.assertEqual(
             result,
             {"three": [{"actor": {"name": "Tom", "surname": "Hanks"}}]}
