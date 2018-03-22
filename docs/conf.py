@@ -147,7 +147,7 @@ html_theme = 'alabaster'
 #'navigation_depth': 4,
 #'fixed_sidebar': True,
 html_theme_options = {
-    'logo': 'praekelt_logo.png',
+    'logo': 'images/praekelt_logo.png',
     'logo_name': True,
     'show_powered_by': False,
     'font_family': '"Helvetica Neue", Helvetica, Arial, sans-serif',
