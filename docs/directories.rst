@@ -1,5 +1,5 @@
-Directories
-###########
+Directory structure
+###################
 
 Mote embraces convention over configuration and infers much from a directory tree.
 
