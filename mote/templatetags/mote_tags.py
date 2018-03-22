@@ -194,7 +194,7 @@ class RenderNode(template.Node):
                 html = result.content
 
             # Make output beautiful for Chris
-            if not settings.DEBUG:
+            if not settings.DEBUG or request.GET.get("beautify", False):
                 beauty = BeautifulSoup(html, "html.parser")
                 html = beauty.prettify()
 
