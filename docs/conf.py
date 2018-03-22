@@ -144,12 +144,12 @@ html_theme = 'alabaster'
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
+#'navigation_depth': 4,
+#'fixed_sidebar': True,
 html_theme_options = {
-    'navigation_depth': 4,
     'logo': 'praekelt_logo.png',
     'logo_name': True,
     'show_powered_by': False,
-    'fixed_sidebar': True,
     'font_family': '"Helvetica Neue", Helvetica, Arial, sans-serif',
     'head_font_family': '"Helvetica Neue", Helvetica, Arial, sans-serif',
     'logo_text_align': 'left',

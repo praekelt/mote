@@ -20,6 +20,7 @@ setup(
     long_description = open("README.rst", "r").read() + open("AUTHORS.rst", "r").read() + open("CHANGELOG.rst", "r").read(),
     author="Praekelt Consulting",
     author_email="dev@praekelt.com",
+    url="https://github.com/praekelt/mote",
     license="BSD",
     packages=find_packages(),
     zip_safe=True,
