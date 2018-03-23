@@ -67,6 +67,13 @@ class Base(object):
 
     @cached_property
     def metadata(self):
+        return self._get_metadata()
+
+    @cached_property
+    def metadata_no_traverse(self):
+        return self._get_metadata(False)
+
+    def _get_metadata(self, traverse=True):
         """Retrieve metadata for this object. Traverses upward else we can't
         infer metadata when layering."""
         t = None
@@ -75,7 +82,7 @@ class Base(object):
                 t = select_template([self.relative_path + name])
             except TemplateDoesNotExist:
                 pass
-            if t is None:
+            if traverse and (t is None):
                 t = self._get_template(name)
             if t is not None:
                 if name.endswith(".yaml"):
@@ -193,6 +200,11 @@ class Variation(Base):
         _relative_paths to allow it."""
         return super(Variation, self)._relative_paths \
             + self.element._relative_paths
+
+    @property
+    def title(self):
+        return self.metadata_no_traverse.get("title", self.id.replace(
+            "_", " ").replace("-", " ").capitalize())
 
     @property
     def template_names(self):
