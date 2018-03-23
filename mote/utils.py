@@ -45,7 +45,7 @@ def _deepmerge(source, delta):
             # By default we use the zero-th item as an archetype, unless
             # archetype is set to False in the first item in value.
             archetype = None
-            if isinstance(value[0], dict) \
+            if value and isinstance(value[0], dict) \
                 and not value[0].pop("archetype", True):
                 pass
             elif source[key]:
