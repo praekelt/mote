@@ -85,7 +85,7 @@ class UtilsTestCase(TestCase):
                 }
             ],
             "six": [
-                {"director": {"name": "Guillermo"}},
+                {"archetype": False, "director": {"name": "Guillermo"}},
                 {"score": {"name": "Hans"}}
             ],
             "infinity": {"a": 0}
