@@ -180,7 +180,7 @@ class ModifiedMixin(object):
                 except OSError:
                     pass
 
-        return hashlib.md5(":".join(li)).hexdigest()
+        return hashlib.md5(":".join(li).encode("utf-8")).hexdigest()
 
 
 class Variation(ModifiedMixin, Base):
