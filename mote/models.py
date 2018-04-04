@@ -1,5 +1,6 @@
 """Model the elements picked up from the filesystem"""
 
+import hashlib
 import json
 import os
 from collections import OrderedDict
@@ -160,7 +161,29 @@ class Base(object):
         return ""
 
 
-class Variation(Base):
+class ModifiedMixin(object):
+
+    @property
+    def modified(self):
+        """Return hash of modification dates of all applicable files"""
+
+        # todo: consider children as well
+        li = []
+        for name in (
+            "element.html", "metadata.json", "metadata.yaml", "usage.html",
+            "usage.md", "usage.rst"
+        ):
+            t = self._get_template(name)
+            if t is not None:
+                try:
+                    li.append(str(os.path.getmtime(t.template.origin.name)))
+                except OSError:
+                    pass
+
+        return hashlib.md5(":".join(li)).hexdigest()
+
+
+class Variation(ModifiedMixin, Base):
     """A variation *is* an element but the subclassing breaks down"""
 
     def __init__(self, id, element):
@@ -220,22 +243,8 @@ class Variation(Base):
             self.id
         )
 
-    @property
-    def modified(self):
-        result = False
 
-        for name in ("element.html", "metadata.json", "metadata.yaml"):
-            t = self._get_template(name)
-            if t is not None:
-                try:
-                    result = result or os.path.getmtime(t.template.origin.name)
-                except OSError:
-                    pass
-
-        return result
-
-
-class Element(Base):
+class Element(ModifiedMixin, Base):
 
     def __init__(self, id, pattern):
         self._id = id
@@ -279,18 +288,6 @@ class Element(Base):
     @cached_property
     def variations(self):
         return self._get_children(Variation, "variations")
-
-    @property
-    def modified(self):
-        t = self._get_template("element.html")
-
-        if t is not None:
-            try:
-                return os.path.getmtime(t.template.origin.name)
-            except OSError:
-                return 0
-
-        return 0
 
     def __getattr__(self, key):
         """Allow variation lookup by name"""

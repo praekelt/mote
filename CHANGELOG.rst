@@ -4,6 +4,7 @@ Changelog
 next
 ----
 #. Vastly simplify the templating. This introduces major backward incompatibility.
+#. Implement caching to speed up the Explorer.
 
 0.3.1
 -----
