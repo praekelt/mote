@@ -163,11 +163,9 @@ class Base(object):
 
 class ModifiedMixin(object):
 
-    @property
+    @cached_property
     def modified(self):
         """Return hash of modification dates of all applicable files"""
-
-        # todo: consider children as well
         li = []
         for name in (
             "element.html", "metadata.json", "metadata.yaml", "usage.html",
@@ -292,6 +290,14 @@ class Element(ModifiedMixin, Base):
     def __getattr__(self, key):
         """Allow variation lookup by name"""
         return {e.id: e for e in self.variations}.get(key)
+
+    @property
+    def modified(self):
+        """Consider variations as well"""
+        result = super(Element, self).modified
+        for variation in self.variations:
+            result += variation.modified
+        return result
 
 
 class Pattern(Base):
