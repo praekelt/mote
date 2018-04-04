@@ -1,6 +1,6 @@
 {% load staticfiles cache %}
 
-{% cache 3600 mote-element-index element.modified %}
+{% cache 3600 mote-element-index element.dotted_name element.modified %}
 <div class="Pattern" id="element-{{ element.id }}">
 
     <h2 class="Pattern-title">
