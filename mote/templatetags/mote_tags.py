@@ -175,12 +175,16 @@ class RenderNode(template.Node):
             # new context to make for cleaner templates.
             newcontext["data"] = masked
             for k, v in masked.items():
-                if k in ("data", "element", "original_element"):
+                if k in ("data", "element", "original_element", "pretty_data"):
                     raise RuntimeError("%s is a reserved key" % k)
                 newcontext[k] = v
 
             # Update new context with the view kwargs
             newcontext.update(view_kwargs)
+
+            # Make data legible in debug mode
+            if settings.DEBUG:
+                newcontext["pretty_data"] = json.dumps(newcontext["data"], indent=4)
 
             # Call the view. Let any error propagate.
             result = view.as_view()(request, **newcontext)

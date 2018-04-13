@@ -1,5 +1,6 @@
 """Model the elements picked up from the filesystem"""
 
+import hashlib
 import json
 import os
 from collections import OrderedDict
@@ -67,6 +68,13 @@ class Base(object):
 
     @cached_property
     def metadata(self):
+        return self._get_metadata()
+
+    @cached_property
+    def metadata_no_traverse(self):
+        return self._get_metadata(False)
+
+    def _get_metadata(self, traverse=True):
         """Retrieve metadata for this object. Traverses upward else we can't
         infer metadata when layering."""
         t = None
@@ -75,7 +83,7 @@ class Base(object):
                 t = select_template([self.relative_path + name])
             except TemplateDoesNotExist:
                 pass
-            if t is None:
+            if traverse and (t is None):
                 t = self._get_template(name)
             if t is not None:
                 if name.endswith(".yaml"):
@@ -96,8 +104,8 @@ class Base(object):
     def data(self):
         """Return the data for this object. We start with top level data.X
         files and traverse down to our own data.X, doing dictionary updates
-        along the way."""
-        # todo: this must deepmerge
+        along the way.  Note we deliberately do not do deepmerges because it
+        causes mayhem as dictionaries may keep growing."""
         result = OrderedDict()
         for t in reversed(self._get_templates("data.yaml")):
             if t is not None:
@@ -153,7 +161,27 @@ class Base(object):
         return ""
 
 
-class Variation(Base):
+class ModifiedMixin(object):
+
+    @cached_property
+    def modified(self):
+        """Return hash of modification dates of all applicable files"""
+        li = []
+        for name in (
+            "element.html", "metadata.json", "metadata.yaml", "usage.html",
+            "usage.md", "usage.rst"
+        ):
+            t = self._get_template(name)
+            if t is not None:
+                try:
+                    li.append(str(os.path.getmtime(t.template.origin.name)))
+                except OSError:
+                    pass
+
+        return hashlib.md5(":".join(li).encode("utf-8")).hexdigest()
+
+
+class Variation(ModifiedMixin, Base):
     """A variation *is* an element but the subclassing breaks down"""
 
     def __init__(self, id, element):
@@ -195,6 +223,11 @@ class Variation(Base):
             + self.element._relative_paths
 
     @property
+    def title(self):
+        return self.metadata_no_traverse.get("title", self.id.replace(
+            "_", " ").replace("-", " ").capitalize())
+
+    @property
     def template_names(self):
         return [pth + "element.html" for pth in self._relative_paths]
 
@@ -208,22 +241,8 @@ class Variation(Base):
             self.id
         )
 
-    @property
-    def modified(self):
-        result = False
 
-        for name in ("element.html", "metadata.json", "metadata.yaml"):
-            t = self._get_template(name)
-            if t is not None:
-                try:
-                    result = result or os.path.getmtime(t.template.origin.name)
-                except OSError:
-                    pass
-
-        return result
-
-
-class Element(Base):
+class Element(ModifiedMixin, Base):
 
     def __init__(self, id, pattern):
         self._id = id
@@ -268,21 +287,17 @@ class Element(Base):
     def variations(self):
         return self._get_children(Variation, "variations")
 
-    @property
-    def modified(self):
-        t = self._get_template("element.html")
-
-        if t is not None:
-            try:
-                return os.path.getmtime(t.template.origin.name)
-            except OSError:
-                return 0
-
-        return 0
-
     def __getattr__(self, key):
         """Allow variation lookup by name"""
         return {e.id: e for e in self.variations}.get(key)
+
+    @property
+    def modified(self):
+        """Consider variations as well"""
+        result = super(Element, self).modified
+        for variation in self.variations:
+            result += variation.modified
+        return result
 
 
 class Pattern(Base):
