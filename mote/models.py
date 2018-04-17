@@ -10,6 +10,7 @@ import pypandoc
 import yaml
 import yamlordereddictloader
 
+from django.conf import settings
 from django.template import TemplateDoesNotExist
 from django.template.loader import select_template
 from django.utils.functional import cached_property
@@ -22,6 +23,26 @@ RESERVED_IDS = (
     "mote", "json", "metadata.json", "metadata.yaml", "projects", "aspects",
     "patterns", "elements", "variations", "tokens", "app"
 )
+
+
+class Cache(object):
+    """Objects never change in a live system so we can cache heavily without
+    any expiration."""
+
+    _items = OrderedDict()
+
+    def get(self, key, default=None):
+        if settings.DEBUG:
+            return default
+        return self._items.get(key, default)
+
+    def set(self, key, value):
+        # Paranoia check for any memory leak
+        if len(self._items) > 10000:
+            self._items.popitem(0)
+        self._items[key] = value
+
+CACHE = Cache()
 
 
 class Base(object):
@@ -161,10 +182,10 @@ class Base(object):
         return ""
 
 
-class ModifiedMixin(object):
+class ChecksumMixin(object):
 
-    @cached_property
-    def modified(self):
+    @property
+    def checksum(self):
         """Return hash of modification dates of all applicable files"""
         li = []
         for name in (
@@ -181,8 +202,17 @@ class ModifiedMixin(object):
         return hashlib.md5(":".join(li).encode("utf-8")).hexdigest()
 
 
-class Variation(ModifiedMixin, Base):
+class Variation(ChecksumMixin, Base):
     """A variation *is* an element but the subclassing breaks down"""
+
+    def __new__(cls, id, element):
+        dotted_name = "%s.%s" % (element.dotted_name, id)
+        obj = CACHE.get(dotted_name, None)
+        if obj is not None:
+            return obj
+        obj = super(Variation, cls).__new__(cls)
+        CACHE.set(dotted_name, obj)
+        return obj
 
     def __init__(self, id, element):
         self._id = id
@@ -242,7 +272,16 @@ class Variation(ModifiedMixin, Base):
         )
 
 
-class Element(ModifiedMixin, Base):
+class Element(ChecksumMixin, Base):
+
+    def __new__(cls, id, pattern):
+        dotted_name = "%s.%s" % (pattern.dotted_name, id)
+        obj = CACHE.get(dotted_name, None)
+        if obj is not None:
+            return obj
+        obj = super(Element, cls).__new__(cls)
+        CACHE.set(dotted_name, obj)
+        return obj
 
     def __init__(self, id, pattern):
         self._id = id
@@ -292,15 +331,24 @@ class Element(ModifiedMixin, Base):
         return {e.id: e for e in self.variations}.get(key)
 
     @property
-    def modified(self):
+    def checksum(self):
         """Consider variations as well"""
-        result = super(Element, self).modified
+        result = super(Element, self).checksum
         for variation in self.variations:
-            result += variation.modified
+            result += variation.checksum
         return result
 
 
 class Pattern(Base):
+
+    def __new__(cls, id, aspect):
+        dotted_name = "%s.%s" % (aspect.dotted_name, id)
+        obj = CACHE.get(dotted_name, None)
+        if obj is not None:
+            return obj
+        obj = super(Pattern, cls).__new__(cls)
+        CACHE.set(dotted_name, obj)
+        return obj
 
     def __init__(self, id, aspect):
         self._id = id
@@ -343,6 +391,15 @@ class Pattern(Base):
 class Aspect(Base):
     """Examples of aspects are website, email templates."""
 
+    def __new__(cls, id, project):
+        dotted_name = "%s.%s" % (project.dotted_name, id)
+        obj = CACHE.get(dotted_name, None)
+        if obj is not None:
+            return obj
+        obj = super(Aspect, cls).__new__(cls)
+        CACHE.set(dotted_name, obj)
+        return obj
+
     def __init__(self, id, project):
         self._id = id
         self._project = project
@@ -376,6 +433,15 @@ class Aspect(Base):
 
 
 class Project(Base):
+
+    def __new__(cls, id):
+        dotted_name = id
+        obj = CACHE.get(dotted_name, None)
+        if obj is not None:
+            return obj
+        obj = super(Project, cls).__new__(cls)
+        CACHE.set(dotted_name, obj)
+        return obj
 
     def __init__(self, id):
         self._id = id

@@ -153,7 +153,7 @@ class RenderNode(template.Node):
                 ))
 
             # Compute a cache key
-            li = [obj.modified, deephash(data)]
+            li = [obj.checksum, deephash(data)]
             li.extend(frozenset(sorted(view_kwargs.items())))
             hashed = md5(
                 ":".join([text_type(l) for l in li]).encode("utf-8")
