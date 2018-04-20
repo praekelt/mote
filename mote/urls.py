@@ -1,4 +1,5 @@
 from django.conf.urls import url, include
+from django.views.generic.base import TemplateView
 
 from rest_framework.urlpatterns import format_suffix_patterns
 
@@ -50,6 +51,17 @@ urlpatterns = [
         views.ProjectView.as_view(),
         name="project"
     ),
+    url(
+        r"^primes/$",
+        views.PrimesView.as_view(),
+        name="primes"
+    ),
+    url(
+        r"^renders/$",
+        TemplateView.as_view(template_name="mote/renders.html"),
+        name="renders"
+    ),
+
 ]
 
 

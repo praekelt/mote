@@ -17,13 +17,18 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
+    "mote.chat",
     "mote",
+    "motelibbase",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.staticfiles",
     "rest_framework",
-)
+]
+
+if sys.version_info[0] >= 3:
+    INSTALLED_APPS.insert(0, "channels")
 
 TEMPLATE_CONTEXT_PROCESSORS = [
     "django.contrib.auth.context_processors.auth",
@@ -67,7 +72,13 @@ STATIC_URL = "/static/"
 
 ALLOWED_HOSTS = ["*"]
 
-MOTE = {
-    "directories": [i for i in sys.path if i.find("mote.lib.base") != -1]
-}
+ASGI_APPLICATION = "mote.routing.application"
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+    },
+}

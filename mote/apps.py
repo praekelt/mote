@@ -16,6 +16,7 @@ class MoteConfig(AppConfig):
     verbose_name = "Mote"
 
     def ready(self):
+        #import pdb;pdb.set_trace()
         # Iterate over apps
         for name in settings.INSTALLED_APPS:
             mod = import_module(name)
@@ -24,7 +25,9 @@ class MoteConfig(AppConfig):
                 pth = os.path.join(os.path.dirname(mod.__file__), "mote", "projects")
             else:
                 pth = os.path.join(os.path.dirname(mod.__file__), "..", "mote", "projects")
+            print("Checking A", pth)
             if os.path.exists(pth):
+                print("It exists")
                 for id in os.listdir(pth):
                     if not id.startswith("."):
                         PROJECT_PATHS[id] = pth
@@ -41,9 +44,11 @@ class MoteConfig(AppConfig):
                     "Redundant trailing \"mote\" component in %s" % directory
                 )
             pth = os.path.join(directory, "mote", "projects")
+            print("Checking B", pth)
             if not os.path.exists(pth):
                 logger.warn("Can't find a pattern library in %s" % pth)
             else:
+                print("It exists")
                 for id in os.listdir(pth):
                     if not id.startswith("."):
                         PROJECT_PATHS[id] = pth
