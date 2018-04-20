@@ -69,9 +69,9 @@ class RenderNode(template.Node):
             self.data = template.Variable(data)
 
     def render(self, context):
-        print("RENDER NODE")
-        for prime in PRIMES:
-            is_prime(prime)
+        #print("RENDER NODE")
+        #for prime in PRIMES:
+        #    is_prime(prime)
 
         # We must import late
         from mote.models import Project, Aspect, Pattern, Element, Variation

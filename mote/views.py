@@ -20,7 +20,7 @@ class HomeView(TemplateView):
         li = []
         for id, pth in PROJECT_PATHS.items():
             li.append(Project(id))
-        context["projects"] = sorted(li, key=lambda item: item.metadata.get("position"))
+        context["projects"] = sorted(li, key=lambda item: item.metadata.get("position", 0))
         return context
 
 

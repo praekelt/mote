@@ -27,8 +27,8 @@ INSTALLED_APPS = [
     "rest_framework",
 ]
 
-if sys.version_info[0] >= 3:
-    INSTALLED_APPS.insert(0, "channels")
+#if sys.version_info[0] >= 3:
+#    INSTALLED_APPS.insert(0, "channels")
 
 TEMPLATE_CONTEXT_PROCESSORS = [
     "django.contrib.auth.context_processors.auth",
@@ -81,4 +81,8 @@ CHANNEL_LAYERS = {
             "hosts": [("localhost", 6379)],
         },
     },
+}
+
+MOTE = {
+    "directories": ["/home/hedley/django/instances/mote/mote/tests"]
 }

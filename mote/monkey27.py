@@ -6,8 +6,6 @@ import multiprocessing
 import time
 from importlib import import_module
 
-import dill
-
 from django.conf import settings
 from django.db import connection
 from django.template.base import logger, Node, NodeList
@@ -90,8 +88,7 @@ def NodeList_render(self, context):
     # incorporate the index.
     #import pdb;pdb.set_trace()
     expected_queue_size = 0
-    #new_context = copy.deepcopy(context)
-    new_context = dill.dumps(context)
+    new_context = copy.deepcopy(context)
     # _current_app is compared to a module level object variable in
     # template/context.py. Upon copy it must thus be restored to be
     # the same as the original current_app else the comparison
@@ -169,8 +166,6 @@ def NodeList_render_annotated_multi(self, node, context, index, queue, cores):
         connection.close()
 
         # Do the actual rendering
-        print("IN MULTI")
-        context = dill.loads(context)
         result = node.render_annotated(context)
 
     finally:
