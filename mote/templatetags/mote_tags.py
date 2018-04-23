@@ -10,7 +10,6 @@ import xmltodict
 
 from django.conf import settings
 from django.core.cache import cache
-from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django import template
 from django.template.base import VariableDoesNotExist
@@ -19,6 +18,10 @@ from django.template.response import TemplateResponse
 from django.utils.translation import ugettext as _
 from django.utils.functional import Promise
 from django.utils.six import string_types, text_type
+try:
+    from django.urls import reverse
+except ImportError:
+    from django.core.urlresolvers import reverse
 
 from mote.utils import deepmerge, deephash, get_object_by_dotted_name
 from mote.views import ElementPartialView, VariationPartialView,\
@@ -39,27 +42,6 @@ def render(parser, token):
     return RenderNode(*tokens[1:])
 
 
-import math
-
-PRIMES = [
-    112272535095293,
-    112582705942171,
-    112272535095293,
-    115280095190773,
-    115797848077099,
-    1099726899285419]
-
-def is_prime(n):
-    if n % 2 == 0:
-        return False
-
-    sqrt_n = int(math.floor(math.sqrt(n)))
-    for i in range(3, sqrt_n + 1, 2):
-        if n % i == 0:
-            return False
-    return True
-
-
 class RenderNode(template.Node):
 
     def __init__(self, element_or_identifier, data=None):
@@ -69,10 +51,6 @@ class RenderNode(template.Node):
             self.data = template.Variable(data)
 
     def render(self, context):
-        #print("RENDER NODE")
-        #for prime in PRIMES:
-        #    is_prime(prime)
-
         # We must import late
         from mote.models import Project, Aspect, Pattern, Element, Variation
 

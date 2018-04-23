@@ -27,9 +27,6 @@ INSTALLED_APPS = [
     "rest_framework",
 ]
 
-#if sys.version_info[0] >= 3:
-#    INSTALLED_APPS.insert(0, "channels")
-
 TEMPLATE_CONTEXT_PROCESSORS = [
     "django.contrib.auth.context_processors.auth",
     "django.template.context_processors.debug",
@@ -74,16 +71,6 @@ ALLOWED_HOSTS = ["*"]
 
 ASGI_APPLICATION = "mote.routing.application"
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("localhost", 6379)],
-        },
-    },
-}
-
 MOTE = {
-    "directories": ["/home/hedley/django/instances/mote/mote/tests"],
-    "parallel": True
+    "directories": ["/home/hedley/django/instances/mote/mote/tests"]
 }

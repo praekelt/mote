@@ -29,7 +29,7 @@ setup(
         "beautifulsoup4",
         "six",
         "djangorestframework-jwt",
-        "djangorestframework",
+        "djangorestframework>=3.6",
         "xmltodict",
         "PyYAML",
         "yamlordereddictloader",

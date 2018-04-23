@@ -51,17 +51,6 @@ urlpatterns = [
         views.ProjectView.as_view(),
         name="project"
     ),
-    url(
-        r"^primes/$",
-        views.PrimesView.as_view(),
-        name="primes"
-    ),
-    url(
-        r"^renders/$",
-        TemplateView.as_view(template_name="mote/renders.html"),
-        name="renders"
-    ),
-
 ]
 
 
