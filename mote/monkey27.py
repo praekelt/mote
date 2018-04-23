@@ -3,32 +3,32 @@ from __future__ import unicode_literals
 import copy
 import logging
 import multiprocessing
+import traceback
 import time
 from importlib import import_module
-
-import dill
 
 from django.conf import settings
 from django.db import connection
 from django.template.base import logger, Node, NodeList
+from django.test.client import RequestFactory
 from django.utils.encoding import force_text
 from django.utils.safestring import mark_safe
 
-import multiprocessing as mp
-import traceback
+
+CPU_COUNT = multiprocessing.cpu_count()
 
 
-class Process(mp.Process):
+class Process(multiprocessing.Process):
     """Wrap Process so exception handling propagates to parent process"""
 
     def __init__(self, *args, **kwargs):
-        mp.Process.__init__(self, *args, **kwargs)
-        self._pconn, self._cconn = mp.Pipe()
+        multiprocessing.Process.__init__(self, *args, **kwargs)
+        self._pconn, self._cconn = multiprocessing.Pipe()
         self._exception = None
 
     def run(self):
         try:
-            mp.Process.run(self)
+            multiprocessing.Process.run(self)
             self._cconn.send(None)
         except Exception as e:
             tb = traceback.format_exc()
@@ -41,29 +41,29 @@ class Process(mp.Process):
             self._exception = self._pconn.recv()
         return self._exception
 
-CPU_COUNT = multiprocessing.cpu_count()
 
 
 def NodeList_render(self, context):
 
     from mote.templatetags.mote_tags import RenderNode
-    # Check that multiprocessing is enabled
-    #try:
-    #    enabled = settings.TEMPLATE_MULTIPROCESSING["enabled"]
-    #except (AttributeError, KeyError):
-    #    enabled = False
-    enabled = True
 
-    # First pass to see if multiprocessing is required for this nodelist. If
-    # current process is already a daemon we can't use multiprocessing.
+    # Check that parallel is enabled
+    try:
+        enabled = settings.MOTE["parallel"]
+    except (AttributeError, KeyError):
+        enabled = False
+
+    # First pass to see if parallel is required for this nodelist. If
+    # current process is already parallelized we can't use parallel.
     has_multi = False
-    if enabled and not multiprocessing.process.current_process().daemon:
+    if enabled and ("request" in context) \
+        and not hasattr(context["request"], "__already_parallel__"):
         for node in self:
             if isinstance(node, RenderNode):
                 has_multi = True
                 break
 
-    # Original code if no multiprocessing required
+    # Original code if no parallel required
     if not has_multi:
         bits = []
         for node in self:
@@ -83,42 +83,36 @@ def NodeList_render(self, context):
     # Queue that keeps track of how many cores are in use
     cores = multiprocessing.Queue(CPU_COUNT)
 
-    # Synchronous queue
-    squeue = []
-
-    # Everything must go into a queue. Queue completion order is not fixed so
-    # incorporate the index.
-    #import pdb;pdb.set_trace()
-    expected_queue_size = 0
-    #new_context = copy.deepcopy(context)
+    # Build a new minimal picklable context and request
     new_context = context.new({
-        "request": context["request"],
-        "element": context["element"]
+        "request": RequestFactory().get("/"),
     })
-    #try:
-    #    new_context = dill.dumps(context)
-    #except:
-    #    import pdb;pdb.set_trace()
-    #    aaa = 1
-    #    raise
-    # _current_app is compared to a module level object variable in
-    # template/context.py. Upon copy it must thus be restored to be
-    # the same as the original current_app else the comparison
-    # fails.
-    #new_context._current_app = context._current_app
+    new_context.request = new_context["request"]
+    if "element" in context:
+        new_context["element"] = context["element"].dotted_name
+    if "data" in context:
+        new_context["data"] = context["data"]
+    if "project" in context:
+        new_context["project"] = context["project"]
+    if "__mote_project_id__" in context:
+        new_context["__mote_project_id__"] = context["__mote_project_id__"]
+
+    # Completion order is not fixed so incorporate an index
+    bits = []
+    expected_queue_size = 0
     for index, node in enumerate(self):
-        if isinstance(node, Node):
-            if isinstance(node, RenderNode):
-                p = Process(
-                    target=self.render_annotated_multi,
-                    args=(node, new_context, index, queue, cores)
-                )
-                jobs.append(p)
-                expected_queue_size += 1
-            else:
-                squeue.append((index, node))
+        if isinstance(node, RenderNode):
+            bits.append("")
+            p = Process(
+                target=self.render_annotated_multi,
+                args=(node, new_context, index, queue, cores)
+            )
+            jobs.append(p)
+            expected_queue_size += 1
+        elif isinstance(node, Node):
+            bits.append(force_text(node.render_annotated(context)))
         else:
-            squeue.append((index, node))
+            bits.append(force_text(node))
 
     # Ensure we never run more than CPU_COUNT jobs on other cores.
     # Unfortunately multiprocessing.Pool doesn't work when used in classes so
@@ -144,26 +138,11 @@ def NodeList_render(self, context):
             error, traceback = p.exception
             raise error
 
-    # Empty the queue
+    # Empty the queue and update bits
     pipeline = {}
     while queue.qsize():
-        index, rendered, callback, data = queue.get()
-        pipeline[index] = (rendered, callback, data)
-    for index, node in squeue:
-        pipeline[index] = node
-
-    # Assemble bits in non-threaded order
-    indexes = sorted(pipeline.keys())
-    bits = []
-    for index in indexes:
-        item = pipeline[index]
-        if isinstance(item, Node):
-            rendered = item.render_annotated(context)
-        elif isinstance(item, tuple):
-            rendered, callback, data = item
-        else:
-            rendered = item
-        bits.append(force_text(rendered))
+        index, rendered = queue.get()
+        bits[index] = rendered
 
     return mark_safe("".join(bits))
 
@@ -178,20 +157,17 @@ def NodeList_render_annotated_multi(self, node, context, index, queue, cores):
         connection.close()
 
         # Do the actual rendering
-        print("IN MULTI")
-        #context = dill.loads(context)
+        setattr(context["request"], "__already_parallel__", True)
         result = node.render_annotated(context)
 
     finally:
         # Always put something on the queue
-        data = {}
-        callback_dotted_name = None
-        queue.put((index, result, callback_dotted_name, data))
+        queue.put((index, result))
 
         # Signal a core is now available
         cores.get()
 
 
-logger.info("template_multiprocessing patching django.template.base.NodeList")
+logger.info("Mote patching django.template.base.NodeList")
 NodeList.render = NodeList_render
 NodeList.render_annotated_multi = NodeList_render_annotated_multi

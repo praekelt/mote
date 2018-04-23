@@ -84,5 +84,6 @@ CHANNEL_LAYERS = {
 }
 
 MOTE = {
-    "directories": ["/home/hedley/django/instances/mote/mote/tests"]
+    "directories": ["/home/hedley/django/instances/mote/mote/tests"],
+    "parallel": True
 }
