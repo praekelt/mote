@@ -15,6 +15,7 @@ from django.template import TemplateDoesNotExist
 from django.template.loader import select_template
 from django.utils.functional import cached_property
 
+from mote import monkey
 from mote import PROJECT_PATHS
 from mote.utils import get_object_by_dotted_name
 
@@ -166,7 +167,7 @@ class Base(object):
                 result.append(l)
                 processed.append(l.id)
 
-        return sorted(result, key=lambda item: item.metadata.get("position"))
+        return sorted(result, key=lambda item: item.metadata.get("position", 0))
 
     @cached_property
     def usage(self):

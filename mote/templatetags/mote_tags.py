@@ -10,7 +10,6 @@ import xmltodict
 
 from django.conf import settings
 from django.core.cache import cache
-from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django import template
 from django.template.base import VariableDoesNotExist
@@ -19,6 +18,10 @@ from django.template.response import TemplateResponse
 from django.utils.translation import ugettext as _
 from django.utils.functional import Promise
 from django.utils.six import string_types, text_type
+try:
+    from django.urls import reverse
+except ImportError:
+    from django.core.urlresolvers import reverse
 
 from mote.utils import deepmerge, deephash, get_object_by_dotted_name
 from mote.views import ElementPartialView, VariationPartialView,\

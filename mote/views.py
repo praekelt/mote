@@ -20,7 +20,7 @@ class HomeView(TemplateView):
         li = []
         for id, pth in PROJECT_PATHS.items():
             li.append(Project(id))
-        context["projects"] = sorted(li, key=lambda item: item.metadata.get("position"))
+        context["projects"] = sorted(li, key=lambda item: item.metadata.get("position", 0))
         return context
 
 
@@ -164,3 +164,35 @@ class VariationIframeView(VariationBaseView):
             "%s/mote/element/iframe.html" % self.element.project.id,
             "mote/element/iframe.html"
         ]
+
+
+import math
+PRIMES = [
+    112272535095293,
+    112582705942171,
+    112272535095293,
+    115280095190773,
+    115797848077099,
+    1099726899285419]
+
+def is_prime(n):
+    if n % 2 == 0:
+        return False
+
+    sqrt_n = int(math.floor(math.sqrt(n)))
+    for i in range(3, sqrt_n + 1, 2):
+        if n % i == 0:
+            return False
+    return True
+
+class PrimesView(TemplateView):
+    """Detail view for a pattern"""
+
+    template_name = "mote/pattern.html"
+
+    def get_context_data(self, **kwargs):
+        for i in range(10):
+            for prime in PRIMES:
+                result = str(is_prime(prime))
+        return {}
+

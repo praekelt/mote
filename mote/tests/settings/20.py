@@ -1,6 +1,5 @@
 import os
 import glob
-import sys
 from os.path import expanduser
 
 if "VIRTUAL_ENV" in os.environ:
@@ -17,14 +16,14 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-INSTALLED_APPS = [
+INSTALLED_APPS = (
     "mote",
-    "motelibbase",
+    "mote.tests",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.staticfiles",
     "rest_framework",
-]
+)
 
 TEMPLATE_CONTEXT_PROCESSORS = [
     "django.contrib.auth.context_processors.auth",
@@ -68,8 +67,4 @@ STATIC_URL = "/static/"
 
 ALLOWED_HOSTS = ["*"]
 
-ASGI_APPLICATION = "mote.routing.application"
-
-MOTE = {
-    "directories": ["/home/hedley/django/instances/mote/mote/tests"]
-}
+MOTE = {"project": lambda request: "myproject"}

@@ -33,7 +33,8 @@ setup(
         "xmltodict",
         "PyYAML",
         "yamlordereddictloader",
-        "pypandoc"
+        "pypandoc",
+        "dill"
     ],
     tests_require=[
         "tox",

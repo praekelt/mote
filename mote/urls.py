@@ -1,4 +1,5 @@
 from django.conf.urls import url, include
+from django.views.generic.base import TemplateView
 
 from rest_framework.urlpatterns import format_suffix_patterns
 
