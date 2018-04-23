@@ -18,7 +18,6 @@ DEBUG = True
 TEMPLATE_DEBUG = True
 
 INSTALLED_APPS = [
-    "mote.chat",
     "mote",
     "motelibbase",
     "django.contrib.auth",
