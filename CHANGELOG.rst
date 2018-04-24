@@ -5,6 +5,7 @@ next
 ----
 #. Vastly simplify the templating. This introduces major backward incompatibility.
 #. Implement caching to speed up the Explorer.
+#. Added a cached loader to speed up rendering during development.
 
 0.3.1
 -----

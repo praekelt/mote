@@ -150,12 +150,6 @@ def NodeList_render(self, context):
 def NodeList_render_annotated_multi(self, node, context, index, queue, cores):
     result = ""
     try:
-        # Multiprocess does a deepcopy of the process and this includes the
-        # database connection. This causes issues because DB connection info is
-        # recorded in thread locals. Close the DB connection - Django will
-        # automatically re-establish it.
-        connection.close()
-
         # Do the actual rendering
         setattr(context["request"], "__already_parallel__", True)
         result = node.render_annotated(context)

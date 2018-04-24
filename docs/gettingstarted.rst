@@ -61,6 +61,11 @@ A sample ``TEMPLATES`` for a simple Django app typically has this form:
         },
     ]
 
+    # Greatly speed up rendering during development
+    if DEBUG:
+        loaders = TEMPLATES[0]["OPTIONS"]["loaders"]
+        TEMPLATES[0]["OPTIONS"]["loaders"] = \
+            [("mote.loaders.cached.Loader", loaders)]
 
 You may now start the Django instance and browse to
 ``http://localhost:8000/mote``. The only available pattern library at this
