@@ -56,12 +56,12 @@ def NodeList_render(self, context):
     # First pass to see if parallel is required for this nodelist. If
     # current process is already parallelized we can't use parallel.
     has_multi = False
-    if enabled and ("request" in context) \
-        and not hasattr(context["request"], "__already_parallel__"):
+    count = 0
+    if enabled and not multiprocessing.process.current_process()._daemonic:
         for node in self:
             if isinstance(node, RenderNode):
-                has_multi = True
-                break
+                count += 1
+    has_multi = count >= 2
 
     # Original code if no parallel required
     if not has_multi:
@@ -89,7 +89,7 @@ def NodeList_render(self, context):
     })
     new_context.request = new_context["request"]
     if "element" in context:
-        new_context["element"] = context["element"].dotted_name
+        new_context["element"] = context["element"]
     if "data" in context:
         new_context["data"] = context["data"]
     if "project" in context:
