@@ -33,7 +33,7 @@ class Loader(CachedLoader):
             self.get_template_cache = cache["get_template_cache"]
 
         else:
-            logger.warning(
+            logger.info(
                 "mote.loaders.cached is only intended for use when DEBUG=True"
             )
 
