@@ -200,10 +200,15 @@ class RenderNode(template.Node):
                 # Old-school view
                 html = result.content
 
-            # Make output beautiful for Chris
+            # Make output beautiful for Chris. This is expensive but required
+            # for production. Make it togglable for develop.
             if not settings.DEBUG or request.GET.get("beautify", False):
                 beauty = BeautifulSoup(html, "html.parser")
                 html = beauty.prettify()
+
+            # Useful debug info
+            if settings.DEBUG:
+                html = "<!-- " + obj.dotted_name + " -->" + html
 
             cache.set(cache_key, html, 300)
             return html
