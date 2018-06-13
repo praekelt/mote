@@ -12,6 +12,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.http import HttpResponse
 from django import template
+from django.template.defaultfilters import stringfilter
 from django.template.base import VariableDoesNotExist
 from django.template.loader import render_to_string
 from django.template.response import TemplateResponse
@@ -30,6 +31,14 @@ from mote.views import ElementPartialView, VariationPartialView,\
 
 register = template.Library()
 
+# Under certain conditions Mote on Linux
+# emits strings with both leading and trailing
+# whitespace. This filter gives us a way of
+# removing that whitespace.
+@register.filter
+@stringfilter
+def trim(value):
+    return value.strip()
 
 @register.tag
 def render(parser, token):
