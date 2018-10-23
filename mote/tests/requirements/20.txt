@@ -1,4 +1,4 @@
-django>=2.0,<2.1
+django>=2.0.8,<2.1
 beautifulsoup4==4.4.1
 djangorestframework==3.8.0
 six==1.9.0
