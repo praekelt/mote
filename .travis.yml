@@ -17,10 +17,10 @@ after_success:
 
 deploy:
   provider: pypi
-  user: Praekelt
+  distributions: sdist bdist_wheel
+  user: praekelt.org
   password:
-    # NOTE: See http://docs.travis-ci.com/user/encryption-keys/ for more info.
-    secure: "insert encrypted pypi password here"
+    secure: "A8XMvXz0oUa4wXIyW+EvWHbWRSzOpFL/UOqvTTzklXjw/0mOkwe9cmD0IHlB15lmPkvvPF8tUp8f05wex+2vEsZ9rIekIJRyMCeQZPuVSiHJ/jGnonS9n95BBWiezhmJnt5np8MU390EbsPDNfQKVzXPsblhticvIuDvzAOJo/jODz083QpLO4THFTnNcBbcYrUX8s6r17DcVC9BdOxIMfth/3lC2b69Jk+Djwwmhc1xjrI9a1q4LDxfe8g88JuWi6F48o1S1YKohoRX4XZggZRGKsy38x+3+AXHiCQFjmplNOyA5QPljTfue4fKo5h3eFqilAXYmwJdSqCu7L2zgG0xItnSOPFmQyy1yiIgbpxqFSUfonVMzTW9ehtDAVhk0mxpTKyI69si1FbswozfBKp8TMryNoaXsr3mqSR9//nOR8ueLokzrlzNtYVtBAd4+H5678kXoFO7NiWu3APGS6uMEvY45N10JxObW81rsTSqME1KiyRY+LmwQ/1psOMqSUzonkVMNeEnDtEA9mNbR2kSDFXgHDp8YS/ONXkxDChGSrh4vHW5e8NeP9FGFLrAoPL4KZAN+fCY4uTIfq5NCOg4CR4fncGLa0Tp1SQ+7VTdi+3PqieZomVRZbXqpMo8mTcyCtHKnwgThYREISWYgoyjyH8opeqE7uD96LTR0TY="
   on:
     tags: true
-    all_branches: true
+    python: 3.6
