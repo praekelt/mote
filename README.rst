@@ -1,7 +1,7 @@
 Mote - the pattern library framework
 ====================================
 
-.. figure:: https://travis-ci.org/praekelt/mote.svg?branch=develop
+.. figure:: https://travis-ci.org/praekeltfoundation/mote.svg?branch=develop
    :align: center
    :alt: Travis
 
