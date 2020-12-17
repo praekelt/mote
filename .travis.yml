@@ -1,12 +1,24 @@
 language: python
 python:
-  - "3.5"
+- '3.6'
 env:
-  - TOXENV=django111-py27
-  - TOXENV=django111-py35
-  - TOXENV=django20-py35
+- TOXENV=django111-py27
+- TOXENV=django111-py35
+- TOXENV=django20-py35
+- TOXENV=django225-py36
 
 install:
-  - pip install tox
-
+- pip install tox
 script: tox
+
+after_success:
+- coveralls
+deploy:
+  provider: pypi
+  distributions: sdist bdist_wheel
+  user: __token__
+  password:
+    secure: hCFsFXn3x1DO23LB91l80YTvZRXWNUt+HHXukReQ/DFwXp3ar8sX7usCLyRwqjT+hibAbppJobCpINARPkczMWFnyk6sUQbw2BexR41a1pwCR4xR9mA7ap+fVkwAkFOy+FPl1H7xgKdmZpFmO6HvU7Y0DfnOLLAdgDFM6lIHsycnJEnxy5PfaiPaUwbW7pzjo2Z1XCMRI+Q+iBsUsSI2IwjrogrurNhmEClv9clcy+h1iHRwztAdDcSW23y6GiJSVK2+60Fh+FHMKIJZjGQDISKpnkIwdB7fmbTOOtGvPU+r+v7UjDxLFlBBNRt6YYSIVdntBGQX4gWwA40ajWp2cT1AXupi6HQkGzYgRdElnGozoH2orU19uHQFukunwP9+pic3SXBZwwCvtsB+dwNZlEVXxCdoq9vD5XsWfkYquMug9iYlzAO8O+RTCZC75E4Gjtf1z5fyV8vqQUlJUhp81mxqRXwGUI7Srl6nfFz6D6OKeWLfs1l8yMUQZNJr9nmnQTUBnLOW7+shj2X70VTY5m2XdgZx9IATjuWj6FbhqvNKczOaZLmj8NGK08tOnUoqqu97+txyI7Pj77joFDv3Dpag11Adf+hLdFNtM6PMdZfJgjnVyYfF+RlzRk8zLrVfdI6KNaKGAY5oX8wswEQU3LEk/nWQA9kLOpDToM+xu7M=
+  on:
+    tags: true
+    python: 3.6

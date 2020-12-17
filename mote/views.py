@@ -4,7 +4,7 @@ from django.template import TemplateDoesNotExist
 from django.template.loader import render_to_string
 from django.templatetags.static import PrefixNode
 from django.utils.functional import cached_property
-from django.utils.six.moves.urllib.parse import urljoin
+from urllib.parse import urljoin
 from django.views.generic.base import TemplateView
 
 from mote import PROJECT_PATHS
@@ -195,4 +195,3 @@ class PrimesView(TemplateView):
             for prime in PRIMES:
                 result = str(is_prime(prime))
         return {}
-

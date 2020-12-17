@@ -18,7 +18,7 @@ from django.template.loader import render_to_string
 from django.template.response import TemplateResponse
 from django.utils.translation import ugettext as _
 from django.utils.functional import Promise
-from django.utils.six import string_types, text_type
+from six import string_types, text_type
 try:
     from django.urls import reverse
 except ImportError:

@@ -1,10 +1,8 @@
 Authors
 =======
 
-Praekelt Consulting
+Praekelt Foundation
 -------------------
 
-* Hedley Roos
-* Chris Sergienko
-* Jason Paidoussi
+* Aphiwe Moshesh
 
