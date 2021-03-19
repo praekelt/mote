@@ -1,6 +1,6 @@
 django~=1.11.16
 beautifulsoup4==4.4.1
-djangorestframework==3.5.3
+djangorestframework==3.11.2
 six==1.9.0
 djangorestframework-jwt==1.8.0
 xmltodict==0.10.2
